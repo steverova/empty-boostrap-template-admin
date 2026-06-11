@@ -133,7 +133,7 @@ export default function NavigationMenu({
 			return (
 				<li className='nav-item' key={navItem.id}>
 					<StyledNavLink
-						className={`nav-link d-flex align-items-center text-decoration-none ${isActive ? 'text-body bg-body' : 'text-body-tertiary'}`}
+						className={`nav-link d-flex align-items-center text-decoration-none ${isActive ? 'text-body bg-body' : 'text-body-secondary'}`}
 						to={navItem.path ?? '/'}
 					>
 						<Icon className='me-2' name={navItem.icon} />
@@ -147,7 +147,7 @@ export default function NavigationMenu({
 			return (
 				<li className='nav-item' key={navItem.id}>
 					<a
-						className={`nav-link d-flex align-items-center text-decoration-none text-body-tertiary`}
+						className={`nav-link d-flex align-items-center text-decoration-none text-body-secondary`}
 						href={navItem.path}
 						target='_blank'
 						rel='noopener noreferrer'
@@ -162,7 +162,7 @@ export default function NavigationMenu({
 		return (
 			<li className='nav-item' key={navItem.id}>
 				<StyledGroupButton
-					className='nav-link  d-flex align-items-center justify-content-between w-100'
+					className='nav-link  d-flex align-items-center justify-content-between w-100 text-body-secondary'
 					onClick={() => toggleGroup(navItem.id)}
 					type='button'
 				>
