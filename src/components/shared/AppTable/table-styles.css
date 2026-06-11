@@ -1,0 +1,120 @@
+.borderless table {
+	border-top-style: none;
+	border-left-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+}
+
+.sticky-header {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+}
+
+.sticky-header th {
+	position: relative;
+	background-color: inherit;
+}
+
+/* Contenedor con scroll optimizado */
+.table-scroll-container {
+	scrollbar-gutter: stable;
+	scrollbar-width: thin;
+	scrollbar-color: #666 rgba(200, 200, 200, 0.4);
+	-webkit-overflow-scrolling: touch;
+}
+
+/* Chrome, Safari - scrollbar con mejor aspecto */
+.table-scroll-container::-webkit-scrollbar {
+	width: 16px;
+	height: 16px;
+}
+
+.table-scroll-container::-webkit-scrollbar-track {
+	background: rgba(200, 200, 200, 0.3);
+	border-radius: 10px;
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb {
+	background: #666;
+	border-radius: 8px;
+	border: 3px solid rgba(200, 200, 200, 0.3);
+	background-clip: padding-box;
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb:hover {
+	background: #444;
+	background-clip: padding-box;
+}
+
+/* Tabla con tamaño completo */
+table {
+	width: 100%;
+	table-layout: auto;
+	border-collapse: collapse;
+}
+
+/* thead sticky */
+table thead {
+	position: sticky;
+	top: 0;
+	z-index: 11;
+}
+
+/* Headers y celdas con tamaño apropiado */
+table thead th {
+	position: sticky;
+	top: 0;
+	z-index: 11;
+	background-color: #fff;
+	padding-top: 12px;
+	padding-bottom: 12px;
+	white-space: normal;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+table tbody td {
+	white-space: normal;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	vertical-align: top;
+	padding: 12px;
+}
+
+.shadow-left {
+	box-shadow: -8px 0 12px -4px rgba(0, 0, 0, 0.15);
+}
+
+.shadow-right {
+	box-shadow: 8px 0 12px -4px rgba(0, 0, 0, 0.15);
+	overflow: visible;
+}
+
+@keyframes pulse {
+	0% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.spin {
+	animation: spin 1s linear infinite;
+}
+
+
