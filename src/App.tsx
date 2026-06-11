@@ -1,8 +1,6 @@
-
 import { Button } from 'react-bootstrap'
 import './App.css'
 import { X } from 'lucide-react'
-import Layout from './components/blocks/layout/layout'
 import AnimalAvatar from './components/shared/animal-avatar'
 import ButtonNeutral from './components/shared/button-neutral'
 import IconButton from './components/shared/icon-button'
@@ -33,36 +31,34 @@ function App() {
 	}
 
 	return (
-		<Layout>
-			<div className='p-3'>
-				<AnimalAvatar name='Felipe' />
-				<h1>Admin Horas</h1>
-				<p>Bienvenido al panel de administración de horas.</p>
+		<div className='p-3'>
+			<AnimalAvatar name='Felipe' />
+			<h1>Admin Horas</h1>
+			<p>Bienvenido al panel de administración de horas.</p>
 
-				<IconButton aria-label='close' icon={<X size={20} />}  elevation/>
+			<IconButton aria-label='close' icon={<X size={20} />} elevation />
 
-				<hr />
+			<hr />
 
-				<h2>Buttons</h2>
+			<h2>Buttons</h2>
 
-				<ButtonNeutral>Click me</ButtonNeutral>
+			<ButtonNeutral>Click me</ButtonNeutral>
 
-				<hr />
+			<hr />
 
-				<h2>Alert Dialog</h2>
-				<Button onClick={handleShowAlertDialog} variant='secondary'>
-					Show Alert Dialog
-				</Button>
+			<h2>Alert Dialog</h2>
+			<Button onClick={handleShowAlertDialog} variant='secondary'>
+				Show Alert Dialog
+			</Button>
 
-				<hr />
+			<hr />
 
-				<h2>Toast</h2>
+			<h2>Toast</h2>
 
-				<Button onClick={handleShowToast} variant='secondary'>
-					Show Toast
-				</Button>
-			</div>
-		</Layout>
+			<Button onClick={handleShowToast} variant='secondary'>
+				Show Toast
+			</Button>
+		</div>
 	)
 }
 

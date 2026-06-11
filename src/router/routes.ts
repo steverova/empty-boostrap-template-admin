@@ -3,6 +3,7 @@ import Layout from '../components/blocks/layout/layout'
 import RootPage from '../components/root'
 import LoadingFallback from '../components/shared/loading-fallback'
 import { RouteErrorBoundary } from '../components/shared/route-error-boundary'
+import App from '../App'
 
 export const routes: RouteObject[] = [
 	{
@@ -18,7 +19,11 @@ export const routes: RouteObject[] = [
 				{
 					index: true,
 					lazy: () => import('../pages/home'),
-				},
+        },
+        {
+          path: 'examples',
+          Component: App
+        }
 			],
 		},
 			{

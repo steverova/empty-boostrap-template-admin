@@ -49,7 +49,7 @@ export function AlertDialogProvider({
 	const [options, setOptions] = useState<AlertDialogOptions>({})
 	const [loading, setLoading] = useState(false)
 
-	const resolveRef = useRef<(value: boolean) => void>()
+	const resolveRef = useRef<(value: boolean) => void>(undefined)
 	const resolvedRef = useRef(false)
 
 	/* ------------------------------ PUBLIC API ------------------------------ */

@@ -1,5 +1,4 @@
 import { assets } from '../../../assets/assets'
-import ThemeMode from '../../shared/theme-mode'
 import ThemeMode2 from '../../shared/theme-mode-2'
 import NavigationMenu from './navigation-menu'
 

@@ -9,6 +9,14 @@ export type NavItem = {
 }
 
 export const navigationMenu: NavItem[] = [
+  {
+    type: 'item',
+    id: 'examples',
+    label: 'Examples',
+    icon: 'box',
+    path: 'examples',
+    auth: ['Administrador', 'Viewer'],
+  },
 	{
 		type: 'item',
 		id: 'dashboard',

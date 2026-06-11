@@ -1,10 +1,11 @@
-import { zodResolver } from '@hookform/resolvers/zod/src/zod.js'
+
+
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeClosed, Lock, Mail } from 'lucide-react'
 import { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import { type SignInValues, signInschema } from './signin-validation-schema'
-import { Link } from 'react-router'
 
 export default function SignInForm() {
 	const [showPassword, setShowPassword] = useState(false)
@@ -83,7 +84,7 @@ export default function SignInForm() {
 				disabled={isSubmitting}
 			>
 				{isSubmitting ? 'Ingresando...' : 'Iniciar sesión'}
-      </Button>
+			</Button>
 		</Form>
 	)
 }

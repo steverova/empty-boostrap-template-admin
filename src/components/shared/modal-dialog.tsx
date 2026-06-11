@@ -32,7 +32,7 @@ export default function ModalDialog(props: ModalDialogProps) {
 					variant='dark'
 					className='bg-purple-lenovo text-white'
 					onClick={props.onHide}
-					aria-label={t('buttons.close')}
+					aria-label='close'
 				>
 					<X aria-hidden='true' /> 'Cerrar'
 				</Button>

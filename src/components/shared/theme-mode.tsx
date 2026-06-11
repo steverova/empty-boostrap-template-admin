@@ -5,7 +5,7 @@ import { useThemeMode } from '../../hooks/use-theme-mode'
 export default function ThemeMode(): JSX.Element {
 	const { setThemeMode, themeMode } = useThemeMode()
 
-	const icons: Record<'light' | 'dark', JSX.Element> = {
+	const icons: Record<'light' | 'dark' | 'system', JSX.Element> = {
 		light: <Moon />,
 		dark: <Sun />,
 		system: <Monitor />,
