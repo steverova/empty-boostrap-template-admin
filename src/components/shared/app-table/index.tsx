@@ -330,9 +330,13 @@ export default function AppTable<T extends Record<string, any>>({
 						</Button>
 					)}
 				</div>
-			</div>
+      </div>
 
-			<div style={{ maxHeight: pagination.pageSize <= 10 ? 500 : 'none', overflow: 'auto', position: 'relative' }}>
+      {/*para que no sea sticky
+      <div style={{ maxHeight: pagination.pageSize <= 10 ? 500 : 'none', overflow: 'auto', position: 'relative' }}>
+      </div>  */}
+
+			<div >
 				<Table
 					className='mb-0 table-striped table-hover'
 					style={{ width: '100%' }}
