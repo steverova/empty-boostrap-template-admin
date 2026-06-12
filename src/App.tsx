@@ -2,6 +2,7 @@ import { Badge } from 'react-bootstrap'
 import './App.css'
 import type { ColumnDef } from '@tanstack/react-table'
 import AppTable from './components/shared/app-table'
+import { RowActions } from './components/shared/app-table/row-actions'
 
 interface User {
 	id: number
@@ -466,8 +467,7 @@ const columns: ColumnDef<User, any>[] = [
 function App() {
 	return (
 		<div className=''>
-      <AppTable
-        
+			<AppTable
 				isLoading={false}
 				striped
 				hover
@@ -481,6 +481,12 @@ function App() {
 				onRowClick={(row) => console.log('Row clicked:', row)}
 				onRefetchFn={() => console.log('Refetch')}
 				onAddFn={() => console.log('Add')}
+				rowActions={(row) => (
+					<RowActions
+						onEdit={() => console.log('Edit:', row)}
+						onDetails={() => console.log('Details:', row)}
+					/>
+				)}
 			/>
 		</div>
 	)

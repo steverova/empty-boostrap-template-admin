@@ -60,6 +60,7 @@ export interface AppTableProps<T extends Record<string, any>>
 	onRefetchFn?: () => void
 	onAddFn?: () => void
 	onRowClick?: (row: T) => void
+	rowActions?: (row: T) => React.ReactNode
 	pageSize?: number
 	pageSizeOptions?: number[]
 	fileName?: string
@@ -87,6 +88,7 @@ export default function AppTable<T extends Record<string, any>>({
 	onRefetchFn,
 	onAddFn,
 	onRowClick,
+	rowActions,
 	...props
 }: AppTableProps<T>) {
 	const [globalFilter, setGlobalFilter] = useState('')
@@ -127,9 +129,28 @@ export default function AppTable<T extends Record<string, any>>({
 		[data, globalFilter, columns],
 	)
 
+	const tableColumns = useMemo(() => {
+		const allColumns: ColumnDef<T, any>[] = [...columns]
+		if (rowActions) {
+			allColumns.push({
+				id: 'actions',
+				header: 'Actions',
+				enableSorting: false,
+				enablePinning: false,
+				enableHiding: false,
+				cell: ({ row }) => (
+					<div className=''>
+						{rowActions(row.original)}
+					</div>
+				),
+			})
+		}
+		return allColumns
+	}, [columns, rowActions])
+
 	const table = useReactTable({
 		data: filteredData,
-		columns,
+		columns: tableColumns,
 		state: {
 			pagination,
 			columnPinning,
