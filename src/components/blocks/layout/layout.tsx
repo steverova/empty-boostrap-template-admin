@@ -89,7 +89,7 @@ export default function Layout() {
 
 				<main className='flex-grow-1 d-flex flex-column overflow-auto bg-primary-subtle '>
 					<div
-						className='flex-grow-1 px-3 py-1 mb-2 mx-2 content-scroll rounded-4 bg-light-subtle'
+						className='flex-grow-1 px-1 py-1 mb-2 mx-2 content-scroll rounded-3 bg-light-subtle'
 						style={{
 							overflow: 'auto',
 
