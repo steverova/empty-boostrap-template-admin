@@ -1,12 +1,14 @@
 import {
 	type ColumnDef,
 	type ColumnPinningState,
+	type SortingState,
 	getCoreRowModel,
 	getPaginationRowModel,
+	getSortedRowModel,
 	type PaginationState,
 	useReactTable,
 } from '@tanstack/react-table'
-import { ArrowLeft, ArrowRight, Copy, Check, Pin, PinOff } from 'lucide-react'
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, ArrowUpDown, Copy, Check, Pin, PinOff } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Button, Dropdown } from 'react-bootstrap'
 import type { TableProps } from 'react-bootstrap/Table'
@@ -68,6 +70,8 @@ export default function AppTable<T extends Record<string, any>>({
 	const [columnPinning, setColumnPinning] =
 		useState<ColumnPinningState>(loadPinning)
 
+	const [sorting, setSorting] = useState<SortingState>([])
+
 	const [copiedCellId, setCopiedCellId] = useState<string | null>(null)
 
 	useEffect(() => {
@@ -80,11 +84,14 @@ export default function AppTable<T extends Record<string, any>>({
 		state: {
 			pagination,
 			columnPinning,
+			sorting,
 		},
 		onPaginationChange: setPagination,
 		onColumnPinningChange: setColumnPinning,
+		onSortingChange: setSorting,
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
+		getSortedRowModel: getSortedRowModel(),
 	})
 
 	const totalPages = table.getPageCount()
@@ -127,6 +134,8 @@ export default function AppTable<T extends Record<string, any>>({
 							<tr key={headerGroup.id}>
 								{headerGroup.headers.map((header) => {
 									const pinned = header.column.getIsPinned()
+									const canSort = header.column.getCanSort()
+									const sortDir = header.column.getIsSorted()
 
 									return (
 										<th
@@ -136,7 +145,10 @@ export default function AppTable<T extends Record<string, any>>({
 												position: 'sticky',
 												top: 0,
 												backgroundColor: pinned ? bgColor : 'var(--bs-body-bg)',
+												cursor: canSort ? 'pointer' : undefined,
+												userSelect: 'none',
 											}}
+											onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
 										>
 											<div className='d-flex align-items-center justify-content-between gap-1'>
 												<span>
@@ -149,50 +161,63 @@ export default function AppTable<T extends Record<string, any>>({
 																)
 															: header.column.columnDef.header}
 												</span>
-												{header.column.getCanPin() && (
-													<Dropdown align='end'>
-														<Dropdown.Toggle
-															as={Button}
-															variant='link'
-															size='sm'
-															className='p-0 text-muted border-0'
-															id={`pin-${header.column.id}`}
-														>
-															{pinned ? (
-																<PinOff size={14} />
+												<div className='d-flex align-items-center gap-1'>
+													{canSort && (
+														<span className='text-muted'>
+															{sortDir === 'asc' ? (
+																<ArrowUp size={14} />
+															) : sortDir === 'desc' ? (
+																<ArrowDown size={14} />
 															) : (
-																<Pin size={14} />
+																<ArrowUpDown size={14} />
 															)}
-														</Dropdown.Toggle>
+														</span>
+													)}
+													{header.column.getCanPin() && (
+														<Dropdown align='end' onClick={(e) => e.stopPropagation()}>
+															<Dropdown.Toggle
+																as={Button}
+																variant='link'
+																size='sm'
+																className='p-0 text-muted border-0'
+																id={`pin-${header.column.id}`}
+															>
+																{pinned ? (
+																	<PinOff size={14} />
+																) : (
+																	<Pin size={14} />
+																)}
+															</Dropdown.Toggle>
 
-														<Dropdown.Menu style={{ zIndex: 9999 }}>
-															{pinned !== 'left' && (
-																<Dropdown.Item
-																	onClick={() => header.column.pin('left')}
-																>
-																	<ArrowLeft size={14} className='me-2' />
-																	Pinned left
-																</Dropdown.Item>
-															)}
-															{pinned !== 'right' && (
-																<Dropdown.Item
-																	onClick={() => header.column.pin('right')}
-																>
-																	<ArrowRight size={14} className='me-2' />
-																	Pinned right
-																</Dropdown.Item>
-															)}
-															{pinned && (
-																<Dropdown.Item
-																	onClick={() => header.column.pin(false)}
-																>
-																	<PinOff size={14} className='me-2' />
-																	Unpin
-																</Dropdown.Item>
-															)}
-														</Dropdown.Menu>
-													</Dropdown>
-												)}
+															<Dropdown.Menu style={{ zIndex: 9999 }}>
+																{pinned !== 'left' && (
+																	<Dropdown.Item
+																		onClick={() => header.column.pin('left')}
+																	>
+																		<ArrowLeft size={14} className='me-2' />
+																		Pinned left
+																	</Dropdown.Item>
+																)}
+																{pinned !== 'right' && (
+																	<Dropdown.Item
+																		onClick={() => header.column.pin('right')}
+																	>
+																		<ArrowRight size={14} className='me-2' />
+																		Pinned right
+																	</Dropdown.Item>
+																)}
+																{pinned && (
+																	<Dropdown.Item
+																		onClick={() => header.column.pin(false)}
+																	>
+																		<PinOff size={14} className='me-2' />
+																		Unpin
+																	</Dropdown.Item>
+																)}
+															</Dropdown.Menu>
+														</Dropdown>
+													)}
+												</div>
 											</div>
 										</th>
 									)
