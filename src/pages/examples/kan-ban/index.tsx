@@ -166,7 +166,7 @@ function TaskCard({
 }) {
 	return (
 		<Card
-			className='mb-3 border-2 shadow-lg bg-body-tertiary'
+			className='mb-3 border-2 shadow-sm bg-body-tertiary'
 			style={{ opacity: isDragging ? 0.5 : 1 }}
 		>
 			<Card.Body className='p-4'>
@@ -307,18 +307,21 @@ export default function KanbanBoard() {
 					onDragOver={handleDragOver}
 					onDragEnd={handleDragEnd}
 				>
-					<Row className='flex-nowrap'>
+					<Row className='flex-nowrap g-2'>
 						{tasksByColumn.map(({ column, tasks: columnTasks }) => {
 							const Icon = column.icon
 							return (
 								<Col
-									key={column.id}
-									md={3}
-									lg={3}
-									className='mb-4 flex-shrink-0'
+                  key={column.id}
+                  xs={11}
+                  sm={9}
+									md={6}
+                  lg={4}
+                  xxl={3}
+									className='mb-4 flex-shrink-0  '
 								>
-									<Card className='border-0 shadow-sm h-100'>
-										<Card.Header className='d-flex justify-content-between align-items-center py-3'>
+									<Card className='border-0 shadow-sm h-100   '>
+										<Card.Header className='d-flex justify-content-between align-items-center py-3 border'>
 											<div className='d-flex align-items-center gap-2'>
 												<div style={{ color: column.color }}>
 													<Icon size={18} />
@@ -334,7 +337,7 @@ export default function KanbanBoard() {
 												{columnTasks.length}
 											</Badge>
 										</Card.Header>
-										<Card.Body className='p-3' style={{ overflowY: 'auto' }}>
+										<Card.Body className='p-3 border shadow ' style={{ overflowY: 'auto' }}>
 											<DroppableColumn columnId={column.id}>
 												<SortableContext
 													items={columnTasks.map((t) => t.id)}
