@@ -1,40 +1,56 @@
-import type React from 'react'
+import { Check, X } from 'lucide-react'
+import type { ReactNode } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import { X } from 'lucide-react'
 
 type ModalDialogProps = {
+	size?: 'sm' | 'lg' | 'xl'
 	show: boolean
 	title: string
-	children: React.ReactNode
+	children: ReactNode
 	onHide: () => void
+	onConfirm?: () => void | Promise<void>
 }
 
-export default function ModalDialog(props: ModalDialogProps) {
-	const { title, children } = props
-
+export default function ModalDialog({
+	size = 'lg',
+	show,
+	title,
+	children,
+	onHide,
+	onConfirm,
+}: ModalDialogProps) {
 	return (
 		<Modal
-			className=''
-			{...props}
+			show={show}
+			onHide={onHide}
 			backdrop='static'
 			scrollable
-			size='lg'
-			aria-labelledby='contained-modal-title-vcenter'
+			size={size}
 			centered
+			aria-labelledby='modal-dialog-title'
 		>
-			<Modal.Header className='border-0' closeButton>
-				<Modal.Title id='contained-modal-title-vcenter'>{title}</Modal.Title>
+			<Modal.Header closeButton className='border-0'>
+				<Modal.Title id='modal-dialog-title'>{title}</Modal.Title>
 			</Modal.Header>
+
 			<Modal.Body>{children}</Modal.Body>
+
 			<Modal.Footer className='border-0 shadow'>
 				<Button
-					variant='dark'
-					className='bg-purple-lenovo text-white'
-					onClick={props.onHide}
-					aria-label='close'
+					variant='outline-secondary'
+					onClick={onHide}
+					aria-label='Close dialog'
 				>
-					<X aria-hidden='true' /> 'Cerrar'
+					<X aria-hidden='true' size={18} /> Close
+				</Button>
+
+				<Button
+					variant='primary'
+					onClick={onConfirm}
+					aria-label='Confirm action'
+				>
+					<Check aria-hidden='true' size={18} /> Ok
 				</Button>
 			</Modal.Footer>
 		</Modal>

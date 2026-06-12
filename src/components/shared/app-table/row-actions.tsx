@@ -8,9 +8,9 @@ interface RowActionsProps {
 
 export function RowActions({ onEdit, onDetails }: RowActionsProps) {
 	return (
-		<div className='d-flex gap-2'>
+		<div className='d-flex gap-2 py-0'>
 			{onEdit && (
-				<Button
+        <Button
 					variant='primary'
 					size='sm'
 					
