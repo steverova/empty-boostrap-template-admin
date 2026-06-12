@@ -332,7 +332,7 @@ export default function AppTable<T extends Record<string, any>>({
 				</div>
 			</div>
 
-			<div style={{ maxHeight: 500, overflow: 'auto', position: 'relative' }}>
+			<div style={{ maxHeight: pagination.pageSize <= 10 ? 500 : 'none', overflow: 'auto', position: 'relative' }}>
 				<Table
 					className='mb-0 table-striped table-hover'
 					style={{ width: '100%' }}
@@ -569,20 +569,18 @@ export default function AppTable<T extends Record<string, any>>({
 				</Table>
 			</div>
 
-			{totalPages > 1 && (
-				<PaginationTable
-					page={pagination.pageIndex + 1}
-					totalPages={totalPages}
-					pageSize={pagination.pageSize}
-					pageSizeOptions={pageSizeOptions}
-					onPageChange={(page) =>
-						setPagination((prev) => ({ ...prev, pageIndex: page - 1 }))
-					}
-					onPageSizeChange={(size) =>
-						setPagination((prev) => ({ ...prev, pageSize: size, pageIndex: 0 }))
-					}
-				/>
-			)}
+			<PaginationTable
+				page={pagination.pageIndex + 1}
+				totalPages={totalPages}
+				pageSize={pagination.pageSize}
+				pageSizeOptions={pageSizeOptions}
+				onPageChange={(page) =>
+					setPagination((prev) => ({ ...prev, pageIndex: page - 1 }))
+				}
+				onPageSizeChange={(size) =>
+					setPagination((prev) => ({ ...prev, pageSize: size, pageIndex: 0 }))
+				}
+			/>
 		</div>
 	)
 }
