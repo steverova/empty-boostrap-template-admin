@@ -61,6 +61,7 @@ const columns: ColumnDef<User, any>[] = [
 	{
 		accessorKey: 'name',
 		header: 'Nombre',
+		meta: { enableCopy: true },
 	},
 	{
 		accessorKey: 'email',
@@ -104,7 +105,20 @@ const columns: ColumnDef<User, any>[] = [
 function App() {
 	return (
 		<div className=''>
-			<AppTable striped hover columns={columns} data={USERS} pageSize={10} />
+			<AppTable
+				striped
+				hover
+				columns={columns}
+				data={USERS}
+				pageSize={10}
+				enableSearch
+				enableColumnVisibility
+				enableRowSelection
+				enableColumnResize
+				onRowClick={(row) => console.log('Row clicked:', row)}
+				onRefetchFn={() => console.log('Refetch')}
+				onAddFn={() => console.log('Add')}
+			/>
 		</div>
 	)
 }

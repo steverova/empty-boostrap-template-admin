@@ -1,4 +1,4 @@
-import type { ColumnDef, ColumnPinningState } from '@tanstack/react-table'
+import type { ColumnDef, ColumnPinningState, VisibilityState } from '@tanstack/react-table'
 import ExcelJS from 'exceljs'
 
 export const DEFAULT_PAGE_SIZE_OPTIONS = [10, 15, 25, 50, 100]
@@ -58,6 +58,72 @@ export function getPinnedStyle({
 	}
 }
 
+// LocalStorage helpers
+export function loadFromStorage<T>(key: string, fallback: T): T {
+	try {
+		const stored = localStorage.getItem(key)
+		return stored ? JSON.parse(stored) : fallback
+	} catch {
+		return fallback
+	}
+}
+
+export function saveToStorage<T>(key: string, value: T) {
+	try {
+		localStorage.setItem(key, JSON.stringify(value))
+	} catch {
+		console.error(`Failed to save to localStorage: ${key}`)
+	}
+}
+
+export const STORAGE_KEYS = {
+	COLUMN_PINNING: 'app-table-column-pinning',
+	COLUMN_VISIBILITY: 'app-table-column-visibility',
+	COLUMN_SIZES: 'app-table-column-sizes',
+} as const
+
+// Column resize helpers
+export type ColumnSizes = Record<string, number>
+
+export function loadColumnSizes(): ColumnSizes {
+	return loadFromStorage<ColumnSizes>(STORAGE_KEYS.COLUMN_SIZES, {})
+}
+
+export function saveColumnSizes(sizes: ColumnSizes) {
+	saveToStorage(STORAGE_KEYS.COLUMN_SIZES, sizes)
+}
+
+// Column visibility helpers
+export function loadColumnVisibility(): VisibilityState {
+	return loadFromStorage<VisibilityState>(STORAGE_KEYS.COLUMN_VISIBILITY, {})
+}
+
+export function saveColumnVisibility(visibility: VisibilityState) {
+	saveToStorage(STORAGE_KEYS.COLUMN_VISIBILITY, visibility)
+}
+
+// Filter helper
+export function filterData<T extends Record<string, any>>(
+	data: T[],
+	globalFilter: string,
+	columns: ColumnDef<T, any>[],
+): T[] {
+	if (!globalFilter.trim()) return data
+
+	const search = globalFilter.toLowerCase()
+
+	return data.filter((row) =>
+		columns.some((col) => {
+			if ('accessorKey' in col) {
+				const value = row[col.accessorKey]
+				return value != null && String(value).toLowerCase().includes(search)
+			}
+			return false
+		}),
+	)
+}
+
+// Export to Excel
 export interface ExportToExcelOptions<T> {
 	columns: ColumnDef<T, any>[]
 	data: T[]
