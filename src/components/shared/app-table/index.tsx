@@ -14,7 +14,7 @@ import Table from 'react-bootstrap/Table'
 import { useThemeMode } from '../../../hooks/use-theme-mode'
 import { PaginationTable } from './pagination-table'
 import TableHeaderToolbar from './table-header-toolbar'
-import { DEFAULT_PAGE_SIZE_OPTIONS } from './table-helper'
+import { getPinnedStyle, DEFAULT_PAGE_SIZE_OPTIONS } from './table-helper'
 
 export type { ColumnDef } from '@tanstack/react-table'
 
@@ -88,49 +88,6 @@ export default function AppTable<T extends Record<string, any>>({
 	const bgColor = isDark ? '#2b3035' : '#fff'
 	const stripedBg = isDark ? '#343a40' : '#f8f9fa'
 
-	const getPinnedStyle = (
-		column: any,
-		isHeader: boolean = false,
-		rowIndex: number = 0,
-	): React.CSSProperties => {
-		const pinned = column.getIsPinned()
-
-		if (!pinned) return {}
-
-		const offset =
-			pinned === 'left' ? column.getStart('left') : column.getAfter('right')
-		const leftIndex = columnPinning.left?.indexOf(column.id) ?? -1
-		const rightIndex = columnPinning.right?.indexOf(column.id) ?? -1
-		const zIndex = isHeader
-			? leftIndex >= 0
-				? 10 + leftIndex
-				: 10 + (columnPinning.right?.length ?? 0) - rightIndex
-			: leftIndex >= 0
-				? 5 + leftIndex
-				: 5 + (columnPinning.right?.length ?? 0) - rightIndex
-
-		const isStriped = rowIndex % 2 === 0
-
-		return {
-			position: 'sticky',
-			zIndex,
-			backgroundColor: isHeader ? bgColor : isStriped ? stripedBg : bgColor,
-			minWidth: 100,
-			...(pinned === 'left' && { left: offset }),
-			...(pinned === 'right' && { right: offset }),
-			...(isHeader
-				? {}
-				: {
-						boxShadow:
-							pinned === 'left' && column.getIsLastColumn('left')
-								? '2px 0 4px rgba(0,0,0,0.1)'
-								: pinned === 'right' && column.getIsFirstColumn('right')
-									? '-2px 0 4px rgba(0,0,0,0.1)'
-									: undefined,
-					}),
-		}
-	}
-
 	return (
 		<div className='border rounded-3 p-1'>
 			<h1 className='fs-2'>Titulo de la tabla</h1>
@@ -149,12 +106,10 @@ export default function AppTable<T extends Record<string, any>>({
 										<th
 											key={header.id}
 											style={{
+												...getPinnedStyle({ column: header.column, isHeader: true, columnPinning, bgColor, stripedBg }),
 												position: 'sticky',
 												top: 0,
-												zIndex: pinned ? 10 : 1,
-												backgroundColor: 'var(--bs-body-bg)',
-												minWidth: 100,
-												...getPinnedStyle(header.column, true),
+												backgroundColor: pinned ? bgColor : 'var(--bs-body-bg)',
 											}}
 											{...header.column.columnDef.meta}
 										>
@@ -226,7 +181,7 @@ export default function AppTable<T extends Record<string, any>>({
 								{row.getVisibleCells().map((cell) => (
 									<td
 										key={cell.id}
-										style={getPinnedStyle(cell.column, false, row.index)}
+										style={getPinnedStyle({ column: cell.column, rowIndex: row.index, columnPinning, bgColor, stripedBg })}
 										{...cell.column.columnDef.meta}
 									>
 										{typeof cell.column.columnDef.cell === 'function'

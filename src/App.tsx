@@ -1,14 +1,7 @@
 import { Badge } from 'react-bootstrap'
 import './App.css'
-import { X } from 'lucide-react'
 import type { ColumnDef } from '@tanstack/react-table'
-import AnimalAvatar from './components/shared/animal-avatar'
 import AppTable from './components/shared/app-table'
-import { Avatar } from './components/shared/avatar'
-import ButtonNeutral from './components/shared/button-neutral'
-import IconButton from './components/shared/icon-button'
-import { useAlertDialog } from './providers/AlertDialogProvider'
-import { useToast } from './providers/ToastProvider'
 
 interface User {
 	id: number
@@ -106,28 +99,6 @@ const columns: ColumnDef<User, any>[] = [
 ]
 
 function App() {
-	const { showToast } = useToast()
-	const { showAlertDialog } = useAlertDialog()
-
-	const handleShowToast = () => {
-		showToast({
-			title: 'Toast Title',
-			message: 'This is a toast description.',
-			variant: 'success',
-			delay: 6000,
-		})
-	}
-
-	const handleShowAlertDialog = async () => {
-		const confirmed = await showAlertDialog({
-			title: 'Confirm Action',
-			message: 'Are you sure you want to perform this action?',
-			showIcon: true,
-		})
-
-		console.log('User confirmed:', confirmed)
-	}
-
 	return (
 		<div className=''>
 			<AppTable striped hover columns={columns} data={USERS} pageSize={10} />

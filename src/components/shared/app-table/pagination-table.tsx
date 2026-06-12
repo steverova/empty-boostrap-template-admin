@@ -13,6 +13,8 @@ interface PaginationProps {
 	onPageSizeChange: (size: number) => void
 }
 
+type Option = { value: number; label: string }
+
 export const PaginationTable = ({
 	page,
 	totalPages,
@@ -40,7 +42,7 @@ export const PaginationTable = ({
 	)
 
 	return (
-		<div className='d-flex align-items-center justify-content-between gap-2 mt-3 px-2'>
+		<div className='d-flex align-items-center justify-content-between gap-2 mt-3 px-2' style={{ position: 'relative', zIndex: 10 }}>
 			<div className='d-flex gap-1 align-items-center'>
 				<Button
 					size='sm'
@@ -50,13 +52,12 @@ export const PaginationTable = ({
 				>
 					<ChevronLeft size={18} />
 				</Button>
-				<Select
+				<Select<Option>
 					menuPlacement='top'
-					style={{ minWidth: 60 }}
 					styles={selectStyles}
 					value={pageOptions.find((o) => o.value === page)}
 					options={pageOptions}
-					onChange={(opt: SingleValue<{ value: number; label: string }>) => {
+					onChange={(opt: SingleValue<Option>) => {
 						if (opt) onPageChange(opt.value)
 					}}
 				/>
@@ -71,13 +72,12 @@ export const PaginationTable = ({
 			</div>
 
 			<div className='d-flex align-items-center gap-1'>
-				<Select
+				<Select<Option>
 					menuPlacement='top'
-					style={{ minWidth: 50 }}
 					styles={selectStyles}
 					value={pageSizeOptionsFormatted.find((o) => o.value === pageSize)}
 					options={pageSizeOptionsFormatted}
-					onChange={(opt: SingleValue<{ value: number; label: string }>) => {
+					onChange={(opt: SingleValue<Option>) => {
 						if (opt) onPageSizeChange(opt.value)
 					}}
 				/>

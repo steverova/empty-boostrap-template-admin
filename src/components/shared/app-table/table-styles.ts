@@ -35,6 +35,7 @@ export const selectStyles: StylesConfig<{ value: number; label: string }> = {
 		...base,
 		backgroundColor: 'var(--bs-body-bg)',
 		border: '1px solid var(--bs-border-color)',
+		zIndex: 9999,
 	}),
 	indicatorSeparator: () => ({
 		display: 'none',
