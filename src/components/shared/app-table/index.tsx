@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
 	useReactTable,
 	getCoreRowModel,
@@ -14,6 +14,7 @@ import Table from 'react-bootstrap/Table'
 import { PaginationTable } from './pagination-table'
 import TableHeaderToolbar from './table-header-toolbar'
 import { DEFAULT_PAGE_SIZE_OPTIONS } from './table-helper'
+import { useThemeMode } from '../../../hooks/use-theme-mode'
 
 export type { ColumnDef } from '@tanstack/react-table'
 
@@ -75,7 +76,18 @@ export default function AppTable<T extends Record<string, any>>({
 
 	const totalPages = table.getPageCount()
 
-	const getPinnedStyle = (column: any, isHeader: boolean = false): React.CSSProperties => {
+	const { themeMode } = useThemeMode()
+	const isDark = useMemo(() => {
+		if (themeMode === 'dark') return true
+		if (themeMode === 'system') {
+			return window.matchMedia('(prefers-color-scheme: dark)').matches
+		}
+		return false
+	}, [themeMode])
+	const bgColor = isDark ? '#2b3035' : '#fff'
+	const stripedBg = isDark ? '#343a40' : '#f8f9fa'
+
+	const getPinnedStyle = (column: any, isHeader: boolean = false, rowIndex: number = 0): React.CSSProperties => {
 		const pinned = column.getIsPinned()
 
 		if (!pinned) return {}
@@ -91,16 +103,24 @@ export default function AppTable<T extends Record<string, any>>({
 				? 5 + leftIndex
 				: 5 + (columnPinning.right?.length ?? 0) - rightIndex
 
+		const isStriped = rowIndex % 2 === 0
+
 		return {
 			position: 'sticky',
 			zIndex,
-			backgroundColor: 'var(--bs-body-bg)',
+			backgroundColor: isHeader
+				? bgColor
+				: isStriped
+					? stripedBg
+					: bgColor,
 			minWidth: 100,
 			...(pinned === 'left' && { left: offset }),
 			...(pinned === 'right' && { right: offset }),
-			boxShadow: column.getIsLastColumn('left') || column.getIsFirstColumn('right')
+			boxShadow: (pinned === 'left' && column.getIsLastColumn('left'))
 				? '2px 0 4px rgba(0,0,0,0.1)'
-				: undefined,
+				: (pinned === 'right' && column.getIsFirstColumn('right'))
+					? '-2px 0 4px rgba(0,0,0,0.1)'
+					: undefined,
 		}
 	}
 
@@ -186,7 +206,7 @@ export default function AppTable<T extends Record<string, any>>({
 							{row.getVisibleCells().map((cell) => (
 								<td
 									key={cell.id}
-									style={getPinnedStyle(cell.column)}
+									style={getPinnedStyle(cell.column, false, row.index)}
 									{...cell.column.columnDef.meta}
 								>
 									{typeof cell.column.columnDef.cell === 'function'
