@@ -61,11 +61,12 @@ export default function Layout() {
 					</div>
 				</Navbar>
 
-				<Offcanvas
-					show={isMobile && showOffcanvas}
-					onHide={() => setShowOffcanvas(false)}
-					style={{ width: 250 }}
-				>
+			<Offcanvas
+				show={isMobile && showOffcanvas}
+				onHide={() => setShowOffcanvas(false)}
+				style={{ width: 250 }}
+				className='overflow-x-hidden'
+			>
 					<Button
 						className='p-0 p-1'
 						variant='light'
@@ -81,7 +82,7 @@ export default function Layout() {
 						<PanelRightOpen aria-hidden='true' />
 					</Button>
 
-					<Offcanvas.Body className='p-0'>
+					<Offcanvas.Body className='p-0 overflow-x-hidden'>
 						<Sidebar />
 					</Offcanvas.Body>
 				</Offcanvas>

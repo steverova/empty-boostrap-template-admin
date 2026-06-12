@@ -8,7 +8,7 @@ export default function Sidebar() {
 			className={`d-flex flex-column flex-shrink-0 py-3 bg-primary-subtle sidebar`}
 			style={{ width: 250 }}
 		>
-			<div className='p-3'>
+			<div className='px-3'>
 				<img
 					alt='Logo'
 					className='img-fluid'
