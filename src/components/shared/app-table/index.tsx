@@ -1,11 +1,14 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
 	useReactTable,
 	getCoreRowModel,
 	getPaginationRowModel,
 	type ColumnDef,
 	type PaginationState,
+	type ColumnPinningState,
 } from '@tanstack/react-table'
+import { Pin, PinOff, ArrowLeft, ArrowRight } from 'lucide-react'
+import { Button, Dropdown } from 'react-bootstrap'
 import type { TableProps } from 'react-bootstrap/Table'
 import Table from 'react-bootstrap/Table'
 import { PaginationTable } from './pagination-table'
@@ -13,6 +16,21 @@ import TableHeaderToolbar from './table-header-toolbar'
 import { DEFAULT_PAGE_SIZE_OPTIONS } from './table-helper'
 
 export type { ColumnDef } from '@tanstack/react-table'
+
+const STORAGE_KEY = 'app-table-column-pinning'
+
+function loadPinning(): ColumnPinningState {
+	try {
+		const stored = localStorage.getItem(STORAGE_KEY)
+		return stored ? JSON.parse(stored) : { left: [], right: [] }
+	} catch {
+		return { left: [], right: [] }
+	}
+}
+
+function savePinning(pinning: ColumnPinningState) {
+	localStorage.setItem(STORAGE_KEY, JSON.stringify(pinning))
+}
 
 export interface AppTableProps<T extends Record<string, any>>
 	extends Omit<TableProps, 'onSelect'> {
@@ -36,18 +54,55 @@ export default function AppTable<T extends Record<string, any>>({
 		pageSize: initialPageSize,
 	})
 
+	const [columnPinning, setColumnPinning] = useState<ColumnPinningState>(loadPinning)
+
+	useEffect(() => {
+		savePinning(columnPinning)
+	}, [columnPinning])
+
 	const table = useReactTable({
 		data,
 		columns,
 		state: {
 			pagination,
+			columnPinning,
 		},
 		onPaginationChange: setPagination,
+		onColumnPinningChange: setColumnPinning,
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
 	})
 
 	const totalPages = table.getPageCount()
+
+	const getPinnedStyle = (column: any, isHeader: boolean = false): React.CSSProperties => {
+		const pinned = column.getIsPinned()
+
+		if (!pinned) return {}
+
+		const offset = pinned === 'left' ? column.getStart('left') : column.getAfter('right')
+		const leftIndex = columnPinning.left?.indexOf(column.id) ?? -1
+		const rightIndex = columnPinning.right?.indexOf(column.id) ?? -1
+		const zIndex = isHeader
+			? leftIndex >= 0
+				? 10 + leftIndex
+				: 10 + (columnPinning.right?.length ?? 0) - rightIndex
+			: leftIndex >= 0
+				? 5 + leftIndex
+				: 5 + (columnPinning.right?.length ?? 0) - rightIndex
+
+		return {
+			position: 'sticky',
+			zIndex,
+			backgroundColor: 'var(--bs-body-bg)',
+			minWidth: 100,
+			...(pinned === 'left' && { left: offset }),
+			...(pinned === 'right' && { right: offset }),
+			boxShadow: column.getIsLastColumn('left') || column.getIsFirstColumn('right')
+				? '2px 0 4px rgba(0,0,0,0.1)'
+				: undefined,
+		}
+	}
 
 	return (
 		<div className='border rounded-3 p-1'>
@@ -55,20 +110,73 @@ export default function AppTable<T extends Record<string, any>>({
 
 			<TableHeaderToolbar />
 
-			<div className='table-responsive'>
-				<Table {...props}>
+			<div style={{ maxHeight: 500, overflow: 'auto', position: 'relative' }}>
+				<Table className='mb-0 table-striped table-hover' {...props}>
 				<thead>
 					{table.getHeaderGroups().map((headerGroup) => (
 						<tr key={headerGroup.id}>
-							{headerGroup.headers.map((header) => (
-								<th key={header.id} {...header.column.columnDef.meta}>
-									{header.isPlaceholder
-										? null
-										: typeof header.column.columnDef.header === 'function'
-											? header.column.columnDef.header(header.getContext())
-											: header.column.columnDef.header}
-								</th>
-							))}
+							{headerGroup.headers.map((header) => {
+								const pinned = header.column.getIsPinned()
+
+								return (
+									<th
+										key={header.id}
+										style={{
+											position: 'sticky',
+											top: 0,
+											zIndex: pinned ? 10 : 1,
+											backgroundColor: 'var(--bs-body-bg)',
+											minWidth: 100,
+											...getPinnedStyle(header.column, true),
+										}}
+										{...header.column.columnDef.meta}
+									>
+										<div className='d-flex align-items-center justify-content-between gap-1'>
+											<span>
+												{header.isPlaceholder
+													? null
+													: typeof header.column.columnDef.header === 'function'
+														? header.column.columnDef.header(header.getContext())
+														: header.column.columnDef.header}
+											</span>
+											{header.column.getCanPin() && (
+												<Dropdown align='end'>
+													<Dropdown.Toggle
+														as={Button}
+														variant='link'
+														size='sm'
+														className='p-0 text-muted border-0'
+														id={`pin-${header.column.id}`}
+													>
+														{pinned ? <PinOff size={14} /> : <Pin size={14} />}
+													</Dropdown.Toggle>
+
+													<Dropdown.Menu style={{ zIndex: 9999 }}>
+														{pinned !== 'left' && (
+															<Dropdown.Item onClick={() => header.column.pin('left')}>
+																<ArrowLeft size={14} className='me-2' />
+																Pinned left
+															</Dropdown.Item>
+														)}
+														{pinned !== 'right' && (
+															<Dropdown.Item onClick={() => header.column.pin('right')}>
+																<ArrowRight size={14} className='me-2' />
+																Pinned right
+															</Dropdown.Item>
+														)}
+														{pinned && (
+															<Dropdown.Item onClick={() => header.column.pin(false)}>
+																<PinOff size={14} className='me-2' />
+																Unpin
+															</Dropdown.Item>
+														)}
+													</Dropdown.Menu>
+												</Dropdown>
+											)}
+										</div>
+									</th>
+								)
+							})}
 						</tr>
 					))}
 				</thead>
@@ -76,7 +184,11 @@ export default function AppTable<T extends Record<string, any>>({
 					{table.getRowModel().rows.map((row) => (
 						<tr key={row.id}>
 							{row.getVisibleCells().map((cell) => (
-								<td key={cell.id} {...cell.column.columnDef.meta}>
+								<td
+									key={cell.id}
+									style={getPinnedStyle(cell.column)}
+									{...cell.column.columnDef.meta}
+								>
 									{typeof cell.column.columnDef.cell === 'function'
 										? cell.column.columnDef.cell(cell.getContext())
 										: cell.getValue()}
