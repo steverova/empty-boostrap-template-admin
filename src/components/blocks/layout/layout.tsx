@@ -49,7 +49,7 @@ export default function Layout() {
 						variant='light'
 						className='p-0 p-1 ms-2'
 					>
-						{showSidebar || isMobile ? (
+						{(!isMobile && showSidebar) || (isMobile && showOffcanvas) ? (
 							<PanelRightOpen aria-label='Cerrar menú' />
 						) : (
 							<PanelRightClose aria-label='Abrir menú' />
@@ -66,22 +66,20 @@ export default function Layout() {
 					onHide={() => setShowOffcanvas(false)}
 					style={{ width: 250 }}
 				>
-					<div
+					<Button
+						className='p-0 p-1'
+						variant='light'
+						onClick={() => setShowOffcanvas(false)}
+						aria-label='Close'
 						style={{
-							position: 'relative',
-							top: 0,
-							left: 0,
-							display: 'flex',
-							justifyContent: 'flex-end',
-							padding: '0.5rem',
+							position: 'fixed',
+							top: '0.5rem',
+							left: '254px',
+							zIndex: 1051,
 						}}
 					>
-						<Button
-							className='btn-close m-2'
-							onClick={() => setShowOffcanvas(false)}
-							aria-label='Close'
-						/>
-					</div>
+						<PanelRightOpen aria-hidden='true' />
+					</Button>
 
 					<Offcanvas.Body className='p-0'>
 						<Sidebar />
