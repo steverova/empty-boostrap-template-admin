@@ -1,35 +1,48 @@
 import {
 	type ColumnDef,
 	type ColumnPinningState,
-	type SortingState,
-	type VisibilityState,
 	getCoreRowModel,
 	getPaginationRowModel,
 	getSortedRowModel,
 	type PaginationState,
+	type SortingState,
 	useReactTable,
+	type VisibilityState,
 } from '@tanstack/react-table'
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, ArrowUpDown, Copy, Check, Maximize2, Pin, PinOff, Plus, RotateCcw } from 'lucide-react'
+import {
+	ArrowDown,
+	ArrowLeft,
+	ArrowRight,
+	ArrowUp,
+	ArrowUpDown,
+	Check,
+	Copy,
+	Maximize2,
+	Pin,
+	PinOff,
+	Plus,
+	RotateCcw,
+} from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Button, Dropdown } from 'react-bootstrap'
 import type { TableProps } from 'react-bootstrap/Table'
 import Table from 'react-bootstrap/Table'
 import { useThemeMode } from '../../../hooks/use-theme-mode'
+import { ColumnVisibilityToggle } from './column-visibility-toggle'
 import { PaginationTable } from './pagination-table'
 import { SearchFilter } from './search-filter'
-import { ColumnVisibilityToggle } from './column-visibility-toggle'
-import { TableSkeleton } from './table-skeleton'
 import { TableEmpty } from './table-empty'
 import {
-	getPinnedStyle,
+	type ColumnSizes,
 	DEFAULT_PAGE_SIZE_OPTIONS,
 	exportToExcel,
-	loadFromStorage,
-	saveToStorage,
-	STORAGE_KEYS,
 	filterData,
-	type ColumnSizes,
+	getPinnedStyle,
+	loadFromStorage,
+	STORAGE_KEYS,
+	saveToStorage,
 } from './table-helper'
+import { TableSkeleton } from './table-skeleton'
 
 export type { ColumnDef } from '@tanstack/react-table'
 
@@ -82,11 +95,14 @@ export default function AppTable<T extends Record<string, any>>({
 		pageSize: initialPageSize,
 	})
 	const [columnPinning, setColumnPinning] = useState<ColumnPinningState>(() =>
-		loadFromStorage<ColumnPinningState>(STORAGE_KEYS.COLUMN_PINNING, { left: [], right: [] }),
+		loadFromStorage<ColumnPinningState>(STORAGE_KEYS.COLUMN_PINNING, {
+			left: [],
+			right: [],
+		}),
 	)
 	const [sorting, setSorting] = useState<SortingState>([])
-	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() =>
-		loadFromStorage<VisibilityState>(STORAGE_KEYS.COLUMN_VISIBILITY, {}),
+	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
+		() => loadFromStorage<VisibilityState>(STORAGE_KEYS.COLUMN_VISIBILITY, {}),
 	)
 	const [rowSelection, setRowSelection] = useState({})
 	const [columnSizing, setColumnSizing] = useState<ColumnSizes>(() =>
@@ -148,8 +164,8 @@ export default function AppTable<T extends Record<string, any>>({
 	}, [])
 
 	const handleExportAll = useCallback(async () => {
-		await exportToExcel({ columns, data, fileName, sheetName })
-	}, [columns, data, fileName, sheetName])
+		await exportToExcel({ columns, data: filteredData, fileName, sheetName })
+	}, [columns, filteredData, fileName, sheetName])
 
 	const handleExportVisible = useCallback(async () => {
 		const visibleColumns = columns.filter((col) => {
@@ -158,8 +174,19 @@ export default function AppTable<T extends Record<string, any>>({
 			}
 			return true
 		})
-		await exportToExcel({ columns: visibleColumns, data, fileName, sheetName })
-	}, [columns, data, fileName, sheetName, columnVisibility])
+		await exportToExcel({ columns: visibleColumns, data: filteredData, fileName, sheetName })
+	}, [columns, filteredData, fileName, sheetName, columnVisibility])
+
+	const handleExportSelected = useCallback(async () => {
+		const visibleColumns = columns.filter((col) => {
+			if ('accessorKey' in col) {
+				return columnVisibility[col.accessorKey as string] !== false
+			}
+			return true
+		})
+		const selectedRows = filteredData.filter((_, index) => rowSelection[index as keyof typeof rowSelection])
+		await exportToExcel({ columns: visibleColumns, data: selectedRows, fileName, sheetName })
+	}, [columns, filteredData, rowSelection, fileName, sheetName, columnVisibility])
 
 	const handleResetColumnSizes = useCallback(() => {
 		setColumnSizing({})
@@ -188,7 +215,10 @@ export default function AppTable<T extends Record<string, any>>({
 		() =>
 			table.getAllLeafColumns().map((col) => ({
 				id: col.id,
-				header: typeof col.columnDef.header === 'string' ? col.columnDef.header : col.id,
+				header:
+					typeof col.columnDef.header === 'string'
+						? col.columnDef.header
+						: col.id,
 				isVisible: col.getIsVisible(),
 			})),
 		[table, columnVisibility],
@@ -215,14 +245,12 @@ export default function AppTable<T extends Record<string, any>>({
 			<div className='d-flex align-items-center justify-content-between mb-2 gap-2'>
 				<div className='d-flex align-items-center gap-2'>
 					{enableSearch && (
-						<SearchFilter
-							value={globalFilter}
-							onChange={setGlobalFilter}
-						/>
+						<SearchFilter value={globalFilter} onChange={setGlobalFilter} />
 					)}
 					{selectedCount > 0 && (
 						<small className='text-muted'>
-							{selectedCount} fila{selectedCount > 1 ? 's' : ''} seleccionada{selectedCount > 1 ? 's' : ''}
+							{selectedCount} fila{selectedCount > 1 ? 's' : ''} seleccionada
+							{selectedCount > 1 ? 's' : ''}
 						</small>
 					)}
 				</div>
@@ -230,7 +258,11 @@ export default function AppTable<T extends Record<string, any>>({
 				<div className='d-flex gap-1'>
 					{enableExport && (
 						<Dropdown>
-							<Dropdown.Toggle variant='secondary' size='sm' id='export-dropdown'>
+							<Dropdown.Toggle
+								variant='secondary'
+								size='sm'
+								id='export-dropdown'
+							>
 								Export
 							</Dropdown.Toggle>
 							<Dropdown.Menu style={{ zIndex: 9999 }}>
@@ -240,6 +272,11 @@ export default function AppTable<T extends Record<string, any>>({
 								<Dropdown.Item onClick={handleExportVisible}>
 									Exportar columnas visibles
 								</Dropdown.Item>
+								{enableRowSelection && selectedCount > 0 && (
+									<Dropdown.Item onClick={handleExportSelected}>
+										Exportar seleccionadas ({selectedCount})
+									</Dropdown.Item>
+								)}
 							</Dropdown.Menu>
 						</Dropdown>
 					)}
@@ -252,7 +289,12 @@ export default function AppTable<T extends Record<string, any>>({
 						/>
 					)}
 					{enableColumnResize && hasResizedColumns && (
-						<Button onClick={handleResetColumnSizes} variant='secondary' size='sm' title='Reset column sizes'>
+						<Button
+							onClick={handleResetColumnSizes}
+							variant='secondary'
+							size='sm'
+							title='Reset column sizes'
+						>
 							<Maximize2 size={16} />
 						</Button>
 					)}
@@ -270,17 +312,30 @@ export default function AppTable<T extends Record<string, any>>({
 			</div>
 
 			<div style={{ maxHeight: 500, overflow: 'auto', position: 'relative' }}>
-				<Table className='mb-0 table-striped table-hover' style={{ width: '100%' }} {...props}>
+				<Table
+					className='mb-0 table-striped table-hover'
+					style={{ width: '100%' }}
+					{...props}
+				>
 					<thead>
 						{table.getHeaderGroups().map((headerGroup) => (
 							<tr key={headerGroup.id}>
 								{enableRowSelection && (
-									<th style={{ width: 40, position: 'sticky', top: 0, zIndex: 20, backgroundColor: 'var(--bs-body-bg)' }}>
+									<th
+										style={{
+											width: 40,
+											position: 'sticky',
+											top: 0,
+											zIndex: 20,
+											backgroundColor: 'var(--bs-body-bg)',
+										}}
+									>
 										<input
 											type='checkbox'
 											checked={table.getIsAllPageRowsSelected()}
 											ref={(el) => {
-												if (el) el.indeterminate = table.getIsSomePageRowsSelected()
+												if (el)
+													el.indeterminate = table.getIsSomePageRowsSelected()
 											}}
 											onChange={table.getToggleAllPageRowsSelectedHandler()}
 										/>
@@ -295,7 +350,13 @@ export default function AppTable<T extends Record<string, any>>({
 										<th
 											key={header.id}
 											style={{
-												...getPinnedStyle({ column: header.column, isHeader: true, columnPinning, bgColor, stripedBg }),
+												...getPinnedStyle({
+													column: header.column,
+													isHeader: true,
+													columnPinning,
+													bgColor,
+													stripedBg,
+												}),
 												position: 'sticky',
 												top: 0,
 												backgroundColor: pinned ? bgColor : 'var(--bs-body-bg)',
@@ -303,7 +364,11 @@ export default function AppTable<T extends Record<string, any>>({
 												userSelect: 'none',
 												width: header.column.getSize(),
 											}}
-											onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
+											onClick={
+												canSort
+													? header.column.getToggleSortingHandler()
+													: undefined
+											}
 										>
 											<div className='d-flex align-items-center justify-content-between gap-1'>
 												<span>
@@ -329,7 +394,10 @@ export default function AppTable<T extends Record<string, any>>({
 														</span>
 													)}
 													{header.column.getCanPin() && (
-														<Dropdown align='end' onClick={(e) => e.stopPropagation()}>
+														<Dropdown
+															align='end'
+															onClick={(e) => e.stopPropagation()}
+														>
 															<Dropdown.Toggle
 																as={Button}
 																variant='link'
@@ -384,7 +452,9 @@ export default function AppTable<T extends Record<string, any>>({
 															top: 0,
 															height: '100%',
 															width: '5px',
-															background: header.column.getIsResizing() ? '#0d6efd' : 'transparent',
+															background: header.column.getIsResizing()
+																? '#0d6efd'
+																: 'transparent',
 															cursor: 'col-resize',
 															userSelect: 'none',
 															touchAction: 'none',
@@ -401,11 +471,13 @@ export default function AppTable<T extends Record<string, any>>({
 					{isLoading ? (
 						<TableSkeleton
 							rows={pagination.pageSize}
-							columns={table.getAllLeafColumns().length}
+							columns={columns.length + (enableRowSelection ? 1 : 0)}
 						/>
 					) : filteredData.length === 0 ? (
 						<TableEmpty
-							colSpan={table.getAllLeafColumns().length + (enableRowSelection ? 1 : 0)}
+							colSpan={
+								table.getAllLeafColumns().length + (enableRowSelection ? 1 : 0)
+							}
 						/>
 					) : (
 						<tbody>
@@ -434,7 +506,13 @@ export default function AppTable<T extends Record<string, any>>({
 										return (
 											<td
 												key={cell.id}
-												style={getPinnedStyle({ column: cell.column, rowIndex: row.index, columnPinning, bgColor, stripedBg })}
+												style={getPinnedStyle({
+													column: cell.column,
+													rowIndex: row.index,
+													columnPinning,
+													bgColor,
+													stripedBg,
+												})}
 											>
 												<div className='d-flex align-items-center justify-content-between'>
 													<span className='text-truncate'>
@@ -452,7 +530,11 @@ export default function AppTable<T extends Record<string, any>>({
 																handleCopy(cell.id, cellValue)
 															}}
 														>
-															{isCopied ? <Check size={14} className='text-success' /> : <Copy size={14} />}
+															{isCopied ? (
+																<Check size={14} className='text-success' />
+															) : (
+																<Copy size={14} />
+															)}
 														</Button>
 													)}
 												</div>
