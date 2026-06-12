@@ -1,7 +1,4 @@
-import {
-	PanelRightClose,
-	PanelRightOpen,
-} from 'lucide-react'
+import { PanelRightClose, PanelRightOpen } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Button, Navbar, Offcanvas } from 'react-bootstrap'
 import { Outlet } from 'react-router'
@@ -69,10 +66,24 @@ export default function Layout() {
 					onHide={() => setShowOffcanvas(false)}
 					style={{ width: 250 }}
 				>
-					<Offcanvas.Header closeButton closeVariant='white'>
-						<Offcanvas.Title className='text-white'>Menu</Offcanvas.Title>
-					</Offcanvas.Header>
-					<Offcanvas.Body className='p-0 overflow-visible'>
+					<div
+						style={{
+							position: 'relative',
+							top: 0,
+							left: 0,
+							display: 'flex',
+							justifyContent: 'flex-end',
+							padding: '0.5rem',
+						}}
+					>
+						<Button
+							className='btn-close m-2'
+							onClick={() => setShowOffcanvas(false)}
+							aria-label='Close'
+						/>
+					</div>
+
+					<Offcanvas.Body className='p-0'>
 						<Sidebar />
 					</Offcanvas.Body>
 				</Offcanvas>

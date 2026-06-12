@@ -10,7 +10,7 @@ export default function Sidebar() {
 		>
 			<div className='p-3'>
 				<img
-					alt='Jaquematte Logo'
+					alt='Logo'
 					className='img-fluid'
 					src={assets.logo.mark}
 				/>
