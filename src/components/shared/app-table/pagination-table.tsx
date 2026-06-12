@@ -70,7 +70,7 @@ export const PaginationTable = ({
 				</Button>
 			</div>
 
-			<div style={{ minWidth: 80 }}>
+			<div className='d-flex align-items-center gap-2' style={{ minWidth: 80 }}>
 				<Select
 					menuPlacement='top'
 					styles={selectStyles}
@@ -80,7 +80,7 @@ export const PaginationTable = ({
 						if (opt) onPageSizeChange(opt.value)
 					}}
 				/>
-				<small>items per page</small>
+				<small className='text-nowrap'>items por página</small>
 			</div>
 		</div>
 	)
