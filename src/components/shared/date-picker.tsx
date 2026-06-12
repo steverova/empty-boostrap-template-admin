@@ -37,6 +37,9 @@ function getScrollParent(el: HTMLElement | null): HTMLElement {
 
 export default function DatePicker({ align = 'start', ...calendarProps }: DatePickerProps) {
 	const [selectedDate, setSelectedDate] = useState<Date | null>(calendarProps.value ?? null)
+	const [rangeStart, setRangeStart] = useState<Date | null>(calendarProps.rangeStart ?? null)
+	const [rangeEnd, setRangeEnd] = useState<Date | null>(calendarProps.rangeEnd ?? null)
+	const [selectedDates, setSelectedDates] = useState<Date[]>(calendarProps.selectedDates ?? [])
 	const [showCalendar, setShowCalendar] = useState(false)
 	const triggerRef = useRef<HTMLDivElement>(null)
 	const isSmallScreen = useIsSmallScreen()
@@ -45,6 +48,18 @@ export default function DatePicker({ align = 'start', ...calendarProps }: DatePi
 	useEffect(() => {
 		setSelectedDate(calendarProps.value ?? null)
 	}, [calendarProps.value])
+
+	useEffect(() => {
+		setRangeStart(calendarProps.rangeStart ?? null)
+	}, [calendarProps.rangeStart])
+
+	useEffect(() => {
+		setRangeEnd(calendarProps.rangeEnd ?? null)
+	}, [calendarProps.rangeEnd])
+
+	useEffect(() => {
+		setSelectedDates(calendarProps.selectedDates ?? [])
+	}, [calendarProps.selectedDates])
 
 	const handleToggle = useCallback(() => {
 		if (!showCalendar && triggerRef.current) {
@@ -70,6 +85,8 @@ export default function DatePicker({ align = 'start', ...calendarProps }: DatePi
 
 	const handleRangeChange = useCallback(
 		(start: Date | null, end: Date | null) => {
+			setRangeStart(start)
+			setRangeEnd(end)
 			calendarProps.onRangeChange?.(start, end)
 			if (start && end) {
 				setShowCalendar(false)
@@ -81,17 +98,27 @@ export default function DatePicker({ align = 'start', ...calendarProps }: DatePi
 
 	const handleMultipleChange = useCallback(
 		(dates: Date[]) => {
+			setSelectedDates(dates)
 			calendarProps.onMultipleChange?.(dates)
 		},
 		[calendarProps.onMultipleChange],
 	)
 
 	const handleClear = useCallback(() => {
-		setSelectedDate(null)
-		calendarProps.onChange?.(null as unknown as Date)
+		if (calendarProps.mode === 'range') {
+			setRangeStart(null)
+			setRangeEnd(null)
+			calendarProps.onRangeChange?.(null, null)
+		} else if (calendarProps.mode === 'multiple') {
+			setSelectedDates([])
+			calendarProps.onMultipleChange?.([])
+		} else {
+			setSelectedDate(null)
+			calendarProps.onChange?.(null as unknown as Date)
+		}
 		setShowCalendar(false)
 		triggerRef.current?.focus()
-	}, [calendarProps.onChange])
+	}, [calendarProps.mode, calendarProps.onChange, calendarProps.onRangeChange, calendarProps.onMultipleChange])
 
 	const handleKeyDown = useCallback(
 		(e: React.KeyboardEvent) => {
@@ -104,17 +131,21 @@ export default function DatePicker({ align = 'start', ...calendarProps }: DatePi
 		[showCalendar],
 	)
 
-	const displayValue = calendarProps.mode === 'range'
-		? calendarProps.rangeStart
-			? calendarProps.rangeEnd
-				? `${calendarProps.rangeStart.toLocaleDateString('es-ES')} – ${calendarProps.rangeEnd.toLocaleDateString('es-ES')}`
-				: calendarProps.rangeStart.toLocaleDateString('es-ES')
-			: null
+	const hasValue = calendarProps.mode === 'range'
+		? !!(rangeStart || rangeEnd)
 		: calendarProps.mode === 'multiple'
-			? calendarProps.selectedDates?.length
-				? `${calendarProps.selectedDates.length} fecha(s)`
-				: null
-			: selectedDate?.toLocaleDateString('es-ES')
+			? selectedDates.length > 0
+			: !!selectedDate
+
+	const handleRemoveDate = useCallback(
+		(e: React.MouseEvent, date: Date) => {
+			e.stopPropagation()
+			const next = selectedDates.filter((d) => d.getTime() !== date.getTime())
+			setSelectedDates(next)
+			calendarProps.onMultipleChange?.(next)
+		},
+		[selectedDates, calendarProps.onMultipleChange],
+	)
 
 	return (
 		<div onKeyDown={handleKeyDown} className='position-relative w-100'>
@@ -125,7 +156,7 @@ export default function DatePicker({ align = 'start', ...calendarProps }: DatePi
 				aria-haspopup='dialog'
 				aria-label='Seleccionar fecha'
 				tabIndex={0}
-				className='form-control d-flex align-items-center justify-content-between'
+				className={`form-control d-flex align-items-center justify-content-between gap-2 ${calendarProps.mode === 'multiple' && selectedDates.length > 0 ? 'h-auto py-1' : ''}`}
 				style={{ cursor: 'pointer' }}
 				onClick={handleToggle}
 				onKeyDown={(e) => {
@@ -135,11 +166,35 @@ export default function DatePicker({ align = 'start', ...calendarProps }: DatePi
 					}
 				}}
 			>
-				<span className={displayValue ? '' : 'text-muted'}>
-					{displayValue ?? calendarProps.placeholder ?? 'Selecciona una fecha'}
-				</span>
-				<span className='d-flex align-items-center gap-1'>
-					{displayValue && (
+				{calendarProps.mode === 'multiple' && selectedDates.length > 0 ? (
+					<div className='d-flex flex-wrap gap-1'>
+						{selectedDates.map((d) => (
+							<span
+								key={d.toISOString()}
+								className='badge bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center gap-1'
+							>
+								{d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
+								<X
+									size={12}
+									role='button'
+									onClick={(e) => handleRemoveDate(e, d)}
+								/>
+							</span>
+						))}
+					</div>
+				) : (
+					<span className={!hasValue ? 'text-muted' : ''}>
+						{calendarProps.mode === 'range'
+							? rangeStart
+								? rangeEnd
+									? `${rangeStart.toLocaleDateString('es-ES')} – ${rangeEnd.toLocaleDateString('es-ES')}`
+									: `${rangeStart.toLocaleDateString('es-ES')} – ...`
+								: calendarProps.placeholder ?? 'Selecciona rango'
+							: selectedDate?.toLocaleDateString('es-ES') ?? calendarProps.placeholder ?? 'Selecciona una fecha'}
+					</span>
+				)}
+				<span className='d-flex align-items-center gap-1 flex-shrink-0'>
+					{hasValue && (
 						<X
 							size={16}
 							className='text-muted'
@@ -168,7 +223,10 @@ export default function DatePicker({ align = 'start', ...calendarProps }: DatePi
 							{...calendarProps}
 							value={selectedDate}
 							onChange={handleChange}
+							rangeStart={rangeStart}
+							rangeEnd={rangeEnd}
 							onRangeChange={handleRangeChange}
+							selectedDates={selectedDates}
 							onMultipleChange={handleMultipleChange}
 						/>
 					</Modal.Body>
@@ -187,7 +245,10 @@ export default function DatePicker({ align = 'start', ...calendarProps }: DatePi
 								{...calendarProps}
 								value={selectedDate}
 								onChange={handleChange}
+								rangeStart={rangeStart}
+								rangeEnd={rangeEnd}
 								onRangeChange={handleRangeChange}
+								selectedDates={selectedDates}
 								onMultipleChange={handleMultipleChange}
 							/>
 						</Popover.Body>

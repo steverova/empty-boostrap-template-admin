@@ -1,5 +1,5 @@
 import { addDays, format, subDays } from 'date-fns'
-import { es } from 'date-fns/locale'
+import { enUS, es } from 'date-fns/locale'
 import { useState } from 'react'
 import Calendar from '@/components/shared/calendar'
 import DatePicker from '@/components/shared/date-picker'
@@ -94,15 +94,15 @@ export default function DatePickerExamplePage() {
 							<strong>{multipleDates.length} fechas seleccionadas</strong>
 						</p>
 					)}
-        </div>
+				</div>
 
-        <hr />
+				<hr />
 
-        <div className='w-100'>
-          <h2>Date Picker</h2>
-  
-          <DatePicker mode='range'  align="end"/>
-        </div>
+				<div className='w-100'>
+					<h2>Date Picker</h2>
+
+					<DatePicker locale={enUS} mode='multiple' align='end' />
+				</div>
 			</div>
 		</div>
 	)
