@@ -1,25 +1,25 @@
 import { useMemo, useState } from 'react'
+import {
+	useReactTable,
+	getCoreRowModel,
+	getPaginationRowModel,
+	type ColumnDef,
+	type PaginationState,
+} from '@tanstack/react-table'
 import type { TableProps } from 'react-bootstrap/Table'
 import Table from 'react-bootstrap/Table'
 import { PaginationTable } from './pagination-table'
 import TableHeaderToolbar from './table-header-toolbar'
 import { DEFAULT_PAGE_SIZE_OPTIONS } from './table-helper'
 
-export interface Column<T> {
-	key: keyof T & string
-	label: string
-	headerProps?: React.ThHTMLAttributes<HTMLTableCellElement>
-	cellProps?: React.TdHTMLAttributes<HTMLTableCellElement>
-	render?: (value: T[keyof T], row: T) => React.ReactNode
-}
+export type { ColumnDef } from '@tanstack/react-table'
 
 export interface AppTableProps<T extends Record<string, any>>
 	extends Omit<TableProps, 'onSelect'> {
-	columns: Column<T>[]
+	columns: ColumnDef<T, any>[]
 	data: T[]
 	onRefetchFn?: () => void
 	onAddFn?: () => void
-	keyField?: keyof T & string
 	pageSize?: number
 	pageSizeOptions?: number[]
 }
@@ -27,25 +27,27 @@ export interface AppTableProps<T extends Record<string, any>>
 export default function AppTable<T extends Record<string, any>>({
 	columns,
 	data,
-	keyField = 'id' as keyof T & string,
 	pageSize: initialPageSize = 10,
 	pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
 	...props
 }: AppTableProps<T>) {
-	const [page, setPage] = useState(1)
-	const [pageSize, setPageSize] = useState(initialPageSize)
+	const [pagination, setPagination] = useState<PaginationState>({
+		pageIndex: 0,
+		pageSize: initialPageSize,
+	})
 
-	const totalPages = Math.ceil(data.length / pageSize)
+	const table = useReactTable({
+		data,
+		columns,
+		state: {
+			pagination,
+		},
+		onPaginationChange: setPagination,
+		getCoreRowModel: getCoreRowModel(),
+		getPaginationRowModel: getPaginationRowModel(),
+	})
 
-	const pagedData = useMemo(() => {
-		const start = (page - 1) * pageSize
-		return data.slice(start, start + pageSize)
-	}, [data, page, pageSize])
-
-	const handlePageSizeChange = (size: number) => {
-		setPageSize(size)
-		setPage(1)
-	}
+	const totalPages = table.getPageCount()
 
 	return (
 		<div className='border rounded-3 p-1'>
@@ -53,38 +55,49 @@ export default function AppTable<T extends Record<string, any>>({
 
 			<TableHeaderToolbar />
 
-			<Table className='' {...props}>
+			<div className='table-responsive'>
+				<Table {...props}>
 				<thead>
-					<tr>
-						{columns.map((col) => (
-							<th key={col.key} {...col.headerProps}>
-								{col.label}
-							</th>
-						))}
-					</tr>
+					{table.getHeaderGroups().map((headerGroup) => (
+						<tr key={headerGroup.id}>
+							{headerGroup.headers.map((header) => (
+								<th key={header.id} {...header.column.columnDef.meta}>
+									{header.isPlaceholder
+										? null
+										: typeof header.column.columnDef.header === 'function'
+											? header.column.columnDef.header(header.getContext())
+											: header.column.columnDef.header}
+								</th>
+							))}
+						</tr>
+					))}
 				</thead>
 				<tbody>
-					{pagedData.map((row) => (
-						<tr key={String(row[keyField])}>
-							{columns.map((col) => (
-								<td key={col.key} {...col.cellProps}>
-									{col.render
-										? col.render(row[col.key], row)
-										: String(row[col.key] ?? '')}
+					{table.getRowModel().rows.map((row) => (
+						<tr key={row.id}>
+							{row.getVisibleCells().map((cell) => (
+								<td key={cell.id} {...cell.column.columnDef.meta}>
+									{typeof cell.column.columnDef.cell === 'function'
+										? cell.column.columnDef.cell(cell.getContext())
+										: cell.getValue()}
 								</td>
 							))}
 						</tr>
 					))}
 				</tbody>
 			</Table>
+			</div>
+
 			{totalPages > 1 && (
 				<PaginationTable
-					page={page}
+					page={pagination.pageIndex + 1}
 					totalPages={totalPages}
-					pageSize={pageSize}
+					pageSize={pagination.pageSize}
 					pageSizeOptions={pageSizeOptions}
-					onPageChange={setPage}
-					onPageSizeChange={handlePageSizeChange}
+					onPageChange={(page) => setPagination((prev) => ({ ...prev, pageIndex: page - 1 }))}
+					onPageSizeChange={(size) =>
+						setPagination((prev) => ({ ...prev, pageSize: size, pageIndex: 0 }))
+					}
 				/>
 			)}
 		</div>
