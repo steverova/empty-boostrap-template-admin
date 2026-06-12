@@ -459,7 +459,7 @@ const columns: ColumnDef<User, any>[] = [
 	},
 	{
 		accessorKey: 'createdAt',
-		header: 'Fecha de creación',
+		header: 'Creación',
 		cell: (info) =>
 			new Date(info.getValue() as string).toLocaleDateString('es-AR'),
 		meta: { enableCopy: true },
