@@ -1,5 +1,5 @@
+import { useThemeMode } from '@hooks/use-theme-mode'
 import { Button } from 'react-bootstrap'
-import { useThemeMode } from '../../hooks/use-theme-mode'
 
 interface ButtonNeutralProps
 	extends React.ButtonHTMLAttributes<HTMLButtonElement> {

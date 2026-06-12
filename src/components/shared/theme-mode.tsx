@@ -1,6 +1,6 @@
+import { useThemeMode } from '@hooks/use-theme-mode'
 import { Monitor, Moon, Sun } from 'lucide-react'
 import type { JSX } from 'react'
-import { useThemeMode } from '../../hooks/use-theme-mode'
 
 export default function ThemeMode(): JSX.Element {
 	const { setThemeMode, themeMode } = useThemeMode()

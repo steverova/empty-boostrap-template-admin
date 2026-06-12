@@ -1,6 +1,6 @@
 import { Col, Container, Row } from 'react-bootstrap'
-import { svg } from '../../assets/assets'
-import SignInForm from '../../components/blocks/signin/signin-form'
+import { svg } from '@assets/assets'
+import SignInForm from '@components/blocks/signin/signin-form'
 import { Link } from 'react-router'
 
 export function Component() {

@@ -1,6 +1,6 @@
 import { LogOut, User } from 'lucide-react'
 import { Dropdown } from 'react-bootstrap'
-import { Avatar } from '../../shared/avatar'
+import { Avatar } from '@components/shared/avatar'
 
 export default function UserMenu() {
 	return (

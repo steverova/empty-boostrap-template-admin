@@ -1,3 +1,5 @@
+import { useDebouncedCallback } from '@hooks/use-debounce'
+import { useThemeMode } from '@hooks/use-theme-mode'
 import {
 	type ColumnDef,
 	type ColumnPinningState,
@@ -27,7 +29,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Button, Dropdown } from 'react-bootstrap'
 import type { TableProps } from 'react-bootstrap/Table'
 import Table from 'react-bootstrap/Table'
-import { useThemeMode } from '../../../hooks/use-theme-mode'
 import { ColumnVisibilityToggle } from './column-visibility-toggle'
 import { PaginationTable } from './pagination-table'
 import { SearchFilter } from './search-filter'
@@ -45,8 +46,11 @@ import {
 import { TableSkeleton } from './table-skeleton'
 
 export type { ColumnDef } from '@tanstack/react-table'
+export type { AsyncExportDataProps } from './async-export-data'
+export { AsyncExportData } from './async-export-data'
 
 declare module '@tanstack/react-table' {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	interface ColumnMeta<TData, TValue> {
 		enableCopy?: boolean
 	}
@@ -70,6 +74,12 @@ export interface AppTableProps<T extends Record<string, any>>
 	enableRowSelection?: boolean
 	enableColumnResize?: boolean
 	enableExport?: boolean
+	enableAsync?: boolean
+	totalCount?: number
+	searchDebounceMs?: number
+	onSearchChange?: (value: string) => void
+	onPaginationChange?: (page: number, pageSize: number) => void
+	onSortingChange?: (sorting: SortingState) => void
 }
 
 export default function AppTable<T extends Record<string, any>>({
@@ -85,6 +95,12 @@ export default function AppTable<T extends Record<string, any>>({
 	enableRowSelection = false,
 	enableColumnResize = false,
 	enableExport = true,
+	enableAsync = false,
+	totalCount,
+	searchDebounceMs = 300,
+	onSearchChange,
+	onPaginationChange,
+	onSortingChange,
 	onRefetchFn,
 	onAddFn,
 	onRowClick,
@@ -124,10 +140,10 @@ export default function AppTable<T extends Record<string, any>>({
 		saveToStorage(STORAGE_KEYS.COLUMN_SIZES, columnSizing)
 	}, [columnSizing])
 
-	const filteredData = useMemo(
-		() => filterData(data, globalFilter, columns),
-		[data, globalFilter, columns],
-	)
+	const filteredData = useMemo(() => {
+		if (enableAsync) return data
+		return filterData(data, globalFilter, columns)
+	}, [data, globalFilter, columns, enableAsync])
 
 	const tableColumns = useMemo(() => {
 		const allColumns: ColumnDef<T, any>[] = [...columns]
@@ -137,15 +153,35 @@ export default function AppTable<T extends Record<string, any>>({
 				header: 'Actions',
 				enableSorting: false,
 				enableHiding: false,
-				cell: ({ row }) => (
-					<div className=''>
-						{rowActions(row.original)}
-					</div>
-				),
+				cell: ({ row }) => <div className=''>{rowActions(row.original)}</div>,
 			})
 		}
 		return allColumns
 	}, [columns, rowActions])
+
+	const handleAsyncPaginationChange = useCallback(
+		(
+			updater: PaginationState | ((old: PaginationState) => PaginationState),
+		) => {
+			setPagination((prev) => {
+				const next = typeof updater === 'function' ? updater(prev) : updater
+				onPaginationChange?.(next.pageIndex + 1, next.pageSize)
+				return next
+			})
+		},
+		[onPaginationChange],
+	)
+
+	const handleAsyncSortingChange = useCallback(
+		(updater: SortingState | ((old: SortingState) => SortingState)) => {
+			setSorting((prev) => {
+				const next = typeof updater === 'function' ? updater(prev) : updater
+				onSortingChange?.(next)
+				return next
+			})
+		},
+		[onSortingChange],
+	)
 
 	const table = useReactTable({
 		data: filteredData,
@@ -158,20 +194,27 @@ export default function AppTable<T extends Record<string, any>>({
 			rowSelection,
 			columnSizing,
 		},
-		onPaginationChange: setPagination,
+		onPaginationChange: enableAsync
+			? handleAsyncPaginationChange
+			: setPagination,
 		onColumnPinningChange: setColumnPinning,
-		onSortingChange: setSorting,
+		onSortingChange: enableAsync ? handleAsyncSortingChange : setSorting,
 		onColumnVisibilityChange: setColumnVisibility,
 		onRowSelectionChange: setRowSelection,
 		onColumnSizingChange: setColumnSizing,
 		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
-		getSortedRowModel: getSortedRowModel(),
+		getPaginationRowModel: enableAsync ? undefined : getPaginationRowModel(),
+		getSortedRowModel: enableAsync ? undefined : getSortedRowModel(),
 		columnResizeMode: enableColumnResize ? 'onChange' : undefined,
 		enableRowSelection,
+		pageCount: enableAsync
+			? Math.ceil((totalCount ?? 0) / pagination.pageSize)
+			: undefined,
 	})
 
-	const totalPages = table.getPageCount()
+	const totalPages = enableAsync
+		? Math.ceil((totalCount ?? 0) / pagination.pageSize)
+		: table.getPageCount()
 
 	const handleCopy = useCallback(async (cellId: string, value: any) => {
 		try {
@@ -194,7 +237,12 @@ export default function AppTable<T extends Record<string, any>>({
 			}
 			return true
 		})
-		await exportToExcel({ columns: visibleColumns, data: filteredData, fileName, sheetName })
+		await exportToExcel({
+			columns: visibleColumns,
+			data: filteredData,
+			fileName,
+			sheetName,
+		})
 	}, [columns, filteredData, fileName, sheetName, columnVisibility])
 
 	const handleExportSelected = useCallback(async () => {
@@ -204,9 +252,23 @@ export default function AppTable<T extends Record<string, any>>({
 			}
 			return true
 		})
-		const selectedRows = filteredData.filter((_, index) => rowSelection[index as keyof typeof rowSelection])
-		await exportToExcel({ columns: visibleColumns, data: selectedRows, fileName, sheetName })
-	}, [columns, filteredData, rowSelection, fileName, sheetName, columnVisibility])
+		const selectedRows = filteredData.filter(
+			(_, index) => rowSelection[index as keyof typeof rowSelection],
+		)
+		await exportToExcel({
+			columns: visibleColumns,
+			data: selectedRows,
+			fileName,
+			sheetName,
+		})
+	}, [
+		columns,
+		filteredData,
+		rowSelection,
+		fileName,
+		sheetName,
+		columnVisibility,
+	])
 
 	const handleResetColumnSizes = useCallback(() => {
 		setColumnSizing({})
@@ -230,6 +292,50 @@ export default function AppTable<T extends Record<string, any>>({
 		})
 		setColumnVisibility(hidden)
 	}, [table])
+
+	const handleSearchChange = useCallback(
+		(value: string) => {
+			setGlobalFilter(value)
+			if (enableAsync) {
+				setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+			}
+		},
+		[enableAsync],
+	)
+
+	const handleAsyncSearch = useDebouncedCallback((value: string) => {
+		onSearchChange?.(value)
+	}, searchDebounceMs)
+
+	const handleSearchInput = useCallback(
+		(value: string) => {
+			handleSearchChange(value)
+			if (enableAsync) {
+				handleAsyncSearch(value)
+			}
+		},
+		[enableAsync, handleSearchChange, handleAsyncSearch],
+	)
+
+	const handlePageChange = useCallback(
+		(page: number) => {
+			setPagination((prev) => ({ ...prev, pageIndex: page - 1 }))
+			if (enableAsync) {
+				onPaginationChange?.(page, pagination.pageSize)
+			}
+		},
+		[enableAsync, onPaginationChange, pagination.pageSize],
+	)
+
+	const handlePageSizeChange = useCallback(
+		(size: number) => {
+			setPagination((prev) => ({ ...prev, pageSize: size, pageIndex: 0 }))
+			if (enableAsync) {
+				onPaginationChange?.(1, size)
+			}
+		},
+		[enableAsync, onPaginationChange],
+	)
 
 	const columnVisibilityData = useMemo(
 		() =>
@@ -265,7 +371,7 @@ export default function AppTable<T extends Record<string, any>>({
 			<div className='d-flex align-items-center justify-content-between mb-2 gap-2'>
 				<div className='d-flex align-items-center gap-2'>
 					{enableSearch && (
-						<SearchFilter value={globalFilter} onChange={setGlobalFilter} />
+						<SearchFilter value={globalFilter} onChange={handleSearchInput} />
 					)}
 					{selectedCount > 0 && (
 						<small className='text-muted'>
@@ -329,13 +435,13 @@ export default function AppTable<T extends Record<string, any>>({
 						</Button>
 					)}
 				</div>
-      </div>
+			</div>
 
-      {/*para que no sea sticky
+			{/*para que no sea sticky
       <div style={{ maxHeight: pagination.pageSize <= 10 ? 500 : 'none', overflow: 'auto', position: 'relative' }}>
       </div>  */}
 
-			<div >
+			<div>
 				<Table
 					className='mb-0 table-striped table-hover'
 					style={{ width: '100%' }}
@@ -577,12 +683,8 @@ export default function AppTable<T extends Record<string, any>>({
 				totalPages={totalPages}
 				pageSize={pagination.pageSize}
 				pageSizeOptions={pageSizeOptions}
-				onPageChange={(page) =>
-					setPagination((prev) => ({ ...prev, pageIndex: page - 1 }))
-				}
-				onPageSizeChange={(size) =>
-					setPagination((prev) => ({ ...prev, pageSize: size, pageIndex: 0 }))
-				}
+				onPageChange={handlePageChange}
+				onPageSizeChange={handlePageSizeChange}
 			/>
 		</div>
 	)

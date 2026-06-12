@@ -30,7 +30,7 @@ import {
 	XCircle,
 	Zap,
 } from 'lucide-react'
-import { type NavItem, navigationMenu } from '../../../router/navigation-menu'
+import { type NavItem, navigationMenu } from '@router/navigation-menu'
 
 const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string; 'aria-label'?: string }>> = {
 	speedometer2: Gauge,

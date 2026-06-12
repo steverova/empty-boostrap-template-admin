@@ -8,7 +8,7 @@ import {
 } from 'react'
 import Modal from 'react-bootstrap/Modal'
 import { Check, X } from 'lucide-react'
-import ButtonNeutral from '../components/shared/button-neutral'
+import ButtonNeutral from '@components/shared/button-neutral'
 
 /* -------------------------------------------------------------------------- */
 /*                                    TYPES                                   */

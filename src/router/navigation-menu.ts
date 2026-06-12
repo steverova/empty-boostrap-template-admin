@@ -2,7 +2,7 @@ export type NavItem = {
 	type: 'item' | 'group' | 'link'
 	id: string
 	label: string
-	icon: string
+	icon?: string
 	path?: string
 	auth?: string[]
 	children?: NavItem[]
@@ -10,12 +10,37 @@ export type NavItem = {
 
 export const navigationMenu: NavItem[] = [
   {
-    type: 'item',
+    type: 'group',
     id: 'examples',
     label: 'Examples',
     icon: 'box',
-    path: 'examples',
     auth: ['Administrador', 'Viewer'],
+    children: [
+      {
+        id: 'table',
+        path: '/examples/table',
+        label: 'Table',
+        type: 'item'
+      },
+      {
+        id: 'date-picker',
+        path: '/examples/date-picker',
+        label: 'Date Picker',
+        type: 'item'
+      },
+      {
+        id: 'dropzone',
+        path: '/examples/dropzone',
+        label: 'Dropzone',
+        type: 'item'
+      },
+      {
+        id: 'kanban',
+        path: '/examples/kanban',
+        label: 'Kanban Board',
+        type: 'item'
+      }
+    ]
   },
 	{
 		type: 'item',

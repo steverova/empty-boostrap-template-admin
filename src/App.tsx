@@ -1,10 +1,10 @@
 import { Badge } from 'react-bootstrap'
 import './App.css'
+import AppTable from '@components/shared/app-table'
+import { RowActions } from '@components/shared/app-table/row-actions'
+import ModalDialog from '@components/shared/modal-dialog'
+import { useModal } from '@hooks/use-modal'
 import type { ColumnDef } from '@tanstack/react-table'
-import AppTable from './components/shared/app-table'
-import { RowActions } from './components/shared/app-table/row-actions'
-import ModalDialog from './components/shared/modal-dialog'
-import { useModal } from './hooks/use-modal'
 
 interface User {
 	id: number
@@ -469,7 +469,7 @@ const columns: ColumnDef<User, any>[] = [
 function App() {
 	const detailsModal = useModal<User>()
 
-  const onDetails = (row: User) => {
+	const onDetails = (row: User) => {
 		detailsModal.open(row)
 	}
 
@@ -480,7 +480,7 @@ function App() {
 				onHide={detailsModal.close}
 				title='Details'
 			>
-        <h3>{detailsModal.data?.email}</h3>
+				<h3>{detailsModal.data?.email}</h3>
 			</ModalDialog>
 
 			<AppTable

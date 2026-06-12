@@ -1,9 +1,8 @@
+import { useThemeMode } from '@hooks/use-theme-mode'
 import { Monitor, Moon, Sun } from 'lucide-react'
 import type { JSX } from 'react'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import ToggleButton from 'react-bootstrap/ToggleButton'
-
-import { useThemeMode } from '../../hooks/use-theme-mode'
 
 type ThemeMode = 'light' | 'dark' | 'system'
 

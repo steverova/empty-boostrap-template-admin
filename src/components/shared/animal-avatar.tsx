@@ -1,4 +1,4 @@
-import { useAnimalAvatar } from '../../hooks/use-animal-avatar'
+import { useAnimalAvatar } from '@hooks/use-animal-avatar'
 
 interface AnimalAvatarProps {
 	name: string
