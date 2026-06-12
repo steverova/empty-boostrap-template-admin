@@ -1,6 +1,6 @@
-import { Dropdown } from 'react-bootstrap'
 import { LogOut, User } from 'lucide-react'
-import AnimalAvatar from '../../shared/animal-avatar'
+import { Dropdown } from 'react-bootstrap'
+import { Avatar } from '../../shared/avatar'
 
 export default function UserMenu() {
 	return (
@@ -11,7 +11,14 @@ export default function UserMenu() {
 				id='user-menu'
 			>
 				<span className='d-none d-md-inline fw-bold'>Steven Rojas</span>
-				<AnimalAvatar name='Felipe' size={32} />
+				<Avatar
+					status='online'
+					seed='Steve Rojas'
+					name='Steven'
+					variant='emoji'
+					shape='circle'
+					size='md'
+				/>
 			</Dropdown.Toggle>
 
 			<Dropdown.Menu>

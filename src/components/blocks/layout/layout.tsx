@@ -47,7 +47,7 @@ export default function Layout() {
 					<Button
 						onClick={handleToggle}
 						variant='light'
-						className='p-0 p-1 ms-2'
+						className='p-0 p-1 ms-2 rounded-3'
 					>
 						{(!isMobile && showSidebar) || (isMobile && showOffcanvas) ? (
 							<PanelRightOpen aria-label='Cerrar menú' />
@@ -61,12 +61,12 @@ export default function Layout() {
 					</div>
 				</Navbar>
 
-			<Offcanvas
-				show={isMobile && showOffcanvas}
-				onHide={() => setShowOffcanvas(false)}
-				style={{ width: 250 }}
-				className='overflow-x-hidden'
-			>
+				<Offcanvas
+					show={isMobile && showOffcanvas}
+					onHide={() => setShowOffcanvas(false)}
+					style={{ width: 250 }}
+					className='overflow-x-hidden'
+				>
 					<Button
 						className='p-0 p-1'
 						variant='light'
@@ -88,7 +88,15 @@ export default function Layout() {
 				</Offcanvas>
 
 				<main className='flex-grow-1 d-flex flex-column overflow-auto bg-primary-subtle '>
-					<div className='flex-grow-1 mb-2 mx-1 mx-lg-2 mx-lg-0 rounded-4 bg-light-subtle'>
+					<div
+						className='flex-grow-1 px-3 py-1 mb-2 mx-2 content-scroll rounded-4 bg-light-subtle'
+						style={{
+							overflow: 'auto',
+
+							minHeight: 0,
+							WebkitOverflowScrolling: 'touch',
+						}}
+					>
 						<Outlet />
 					</div>
 				</main>

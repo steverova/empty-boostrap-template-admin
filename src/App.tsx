@@ -2,6 +2,7 @@ import { Button } from 'react-bootstrap'
 import './App.css'
 import { X } from 'lucide-react'
 import AnimalAvatar from './components/shared/animal-avatar'
+import { Avatar } from './components/shared/avatar'
 import ButtonNeutral from './components/shared/button-neutral'
 import IconButton from './components/shared/icon-button'
 import { useAlertDialog } from './providers/AlertDialogProvider'
@@ -33,6 +34,7 @@ function App() {
 	return (
 		<div className='p-3'>
 			<AnimalAvatar name='Felipe' />
+      
 			<h1>Admin Horas</h1>
 			<p>Bienvenido al panel de administración de horas.</p>
 
