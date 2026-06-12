@@ -5,12 +5,14 @@ type TableHeaderToolbarProps = {
 	isRefetching?: boolean
 	onRefetchFn?: () => void
 	onAddFn?: () => void
+	onExportFn?: () => void
 }
 
 export default function TableHeaderToolbar({
 	isRefetching = false,
 	onRefetchFn,
 	onAddFn,
+	onExportFn,
 }: TableHeaderToolbarProps) {
 	return (
 		<div className='d-flex align-items-center justify-content-between mb-2'>
@@ -27,7 +29,7 @@ export default function TableHeaderToolbar({
 			</Form>
 
 			<div className='d-flex gap-1'>
-				<Button variant='secondary' size='sm'>
+				<Button onClick={onExportFn} variant='secondary' size='sm'>
 					<FileSpreadsheet size={16} />
 				</Button>
 

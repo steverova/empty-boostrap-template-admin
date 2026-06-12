@@ -6,17 +6,23 @@ import {
 	type PaginationState,
 	useReactTable,
 } from '@tanstack/react-table'
-import { ArrowLeft, ArrowRight, Pin, PinOff } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { ArrowLeft, ArrowRight, Copy, Check, Pin, PinOff } from 'lucide-react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Button, Dropdown } from 'react-bootstrap'
 import type { TableProps } from 'react-bootstrap/Table'
 import Table from 'react-bootstrap/Table'
 import { useThemeMode } from '../../../hooks/use-theme-mode'
 import { PaginationTable } from './pagination-table'
 import TableHeaderToolbar from './table-header-toolbar'
-import { getPinnedStyle, DEFAULT_PAGE_SIZE_OPTIONS } from './table-helper'
+import { getPinnedStyle, DEFAULT_PAGE_SIZE_OPTIONS, exportToExcel } from './table-helper'
 
 export type { ColumnDef } from '@tanstack/react-table'
+
+declare module '@tanstack/react-table' {
+	interface ColumnMeta<TData, TValue> {
+		enableCopy?: boolean
+	}
+}
 
 const STORAGE_KEY = 'app-table-column-pinning'
 
@@ -41,6 +47,8 @@ export interface AppTableProps<T extends Record<string, any>>
 	onAddFn?: () => void
 	pageSize?: number
 	pageSizeOptions?: number[]
+	fileName?: string
+	sheetName?: string
 }
 
 export default function AppTable<T extends Record<string, any>>({
@@ -48,6 +56,8 @@ export default function AppTable<T extends Record<string, any>>({
 	data,
 	pageSize: initialPageSize = 10,
 	pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
+	fileName,
+	sheetName,
 	...props
 }: AppTableProps<T>) {
 	const [pagination, setPagination] = useState<PaginationState>({
@@ -57,6 +67,8 @@ export default function AppTable<T extends Record<string, any>>({
 
 	const [columnPinning, setColumnPinning] =
 		useState<ColumnPinningState>(loadPinning)
+
+	const [copiedCellId, setCopiedCellId] = useState<string | null>(null)
 
 	useEffect(() => {
 		savePinning(columnPinning)
@@ -77,6 +89,20 @@ export default function AppTable<T extends Record<string, any>>({
 
 	const totalPages = table.getPageCount()
 
+	const handleCopy = useCallback(async (cellId: string, value: any) => {
+		try {
+			await navigator.clipboard.writeText(String(value ?? ''))
+			setCopiedCellId(cellId)
+			setTimeout(() => setCopiedCellId(null), 1500)
+		} catch {
+			console.error('Failed to copy')
+		}
+	}, [])
+
+	const handleExport = useCallback(async () => {
+		await exportToExcel({ columns, data, fileName, sheetName })
+	}, [columns, data, fileName, sheetName])
+
 	const { themeMode } = useThemeMode()
 	const isDark = useMemo(() => {
 		if (themeMode === 'dark') return true
@@ -92,7 +118,7 @@ export default function AppTable<T extends Record<string, any>>({
 		<div className='border rounded-3 p-1'>
 			<h1 className='fs-2'>Titulo de la tabla</h1>
 
-			<TableHeaderToolbar />
+			<TableHeaderToolbar onExportFn={handleExport} />
 
 			<div style={{ maxHeight: 500, overflow: 'auto', position: 'relative' }}>
 				<Table className='mb-0 table-striped table-hover' {...props}>
@@ -111,7 +137,6 @@ export default function AppTable<T extends Record<string, any>>({
 												top: 0,
 												backgroundColor: pinned ? bgColor : 'var(--bs-body-bg)',
 											}}
-											{...header.column.columnDef.meta}
 										>
 											<div className='d-flex align-items-center justify-content-between gap-1'>
 												<span>
@@ -178,17 +203,36 @@ export default function AppTable<T extends Record<string, any>>({
 					<tbody>
 						{table.getRowModel().rows.map((row) => (
 							<tr key={row.id}>
-								{row.getVisibleCells().map((cell) => (
-									<td
-										key={cell.id}
-										style={getPinnedStyle({ column: cell.column, rowIndex: row.index, columnPinning, bgColor, stripedBg })}
-										{...cell.column.columnDef.meta}
-									>
-										{typeof cell.column.columnDef.cell === 'function'
-											? cell.column.columnDef.cell(cell.getContext())
-											: cell.getValue()}
-									</td>
-								))}
+								{row.getVisibleCells().map((cell) => {
+									const enableCopy = cell.column.columnDef.meta?.enableCopy
+									const cellValue = cell.getValue()
+									const isCopied = copiedCellId === cell.id
+
+									return (
+										<td
+											key={cell.id}
+											style={getPinnedStyle({ column: cell.column, rowIndex: row.index, columnPinning, bgColor, stripedBg })}
+										>
+											<div className='d-flex align-items-center justify-content-between'>
+												<span className='text-truncate'>
+													{typeof cell.column.columnDef.cell === 'function'
+														? cell.column.columnDef.cell(cell.getContext())
+														: cellValue}
+												</span>
+												{enableCopy && (
+													<Button
+														variant='link'
+														size='sm'
+														className='p-0 ms-2 text-muted btn-copy'
+														onClick={() => handleCopy(cell.id, cellValue)}
+													>
+														{isCopied ? <Check size={14} className='text-success' /> : <Copy size={14} />}
+													</Button>
+												)}
+											</div>
+										</td>
+									)
+								})}
 							</tr>
 						))}
 					</tbody>

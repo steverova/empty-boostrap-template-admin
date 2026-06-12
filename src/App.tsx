@@ -65,6 +65,7 @@ const columns: ColumnDef<User, any>[] = [
 	{
 		accessorKey: 'email',
 		header: 'Email',
+		meta: { enableCopy: true },
 	},
 	{
 		accessorKey: 'role',
@@ -78,6 +79,7 @@ const columns: ColumnDef<User, any>[] = [
 	{
 		accessorKey: 'department',
 		header: 'Departamento',
+		meta: { enableCopy: true },
 	},
 	{
 		accessorKey: 'status',
@@ -95,6 +97,7 @@ const columns: ColumnDef<User, any>[] = [
 		accessorKey: 'createdAt',
 		header: 'Fecha de creación',
 		cell: (info) => new Date(info.getValue() as string).toLocaleDateString('es-AR'),
+		meta: { enableCopy: true },
 	},
 ]
 
