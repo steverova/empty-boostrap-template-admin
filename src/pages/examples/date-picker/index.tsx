@@ -2,6 +2,7 @@ import { addDays, format, subDays } from 'date-fns'
 import { enUS, es } from 'date-fns/locale'
 import { useState } from 'react'
 import Calendar from '@/components/shared/calendar'
+import DateField from '@/components/shared/date-field'
 import DatePicker from '@/components/shared/date-picker'
 
 export default function DatePickerExamplePage() {
@@ -18,90 +19,95 @@ export default function DatePickerExamplePage() {
 		<div className='container py-4'>
 			<h4>Calendario</h4>
 
-			<div className='d-flex gap-4 flex-wrap'>
-				<div>
-					<h6>Normal</h6>
-					<Calendar
-						showWeeks
-						onSelectWeek={setWeekDates}
-						value={selectedDate}
-						onChange={setSelectedDate}
-						locale={es}
-						minDate={minDate}
-						maxDate={maxDate}
-						weekStartsOn={1}
-						showOutsideDays
-						showToday
-						showClear
-						keyboardNav
-						placeholder='Selecciona una fecha'
-					/>
-					{selectedDate && (
-						<p className='mt-2 text-muted small'>
-							Seleccionado:{' '}
-							<strong>
-								{format(selectedDate, 'EEEE d MMMM yyyy', { locale: es })}
-							</strong>
-						</p>
-					)}
-					{weekDates.length > 0 && (
-						<p className='mt-1 text-muted small'>
-							Semana:{' '}
-							<strong>
-								{format(weekDates[0], 'd MMM', { locale: es })} –{' '}
-								{format(weekDates[6], 'd MMM yyyy', { locale: es })}
-							</strong>
-						</p>
-					)}
-				</div>
+			<div className='d-flex flex-column gap-4 flex-wrap'>
+				<div className='d-flex gap-3'>
+					<div>
+						<h6>Normal</h6>
+						<Calendar
+							showWeeks
+							onSelectWeek={setWeekDates}
+							value={selectedDate}
+							onChange={setSelectedDate}
+							locale={es}
+							minDate={minDate}
+							maxDate={maxDate}
+							weekStartsOn={1}
+							showOutsideDays
+							showToday
+							showClear
+							keyboardNav
+							placeholder='Selecciona una fecha'
+						/>
+						{selectedDate && (
+							<p className='mt-2 text-muted small'>
+								Seleccionado:{' '}
+								<strong>
+									{format(selectedDate, 'EEEE d MMMM yyyy', { locale: es })}
+								</strong>
+							</p>
+						)}
+						{weekDates.length > 0 && (
+							<p className='mt-1 text-muted small'>
+								Semana:{' '}
+								<strong>
+									{format(weekDates[0], 'd MMM', { locale: es })} –{' '}
+									{format(weekDates[6], 'd MMM yyyy', { locale: es })}
+								</strong>
+							</p>
+						)}
+					</div>
 
-				<div>
-					<h6>Rango</h6>
-					<Calendar
-						mode='range'
-						rangeStart={rangeStart}
-						rangeEnd={rangeEnd}
-						onRangeChange={(s, e) => {
-							setRangeStart(s)
-							setRangeEnd(e)
-						}}
-						locale={es}
-						weekStartsOn={1}
-						showToday
-						showClear
-					/>
-					{rangeStart && rangeEnd && (
-						<p className='mt-2 text-muted small'>
-							<strong>
-								{format(rangeStart, 'd MMM')} – {format(rangeEnd, 'd MMM yyyy')}
-							</strong>
-						</p>
-					)}
-				</div>
+					<div>
+						<h6>Rango</h6>
+						<Calendar
+							mode='range'
+							rangeStart={rangeStart}
+							rangeEnd={rangeEnd}
+							onRangeChange={(s, e) => {
+								setRangeStart(s)
+								setRangeEnd(e)
+							}}
+							locale={es}
+							weekStartsOn={1}
+							showToday
+							showClear
+						/>
+						{rangeStart && rangeEnd && (
+							<p className='mt-2 text-muted small'>
+								<strong>
+									{format(rangeStart, 'd MMM')} –{' '}
+									{format(rangeEnd, 'd MMM yyyy')}
+								</strong>
+							</p>
+						)}
+					</div>
 
-				<div>
-					<h6>Múltiples</h6>
-					<Calendar
-						mode='multiple'
-						selectedDates={multipleDates}
-						onMultipleChange={setMultipleDates}
-						locale={es}
-						weekStartsOn={1}
-						showClear
-					/>
-					{multipleDates.length > 0 && (
-						<p className='mt-2 text-muted small'>
-							<strong>{multipleDates.length} fechas seleccionadas</strong>
-						</p>
-					)}
+					<div>
+						<h6>Múltiples</h6>
+						<Calendar
+							mode='multiple'
+							selectedDates={multipleDates}
+							onMultipleChange={setMultipleDates}
+							locale={es}
+							weekStartsOn={1}
+							showClear
+						/>
+						{multipleDates.length > 0 && (
+							<p className='mt-2 text-muted small'>
+								<strong>{multipleDates.length} fechas seleccionadas</strong>
+							</p>
+						)}
+					</div>
 				</div>
-
 				<hr />
-
 				<div className='w-100'>
-					<h2>Date Picker</h2>
-
+					<h3>Date Picker</h3>
 					<DatePicker locale={enUS} mode='multiple' align='end' />
+				</div>
+				<hr />
+				<div>
+					<h3>Date Input</h3>
+					<DateField />
 				</div>
 			</div>
 		</div>
