@@ -40,8 +40,8 @@ export const PaginationTable = ({
 	)
 
 	return (
-		<div className='d-flex flex-column flex-md-row align-items-center justify-content-between mt-3 px-2'>
-			<div className='d-flex gap-2 align-items-center justify-content-end mt-3'>
+		<div className='d-flex align-items-center justify-content-between gap-2 mt-3 px-2'>
+			<div className='d-flex gap-1 align-items-center'>
 				<Button
 					size='sm'
 					variant='outline-secondary'
@@ -52,7 +52,7 @@ export const PaginationTable = ({
 				</Button>
 				<Select
 					menuPlacement='top'
-					style={{ minWidth: 80 }}
+					style={{ minWidth: 60 }}
 					styles={selectStyles}
 					value={pageOptions.find((o) => o.value === page)}
 					options={pageOptions}
@@ -70,9 +70,10 @@ export const PaginationTable = ({
 				</Button>
 			</div>
 
-			<div className='d-flex align-items-center gap-2' style={{ minWidth: 80 }}>
+			<div className='d-flex align-items-center gap-1'>
 				<Select
 					menuPlacement='top'
+					style={{ minWidth: 50 }}
 					styles={selectStyles}
 					value={pageSizeOptionsFormatted.find((o) => o.value === pageSize)}
 					options={pageSizeOptionsFormatted}
@@ -80,7 +81,7 @@ export const PaginationTable = ({
 						if (opt) onPageSizeChange(opt.value)
 					}}
 				/>
-				<small className='text-nowrap'>items por página</small>
+				<small className='text-nowrap'>por página</small>
 			</div>
 		</div>
 	)
