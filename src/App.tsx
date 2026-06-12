@@ -470,7 +470,6 @@ function App() {
 	const detailsModal = useModal<User>()
 
   const onDetails = (row: User) => {
-    console.log('row ->', row)
 		detailsModal.open(row)
 	}
 

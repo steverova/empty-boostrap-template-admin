@@ -1,9 +1,11 @@
 import { Check, X } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { Spinner } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 
 type ModalDialogProps = {
+	isLoading?: boolean
 	size?: 'sm' | 'lg' | 'xl'
 	show: boolean
 	title: string
@@ -13,6 +15,7 @@ type ModalDialogProps = {
 }
 
 export default function ModalDialog({
+	isLoading = true,
 	size = 'lg',
 	show,
 	title,
@@ -30,14 +33,15 @@ export default function ModalDialog({
 			centered
 			aria-labelledby='modal-dialog-title'
 		>
-			<Modal.Header closeButton className='border-0'>
+			<Modal.Header closeButton className='border-0 px-3 py-1'>
 				<Modal.Title id='modal-dialog-title'>{title}</Modal.Title>
 			</Modal.Header>
 
 			<Modal.Body>{children}</Modal.Body>
 
-			<Modal.Footer className='border-0 shadow'>
+			<Modal.Footer className='border-0 shadow p-1'>
 				<Button
+					disabled={isLoading}
 					variant='outline-secondary'
 					onClick={onHide}
 					aria-label='Close dialog'
@@ -46,11 +50,21 @@ export default function ModalDialog({
 				</Button>
 
 				<Button
+					disabled={isLoading}
 					variant='primary'
 					onClick={onConfirm}
 					aria-label='Confirm action'
 				>
-					<Check aria-hidden='true' size={18} /> Ok
+					{isLoading && (
+						<span>
+							<Spinner aria-hidden='true' size='sm' /> Loading...
+						</span>
+					)}
+					{!isLoading && (
+						<span>
+							<Check aria-hidden='true' size={18} /> Ok
+						</span>
+					)}
 				</Button>
 			</Modal.Footer>
 		</Modal>
