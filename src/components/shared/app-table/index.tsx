@@ -136,7 +136,6 @@ export default function AppTable<T extends Record<string, any>>({
 				id: 'actions',
 				header: 'Actions',
 				enableSorting: false,
-				enablePinning: false,
 				enableHiding: false,
 				cell: ({ row }) => (
 					<div className=''>
