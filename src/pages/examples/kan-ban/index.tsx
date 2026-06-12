@@ -19,7 +19,9 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 import {
 	AlertCircle,
+	ArrowLeftToLine,
 	ArrowRight,
+	ArrowRightToLine,
 	CheckCircle,
 	Clock,
 	Plus,
@@ -170,12 +172,11 @@ function TaskCard({
 			className='mb-3 border-2 shadow-sm bg-body-tertiary'
 			style={{ opacity: isDragging ? 0.5 : 1 }}
 		>
-      <Card.Body className='p-4'>
-
-       	<div className='position-absolute top-0 end-0 px-2'>
+			<Card.Body className='p-4'>
+				<div className='position-absolute top-0 end-0 px-2'>
 					<RefreshCcw size={16} className='' />
 				</div>
-        
+
 				<Card.Title className='h6 fw-semibold mb-2'>{task.title}</Card.Title>
 				<Card.Text className='small text-muted mb-2'>
 					{task.description}
@@ -229,6 +230,9 @@ function SortableItem({ task }: { task: Task }) {
 export default function KanbanBoard() {
 	const [tasks, setTasks] = useState<Task[]>(initialTasks)
 	const [activeTask, setActiveTask] = useState<Task | null>(null)
+	const [collapsedColumns, setCollapsedColumns] = useState<Set<string>>(
+		new Set(),
+	)
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -237,8 +241,6 @@ export default function KanbanBoard() {
 		}),
 	)
 
-	// Fired continuously while dragging — updates columnId on-the-fly so the
-	// ghost card appears in the target column immediately.
 	function handleDragOver(event: DragOverEvent) {
 		const { active, over } = event
 		if (!over) return
@@ -255,12 +257,10 @@ export default function KanbanBoard() {
 			return prev.map((task) => {
 				if (task.id !== activeId) return task
 
-				// Dropped over a column directly
 				if (isOverColumn) {
 					return { ...task, columnId: overId }
 				}
 
-				// Dropped over another task — adopt its columnId
 				if (overTask) {
 					return { ...task, columnId: overTask.columnId }
 				}
@@ -284,7 +284,6 @@ export default function KanbanBoard() {
 		const activeTask = tasks.find((t) => t.id === activeId)
 		const overTask = tasks.find((t) => t.id === overId)
 
-		// Reorder within same column when dropped on a sibling task
 		if (activeTask && overTask && activeTask.columnId === overTask.columnId) {
 			setTasks((prev) => {
 				const oldIndex = prev.findIndex((t) => t.id === activeId)
@@ -292,6 +291,18 @@ export default function KanbanBoard() {
 				return arrayMove(prev, oldIndex, newIndex)
 			})
 		}
+	}
+
+	function handleCollapse(columnId: string) {
+		setCollapsedColumns((prev) => {
+			const next = new Set(prev)
+			if (next.has(columnId)) {
+				next.delete(columnId)
+			} else {
+				next.add(columnId)
+			}
+			return next
+		})
 	}
 
 	const tasksByColumn = columns.map((column) => ({
@@ -303,7 +314,7 @@ export default function KanbanBoard() {
 		<div className='min-vh-100'>
 			<Container fluid>
 				<h1 className=''>Kanban Board</h1>
-				
+
 				<DndContext
 					sensors={sensors}
 					collisionDetection={closestCenter}
@@ -314,62 +325,125 @@ export default function KanbanBoard() {
 					onDragOver={handleDragOver}
 					onDragEnd={handleDragEnd}
 				>
-					<Row className='flex-nowrap g-2'>
+					<Row className='flex-nowrap g-2 align-items-start'>
 						{tasksByColumn.map(({ column, tasks: columnTasks }) => {
 							const Icon = column.icon
+							const isCollapsed = collapsedColumns.has(column.id)
+
 							return (
 								<Col
-                  key={column.id}
-                  xs={11}
-                  sm={9}
-									md={6}
-                  lg={4}
-                  xxl={3}
-									className='mb-4 flex-shrink-0  '
+									key={column.id}
+									// Columna colapsada: ancho mínimo fijo; expandida: ancho normal
+									style={
+										isCollapsed
+											? { width: 56, flex: '0 0 56px', padding: '0 4px' }
+											: undefined
+									}
+									{...(isCollapsed
+										? {}
+										: { xs: 11, sm: 9, md: 6, lg: 4, xxl: 3 })}
+									className='mb-4 flex-shrink-0'
 								>
-									<Card className='border-0 shadow-sm h-100   '>
-										<Card.Header className='d-flex justify-content-between align-items-center py-3 border'>
-											<div className='d-flex align-items-center gap-2'>
-												<div style={{ color: column.color }}>
-													<Icon size={18} />
-												</div>
-												<Card.Title
-													className='h6 mb-0 fw-semibold'
-													style={{ color: column.color }}
+									{isCollapsed ? (
+										// ── Vista colapsada: columna vertical angosta ──
+										<Card
+											className='border-0 shadow-sm'
+											style={{ minHeight: 120 }}
+										>
+											<Card.Body
+												className='p-0 d-flex flex-column align-items-center py-3 gap-3'
+												style={{ cursor: 'default' }}
+											>
+												<Button
+													onClick={() => handleCollapse(column.id)}
+													size='sm'
+													className='px-1'
+													variant='outline-secondary'
+													title='Expand column'
+												>
+													<ArrowRightToLine size={18} />
+												</Button>
+
+												{/* Título rotado verticalmente */}
+												<div
+													style={{
+														writingMode: 'vertical-rl',
+														transform: 'rotate(180deg)',
+														color: column.color,
+														fontWeight: 600,
+														fontSize: '0.85rem',
+														userSelect: 'none',
+													}}
 												>
 													{column.title}
-												</Card.Title>
-											</div>
-											<Badge bg='light' text='dark' className='rounded-pill'>
-												{columnTasks.length}
-											</Badge>
-										</Card.Header>
-										<Card.Body className='p-3 border shadow ' style={{ overflowY: 'auto' }}>
-											<DroppableColumn columnId={column.id}>
-												<SortableContext
-													items={columnTasks.map((t) => t.id)}
-													strategy={verticalListSortingStrategy}
+												</div>
+
+												<Badge
+													bg='light'
+													text='dark'
+													className='rounded-pill'
 												>
-													{columnTasks.map((task) => (
-														<SortableItem key={task.id} task={task} />
-													))}
-												</SortableContext>
-											</DroppableColumn>
-											<Button
-												variant='outline-secondary'
-												className='w-100 mt-3'
-												size='sm'
+													{columnTasks.length}
+												</Badge>
+											</Card.Body>
+										</Card>
+									) : (
+										// ── Vista expandida normal ──
+										<Card className='border-0 shadow-sm h-100'>
+											<Card.Header className='d-flex justify-content-between align-items-center py-3 border'>
+												<div className='d-flex align-items-center gap-2'>
+													<Button
+														onClick={() => handleCollapse(column.id)}
+														size='sm'
+														className='px-1'
+														variant='outline-secondary'
+														title='Collapse column'
+													>
+														<ArrowLeftToLine size={18} />
+													</Button>
+													<div style={{ color: column.color }}>
+														<Icon size={18} />
+													</div>
+													<Card.Title
+														className='h6 mb-0 fw-semibold'
+														style={{ color: column.color }}
+													>
+														{column.title}
+													</Card.Title>
+												</div>
+												<Badge bg='light' text='dark' className='rounded-pill'>
+													{columnTasks.length}
+												</Badge>
+											</Card.Header>
+											<Card.Body
+												className='p-3 border shadow'
+												style={{ overflowY: 'auto' }}
 											>
-												<Plus size={16} className='me-2' /> Add Task
-											</Button>
-										</Card.Body>
-									</Card>
+												<DroppableColumn columnId={column.id}>
+													<SortableContext
+														items={columnTasks.map((t) => t.id)}
+														strategy={verticalListSortingStrategy}
+													>
+														{columnTasks.map((task) => (
+															<SortableItem key={task.id} task={task} />
+														))}
+													</SortableContext>
+												</DroppableColumn>
+												<Button
+													variant='outline-secondary'
+													className='w-100 mt-3'
+													size='sm'
+												>
+													<Plus size={16} className='me-2' /> Add Task
+												</Button>
+											</Card.Body>
+										</Card>
+									)}
 								</Col>
 							)
 						})}
 					</Row>
 
-					{/* Overlay card — renders the dragged card on top of everything */}
 					<DragOverlay>
 						{activeTask ? <TaskCard task={activeTask} /> : null}
 					</DragOverlay>
