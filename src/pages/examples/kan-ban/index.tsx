@@ -23,6 +23,7 @@ import {
 	CheckCircle,
 	Clock,
 	Plus,
+	RefreshCcw,
 	XCircle,
 } from 'lucide-react'
 import { useState } from 'react'
@@ -169,7 +170,12 @@ function TaskCard({
 			className='mb-3 border-2 shadow-sm bg-body-tertiary'
 			style={{ opacity: isDragging ? 0.5 : 1 }}
 		>
-			<Card.Body className='p-4'>
+      <Card.Body className='p-4'>
+
+       	<div className='position-absolute top-0 end-0 px-2'>
+					<RefreshCcw size={16} className='' />
+				</div>
+        
 				<Card.Title className='h6 fw-semibold mb-2'>{task.title}</Card.Title>
 				<Card.Text className='small text-muted mb-2'>
 					{task.description}
@@ -297,6 +303,7 @@ export default function KanbanBoard() {
 		<div className='min-vh-100'>
 			<Container fluid>
 				<h1 className=''>Kanban Board</h1>
+				
 				<DndContext
 					sensors={sensors}
 					collisionDetection={closestCenter}
