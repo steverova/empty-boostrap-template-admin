@@ -1,11 +1,15 @@
 import { addDays, format, subDays } from 'date-fns'
-import { enUS, es } from 'date-fns/locale'
+import { es } from 'date-fns/locale'
 import { useState } from 'react'
 import Calendar from '@/components/shared/calendar'
+import DatePicker from '@/components/shared/date-picker'
 
 export default function DatePickerExamplePage() {
 	const [selectedDate, setSelectedDate] = useState<Date | null>(null)
 	const [weekDates, setWeekDates] = useState<Date[]>([])
+	const [rangeStart, setRangeStart] = useState<Date | null>(null)
+	const [rangeEnd, setRangeEnd] = useState<Date | null>(null)
+	const [multipleDates, setMultipleDates] = useState<Date[]>([])
 
 	const minDate = subDays(new Date(), 7)
 	const maxDate = addDays(new Date(), 30)
@@ -27,6 +31,10 @@ export default function DatePickerExamplePage() {
 						maxDate={maxDate}
 						weekStartsOn={1}
 						showOutsideDays
+						showToday
+						showClear
+						keyboardNav
+						placeholder='Selecciona una fecha'
 					/>
 					{selectedDate && (
 						<p className='mt-2 text-muted small'>
@@ -46,6 +54,55 @@ export default function DatePickerExamplePage() {
 						</p>
 					)}
 				</div>
+
+				<div>
+					<h6>Rango</h6>
+					<Calendar
+						mode='range'
+						rangeStart={rangeStart}
+						rangeEnd={rangeEnd}
+						onRangeChange={(s, e) => {
+							setRangeStart(s)
+							setRangeEnd(e)
+						}}
+						locale={es}
+						weekStartsOn={1}
+						showToday
+						showClear
+					/>
+					{rangeStart && rangeEnd && (
+						<p className='mt-2 text-muted small'>
+							<strong>
+								{format(rangeStart, 'd MMM')} – {format(rangeEnd, 'd MMM yyyy')}
+							</strong>
+						</p>
+					)}
+				</div>
+
+				<div>
+					<h6>Múltiples</h6>
+					<Calendar
+						mode='multiple'
+						selectedDates={multipleDates}
+						onMultipleChange={setMultipleDates}
+						locale={es}
+						weekStartsOn={1}
+						showClear
+					/>
+					{multipleDates.length > 0 && (
+						<p className='mt-2 text-muted small'>
+							<strong>{multipleDates.length} fechas seleccionadas</strong>
+						</p>
+					)}
+        </div>
+
+        <hr />
+
+        <div className='w-100'>
+          <h2>Date Picker</h2>
+  
+          <DatePicker mode='range'  align="end"/>
+        </div>
 			</div>
 		</div>
 	)

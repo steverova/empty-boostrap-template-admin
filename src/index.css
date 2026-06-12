@@ -32,3 +32,11 @@ body {
 .rotate-spin-reverse {
 	animation: spin-reverse 1s linear infinite;
 }
+
+.no-arrow .popover-arrow {
+	display: none;
+}
+
+.no-arrow {
+	max-width: calc(100vw - 2rem);
+}

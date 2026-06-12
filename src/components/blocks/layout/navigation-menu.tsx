@@ -136,7 +136,7 @@ export default function NavigationMenu({
 						className={`nav-link d-flex align-items-center text-decoration-none ${isActive ? 'text-body bg-body' : 'text-body-secondary'}`}
 						to={navItem.path ?? '/'}
 					>
-						<Icon className='me-2' name={navItem.icon} />
+						<Icon className='me-2' name={navItem.icon ?? ''} />
 						{navItem.label}
 					</StyledNavLink>
 				</li>
@@ -152,7 +152,7 @@ export default function NavigationMenu({
 						target='_blank'
 						rel='noopener noreferrer'
 					>
-						<Icon className='me-2' name={navItem.icon} />
+						<Icon className='me-2' name={navItem.icon ?? ''} />
 						{navItem.label}
 					</a>
 				</li>
@@ -167,7 +167,7 @@ export default function NavigationMenu({
 					type='button'
 				>
 					<span className='d-flex align-items-center'>
-						<Icon className='me-1' name={navItem.icon} />
+						<Icon className='me-1' name={navItem.icon ?? ''} />
 						{navItem.label}
 					</span>
 					<Icon name={openGroups.has(navItem.id) ? 'chevron-up' : 'chevron-down'} />
