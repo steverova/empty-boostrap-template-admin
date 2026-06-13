@@ -33,6 +33,7 @@ import {
 	Row,
 	Stack,
 } from 'react-bootstrap'
+import React from 'react'
 
 interface Task {
 	id: string
@@ -227,9 +228,9 @@ export default function KanbanExamplePage() {
 										<Card className='border-0 shadow-sm h-100 '>
 											<Card.Header className='d-flex justify-content-between align-items-center py-3'>
 												<div className='d-flex align-items-center gap-2'>
-													<div style={{ color: column.color }}>
-														<Icon size={18} />
-													</div>
+												<div style={{ color: column.color }}>
+													{React.createElement(Icon, { size: 18 })}
+												</div>
 													<Card.Title
 														className='h6 mb-0 fw-semibold'
 														style={{ color: column.color }}
