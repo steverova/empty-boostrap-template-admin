@@ -30,7 +30,7 @@ export default function EditorBubbleMenu({ editor }: EditorBubbleMenuProps) {
 	}, [editor])
 
 	return (
-		<div ref={menuRef} style={{ display: undefined }}>
+		<div ref={menuRef} style={{ display: 'none' }}>
 			<div className={toolbar}>
 				<div className={toolbarGroup}>
 					<ToolbarButton

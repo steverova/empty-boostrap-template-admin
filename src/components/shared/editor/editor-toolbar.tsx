@@ -22,13 +22,7 @@ import {
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import { toolbar, toolbarButton, toolbarGroup } from './editor.styles.css'
-import {
-	ToolbarButton,
-	ToolbarColorPicker,
-	ToolbarDivider,
-	ToolbarImagePopover,
-	ToolbarLinkPopover,
-} from './toolbar'
+import { ToolbarButton, ToolbarColorPicker, ToolbarDivider, ToolbarImagePopover, ToolbarLinkPopover, ToolbarYouTubePopover } from './toolbar'
 
 type EditorToolbarProps = {
 	editor: Editor
@@ -232,6 +226,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
 			<div className={toolbarGroup}>
 				<ToolbarLinkPopover editor={editor} />
 				<ToolbarImagePopover editor={editor} />
+				<ToolbarYouTubePopover editor={editor} />
 				<ToolbarColorPicker editor={editor} />
 			</div>
 

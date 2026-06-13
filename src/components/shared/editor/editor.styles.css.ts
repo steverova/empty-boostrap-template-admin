@@ -228,6 +228,18 @@ globalStyle(`${contentArea} .tiptap .ProseMirror-selectednode`, {
 	borderRadius: 'var(--bs-border-radius)',
 })
 
+globalStyle(`${contentArea} .tiptap div[data-youtube]`, {
+	margin: '8px 0',
+	borderRadius: 'var(--bs-border-radius)',
+	overflow: 'hidden',
+})
+
+globalStyle(`${contentArea} .tiptap div[data-youtube] iframe`, {
+	width: '100%',
+	aspectRatio: '16 / 9',
+	border: 0,
+})
+
 export const statusBar = style({
 	display: 'flex',
 	justifyContent: 'space-between',

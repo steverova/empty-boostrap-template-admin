@@ -19,11 +19,13 @@ import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { common, createLowlight } from 'lowlight'
 import { useEffect } from 'react'
+import { YouTube } from './extensions/youtube'
 import { useEditorStore } from './editor.store'
 import { editorWrapper } from './editor.styles.css'
 import type { EditorProps } from './editor.types'
 import EditorBubbleMenu from './editor-bubble-menu'
 import EditorContent from './editor-content'
+import EditorExportMenu from './editor-export-menu'
 import EditorStatusBar from './editor-status-bar'
 import EditorToolbar from './editor-toolbar'
 
@@ -35,6 +37,8 @@ export default function Editor({
 	editable = true,
 	size = 'md',
 	className,
+	showExport = false,
+	exportFilename,
 	onUpdate,
 	onBlur,
 	onFocus,
@@ -60,6 +64,7 @@ export default function Editor({
 		TaskList,
 		TaskItem.configure({ nested: true }),
 		CodeBlockLowlight.configure({ lowlight }),
+		YouTube,
 		...(characterLimit
 			? [CharacterCount.configure({ limit: characterLimit })]
 			: []),
@@ -89,6 +94,11 @@ export default function Editor({
 
 	return (
 		<div className={`${editorWrapper} ${className ?? ''}`}>
+			{editable && (
+				<div className='d-flex justify-content-end px-2 pt-2'>
+					{showExport && <EditorExportMenu editor={editor} filename={exportFilename} />}
+				</div>
+			)}
 			{editable && <EditorToolbar editor={editor} />}
 			{editable && <EditorBubbleMenu editor={editor} />}
 			<EditorContent editor={editor} size={size} />

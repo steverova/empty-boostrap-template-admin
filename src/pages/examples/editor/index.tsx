@@ -22,6 +22,8 @@ export default function EditorExamplePage() {
 					<Editor
 						placeholder='Comienza a escribir...'
 						characterLimit={5000}
+						showExport
+						exportFilename='mi-documento'
 						onUpdate={(ed) => setContent(ed.getHTML())}
 					/>
 				</Col>
