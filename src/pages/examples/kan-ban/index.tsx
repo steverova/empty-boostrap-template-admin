@@ -38,6 +38,7 @@ import {
 	Row,
 	Stack,
 } from 'react-bootstrap'
+import IconButton from '@/components/shared/icon-button'
 
 interface Task {
 	id: string
@@ -354,15 +355,12 @@ export default function KanbanBoard() {
 												className='p-0 d-flex flex-column align-items-center py-3 gap-3'
 												style={{ cursor: 'default' }}
 											>
-												<Button
+												<IconButton
 													onClick={() => handleCollapse(column.id)}
-													size='sm'
-													className='px-1'
-													variant='outline-secondary'
-													title='Expand column'
+													aria-label='Expand column'
 												>
 													<ArrowRightToLine size={18} />
-												</Button>
+												</IconButton>
 
 												{/* Título rotado verticalmente */}
 												<div
@@ -378,11 +376,7 @@ export default function KanbanBoard() {
 													{column.title}
 												</div>
 
-												<Badge
-													bg='light'
-													text='dark'
-													className='rounded-pill'
-												>
+												<Badge bg='light' text='dark' className='rounded-pill'>
 													{columnTasks.length}
 												</Badge>
 											</Card.Body>
@@ -392,15 +386,12 @@ export default function KanbanBoard() {
 										<Card className='border-0 shadow-sm h-100'>
 											<Card.Header className='d-flex justify-content-between align-items-center py-3 border'>
 												<div className='d-flex align-items-center gap-2'>
-													<Button
+													<IconButton
 														onClick={() => handleCollapse(column.id)}
-														size='sm'
-														className='px-1'
-														variant='outline-secondary'
-														title='Collapse column'
+														aria-label='Collapse column'
 													>
 														<ArrowLeftToLine size={18} />
-													</Button>
+													</IconButton>
 													<div style={{ color: column.color }}>
 														<Icon size={18} />
 													</div>
