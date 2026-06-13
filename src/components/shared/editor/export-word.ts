@@ -1,369 +1,78 @@
-import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from 'docx'
-
-type ExportNode = {
-	type: string
-	content?: ExportNode[]
-	attrs?: Record<string, any>
-	marks?: { type: string; attrs?: Record<string, any> }[]
-	text?: string
-}
-
-function getAlignment(align?: string): (typeof AlignmentType)[keyof typeof AlignmentType] {
-	switch (align) {
-		case 'center':
-			return AlignmentType.CENTER
-		case 'right':
-			return AlignmentType.RIGHT
-		case 'justify':
-			return AlignmentType.JUSTIFIED
-		default:
-			return AlignmentType.LEFT
-	}
-}
-
-function getHeadingLevel(level?: number): (typeof HeadingLevel)[keyof typeof HeadingLevel] {
-	switch (level) {
-		case 1:
-			return HeadingLevel.HEADING_1
-		case 2:
-			return HeadingLevel.HEADING_2
-		case 3:
-			return HeadingLevel.HEADING_3
-		default:
-			return HeadingLevel.HEADING_1
-	}
-}
-
-function parseInlineText(marks?: { type: string; attrs?: Record<string, any> }[]): {
-	bold?: boolean
-	italics?: boolean
-	underline?: { type: 'single' | 'double' | 'thick' | 'dotted' | 'dottedHeavy' | 'dash' | 'dashedHeavy' | 'dashLong' | 'dashLongHeavy' | 'dotDash' | 'dashDotHeavy' | 'dotDotDash' | 'wave' | 'wavyHeavy' | 'wavyDouble' | 'none' }
-	strike?: boolean
-	font?: string
-	color?: string
-} {
-	const result: ReturnType<typeof parseInlineText> = {}
-	if (!marks) return result
-
-	for (const mark of marks) {
-		switch (mark.type) {
-			case 'bold':
-				result.bold = true
-				break
-			case 'italic':
-				result.italics = true
-				break
-			case 'underline':
-				result.underline = { type: 'single' }
-				break
-			case 'strike':
-				result.strike = true
-				break
-			case 'code':
-				result.font = 'Courier New'
-				break
-			case 'textStyle':
-				if (mark.attrs?.color) {
-					result.color = mark.attrs.color
-				}
-				break
-		}
-	}
-	return result
-}
-
-function inlineRuns(node: ExportNode): TextRun[] {
-	if (node.type === 'text') {
-		const marks = parseInlineText(node.marks)
-		return [
-			new TextRun({
-				text: node.text ?? '',
-				...marks,
-			}),
-		]
-	}
-
-	if (node.content) {
-		return node.content.flatMap((child) => inlineRuns(child))
-	}
-
-	return []
-}
-
-function nodeToDocx(node: ExportNode): Paragraph[] {
-	const paragraphs: Paragraph[] = []
-
-	if (node.type === 'text') {
-		const runs = inlineRuns(node)
-		paragraphs.push(
-			new Paragraph({
-				children: runs,
-			}),
-		)
-		return paragraphs
-	}
-
-	if (node.type === 'heading') {
-		const runs = node.content
-			?.flatMap((child) => inlineRuns(child))
-			?? []
-		paragraphs.push(
-			new Paragraph({
-				heading: getHeadingLevel(node.attrs?.level),
-				alignment: getAlignment(node.attrs?.textAlign),
-				children: runs.length > 0 ? runs : [new TextRun({ text: '' })],
-			}),
-		)
-		return paragraphs
-	}
-
-	if (node.type === 'paragraph') {
-		const runs = node.content
-			?.flatMap((child) => inlineRuns(child))
-			?? []
-		const align = getAlignment(node.attrs?.textAlign)
-		paragraphs.push(
-			new Paragraph({
-				alignment: align,
-				children: runs.length > 0 ? runs : [new TextRun({ text: '' })],
-			}),
-		)
-		return paragraphs
-	}
-
-	if (node.type === 'bulletList') {
-		node.content?.forEach((item) => {
-			const itemParagraphs = nodeToDocx(item)
-			itemParagraphs.forEach((p) => {
-				paragraphs.push(p)
-			})
+async function fetchImageAsDataUrl(src: string): Promise<string> {
+	try {
+		const resp = await fetch(src)
+		const blob = await resp.blob()
+		return await new Promise<string>((resolve) => {
+			const reader = new FileReader()
+			reader.onloadend = () => resolve(reader.result as string)
+			reader.onerror = () => resolve('')
+			reader.readAsDataURL(blob)
 		})
-		return paragraphs
+	} catch {
+		return ''
 	}
+}
 
-	if (node.type === 'listItem') {
-		const runs = node.content
-			?.filter((c) => c.type === 'paragraph')
-			.flatMap((child) => child.content?.flatMap((c) => inlineRuns(c)) ?? [])
-			?? []
-		paragraphs.push(
-			new Paragraph({
-				bullet: { level: 0 },
-				children: runs.length > 0 ? runs : [new TextRun({ text: '' })],
+async function preprocessImages(html: string): Promise<string> {
+	const container = document.createElement('div')
+	container.innerHTML = html
+
+	const imgs = container.querySelectorAll('img')
+	const tasks: Promise<void>[] = []
+
+	for (const img of Array.from(imgs)) {
+		const src = img.getAttribute('src')
+		if (!src || src.startsWith('data:')) continue
+		tasks.push(
+			fetchImageAsDataUrl(src).then((dataUrl) => {
+				if (dataUrl) img.setAttribute('src', dataUrl)
 			}),
 		)
-		return paragraphs
 	}
 
-	if (node.type === 'blockquote') {
-		node.content?.forEach((child) => {
-			const childParagraphs = nodeToDocx(child)
-			childParagraphs.forEach(() => {
-				paragraphs.push(
-					new Paragraph({
-						indent: { left: 720 },
-						children: [
-							new TextRun({
-								text: '',
-								italics: true,
-								color: '666666',
-							}),
-						],
-					}),
-				)
-			})
-		})
-		return paragraphs
-	}
-
-	if (node.type === 'codeBlock') {
-		const codeText = node.content?.map((c) => c.text ?? '').join('\n') ?? ''
-		paragraphs.push(
-			new Paragraph({
-				children: [
-					new TextRun({
-						text: codeText,
-						font: 'Courier New',
-						size: 20,
-					}),
-				],
-			}),
-		)
-		return paragraphs
-	}
-
-	if (node.type === 'horizontalRule') {
-		paragraphs.push(
-			new Paragraph({
-				thematicBreak: true,
-				children: [],
-			}),
-		)
-		return paragraphs
-	}
-
-	if (node.type === 'taskList') {
-		node.content?.forEach((item) => {
-			const checked = item.attrs?.checked ?? false
-			const runs = item.content
-				?.filter((c) => c.type === 'paragraph')
-				.flatMap((child) => child.content?.flatMap((c) => inlineRuns(c)) ?? [])
-				?? []
-			paragraphs.push(
-				new Paragraph({
-					bullet: { level: 0 },
-					children: [
-						new TextRun({
-							text: checked ? '☑ ' : '☐ ',
-						}),
-						...runs,
-					],
-				}),
-			)
-		})
-		return paragraphs
-	}
-
-	if (node.content) {
-		node.content.forEach((child) => {
-			paragraphs.push(...nodeToDocx(child))
-		})
-	}
-
-	return paragraphs
+	await Promise.all(tasks)
+	return container.innerHTML
 }
 
 export async function exportToWord(html: string, filename = 'documento') {
-	const tiptapNode = htmlToJson(html)
+	const processedHtml = await preprocessImages(html)
 
-	const doc = new Document({
-		sections: [
-			{
-				children: nodeToDocx(tiptapNode),
-			},
-		],
-	})
+	const fullHtml = `<!DOCTYPE html>
+<html xmlns:o='urn:schemas-microsoft-com:office:office'
+      xmlns:w='urn:schemas-microsoft-com:office:word'
+      xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+<meta charset="utf-8">
+<title>Documento</title>
+<style>
+  body { font-family: 'Calibri', sans-serif; font-size: 11pt; line-height: 1.5; color: #333; }
+  p { margin: 0 0 8pt 0; }
+  h1 { font-size: 20pt; margin: 12pt 0 6pt 0; color: #1a1a1a; }
+  h2 { font-size: 16pt; margin: 10pt 0 5pt 0; color: #1a1a1a; }
+  h3 { font-size: 13pt; margin: 8pt 0 4pt 0; color: #1a1a1a; }
+  h4 { font-size: 12pt; margin: 6pt 0 3pt 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8pt 0; }
+  th, td { border: 1px solid #999; padding: 4px 8px; text-align: left; }
+  th { background: #f0f0f0; font-weight: bold; }
+  blockquote { margin: 0 0 0 24pt; border-left: 3pt solid #ccc; padding-left: 10pt; color: #666; font-style: italic; }
+  pre { font-family: 'Courier New', monospace; font-size: 9pt; background: #f5f5f5; padding: 8pt; white-space: pre-wrap; border: 1px solid #ddd; }
+  code { font-family: 'Courier New', monospace; font-size: 10pt; background: #f5f5f5; padding: 1pt 3pt; }
+  ul, ol { margin: 0 0 8pt 18pt; padding-left: 12pt; }
+  li { margin-bottom: 2pt; }
+  img { max-width: 100%; height: auto; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 12pt 0; }
+</style>
+</head>
+<body>
+${processedHtml}
+</body>
+</html>`
 
-	const blob = await Packer.toBlob(doc)
+	const blob = new Blob([fullHtml], { type: 'application/msword' })
 	const url = URL.createObjectURL(blob)
 	const a = document.createElement('a')
 	a.href = url
-	a.download = `${filename}.docx`
+	a.download = `${filename}.doc`
 	a.click()
 	URL.revokeObjectURL(url)
-}
-
-function htmlToJson(html: string): ExportNode {
-	const tempDiv = document.createElement('div')
-	tempDiv.innerHTML = html
-	const children = Array.from(tempDiv.childNodes)
-	return {
-		type: 'doc',
-		content: children.flatMap((child) => elementToNode(child)),
-	}
-}
-
-function elementToNode(el: ChildNode): ExportNode[] {
-	if (el.nodeType === Node.TEXT_NODE) {
-		const text = el.textContent ?? ''
-		if (!text.trim()) return []
-		return [{ type: 'text', text }]
-	}
-
-	if (el.nodeType !== Node.ELEMENT_NODE) return []
-
-	const element = el as HTMLElement
-	const tag = element.tagName.toLowerCase()
-
-	const marks: { type: string; attrs?: Record<string, any> }[] = []
-	if (tag === 'strong' || tag === 'b') marks.push({ type: 'bold' })
-	if (tag === 'em' || tag === 'i') marks.push({ type: 'italic' })
-	if (tag === 'u') marks.push({ type: 'underline' })
-	if (tag === 's' || tag === 'del') marks.push({ type: 'strike' })
-	if (tag === 'code') marks.push({ type: 'code' })
-	if (tag === 'a') marks.push({ type: 'link', attrs: { href: element.getAttribute('href') } })
-
-	const inlineContent = Array.from(element.childNodes).flatMap((child) => {
-		const childNodes = elementToNode(child)
-		if (marks.length > 0) {
-			return childNodes.map((n) => ({
-				...n,
-				marks: [...(n.marks ?? []), ...marks],
-			}))
-		}
-		return childNodes
-	})
-
-	const blockMap: Record<string, string> = {
-		p: 'paragraph',
-		h1: 'heading',
-		h2: 'heading',
-		h3: 'heading',
-		h4: 'heading',
-		h5: 'heading',
-		h6: 'heading',
-		ul: 'bulletList',
-		ol: 'orderedList',
-		li: 'listItem',
-		blockquote: 'blockquote',
-		pre: 'codeBlock',
-		hr: 'horizontalRule',
-	}
-
-	const blockType = blockMap[tag]
-
-	if (tag === 'h1' || tag === 'h2' || tag === 'h3' || tag === 'h4' || tag === 'h5' || tag === 'h6') {
-		const level = Number.parseInt(tag[1])
-		return [
-			{
-				type: 'heading',
-				attrs: { level },
-				content: inlineContent,
-			},
-		]
-	}
-
-	if (blockType) {
-		if (blockType === 'bulletList' || blockType === 'orderedList') {
-			const listItems = Array.from(element.children).map((li) => ({
-				type: 'listItem' as const,
-				content: elementToNode(li),
-			}))
-			return [{ type: blockType, content: listItems }]
-		}
-
-		if (blockType === 'codeBlock') {
-			return [
-				{
-					type: 'codeBlock',
-					content: [{ type: 'text', text: element.textContent ?? '' }],
-				},
-			]
-		}
-
-		if (blockType === 'horizontalRule') {
-			return [{ type: 'horizontalRule' }]
-		}
-
-		return [
-			{
-				type: blockType,
-				content: inlineContent,
-			},
-		]
-	}
-
-	if (tag === 'div' && element.getAttribute('data-youtube')) {
-		return [{ type: 'paragraph', content: [{ type: 'text', text: '[YouTube Video]' }] }]
-	}
-
-	if (tag === 'img') {
-		return [{ type: 'paragraph', content: [{ type: 'text', text: `[Imagen: ${element.getAttribute('alt') ?? ''}]` }] }]
-	}
-
-	if (tag === 'br') {
-		return [{ type: 'paragraph', content: [] }]
-	}
-
-	return inlineContent
 }
