@@ -19,7 +19,7 @@ type DateFormat =
 	| 'dd MMMM yyyy'
 
 interface DateFieldBaseProps
-	extends Omit<ComponentProps<'input'>, 'value' | 'onChange' | 'type'> {
+	extends Omit<ComponentProps<'input'>, 'value' | 'onChange' | 'type' | 'defaultValue'> {
 	label?: string
 	format?: DateFormat
 	error?: string

@@ -1,47 +1,8 @@
-export type NavItem = {
-	type: 'item' | 'group' | 'link'
-	id: string
-	label: string
-	icon?: string
-	path?: string
-	auth?: string[]
-	children?: NavItem[]
-}
+import { exampleNavigation } from '@/pages/examples/examples-navigation'
+import type { NavItem } from '@/types/navigation-menu'
 
 export const navigationMenu: NavItem[] = [
-  {
-    type: 'group',
-    id: 'examples',
-    label: 'Examples',
-    icon: 'box',
-    auth: ['Administrador', 'Viewer'],
-    children: [
-      {
-        id: 'table',
-        path: '/examples/table',
-        label: 'Table',
-        type: 'item'
-      },
-      {
-        id: 'date-picker',
-        path: '/examples/date-picker',
-        label: 'Date Picker',
-        type: 'item'
-      },
-      {
-        id: 'dropzone',
-        path: '/examples/dropzone',
-        label: 'Dropzone',
-        type: 'item'
-      },
-      {
-        id: 'kanban',
-        path: '/examples/kanban',
-        label: 'Kanban Board',
-        type: 'item'
-      }
-    ]
-  },
+	...exampleNavigation,
 	{
 		type: 'item',
 		id: 'dashboard',
