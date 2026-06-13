@@ -22,13 +22,28 @@ import {
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import { toolbar, toolbarButton, toolbarGroup } from './editor.styles.css'
-import { ToolbarButton, ToolbarColorPicker, ToolbarDivider, ToolbarImagePopover, ToolbarLinkPopover, ToolbarYouTubePopover } from './toolbar'
+import {
+	ToolbarButton,
+	ToolbarColumnsButton,
+	ToolbarColorPicker,
+	ToolbarDivider,
+	ToolbarExportPdf,
+	ToolbarExportWord,
+	ToolbarFontSize,
+	ToolbarHighlightButton,
+	ToolbarImagePopover,
+	ToolbarImportWord,
+	ToolbarIndentButtons,
+	ToolbarLinkPopover,
+	ToolbarYouTubePopover,
+} from './toolbar'
 
 type EditorToolbarProps = {
 	editor: Editor
+	filename?: string
 }
 
-export default function EditorToolbar({ editor }: EditorToolbarProps) {
+export default function EditorToolbar({ editor, filename }: EditorToolbarProps) {
 	return (
 		<div className={toolbar}>
 			<div className={toolbarGroup}>
@@ -72,6 +87,13 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
 					isActive={(e) => e.isActive('code')}
 					editor={editor}
 				/>
+				<ToolbarHighlightButton editor={editor} />
+			</div>
+
+			<ToolbarDivider />
+
+			<div className={toolbarGroup}>
+				<ToolbarFontSize editor={editor} />
 			</div>
 
 			<ToolbarDivider />
@@ -159,6 +181,12 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
 			<ToolbarDivider />
 
 			<div className={toolbarGroup}>
+				<ToolbarIndentButtons editor={editor} />
+			</div>
+
+			<ToolbarDivider />
+
+			<div className={toolbarGroup}>
 				<ToolbarButton
 					icon={AlignLeft}
 					label='Alinear izquierda'
@@ -219,6 +247,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
 					action={(e) => e.chain().focus().setHorizontalRule().run()}
 					editor={editor}
 				/>
+				<ToolbarColumnsButton editor={editor} />
 			</div>
 
 			<ToolbarDivider />
@@ -246,6 +275,14 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
 					}
 					editor={editor}
 				/>
+			</div>
+
+			<ToolbarDivider />
+
+			<div className={toolbarGroup}>
+				<ToolbarImportWord editor={editor} />
+				<ToolbarExportWord editor={editor} filename={filename} />
+				<ToolbarExportPdf editor={editor} filename={filename} />
 			</div>
 
 			<div className={toolbarGroup} style={{ marginLeft: 'auto' }}>

@@ -283,3 +283,34 @@ export const colorSwatch = style({
 		},
 	},
 })
+
+globalStyle(`${contentArea} .tiptap .editor-two-columns`, {
+	display: 'flex',
+	gap: '1rem',
+	margin: '1em 0',
+	padding: '8px',
+	border: '2px dashed var(--bs-primary)',
+	borderRadius: 'var(--bs-border-radius)',
+})
+
+globalStyle(`${contentArea} .tiptap .editor-two-columns:empty::before`, {
+	content: '"Columnas"',
+	color: 'var(--bs-secondary-color)',
+	fontStyle: 'italic',
+})
+
+globalStyle(`${contentArea} .tiptap .editor-column-block`, {
+	flex: '1 1 0',
+	minWidth: 0,
+	padding: '8px 12px',
+	border: '1px solid var(--bs-border-color)',
+	borderRadius: 'var(--bs-border-radius-sm)',
+	backgroundColor: 'var(--bs-body-bg)',
+})
+
+globalStyle(`${contentArea} .tiptap .editor-column-block:empty::before`, {
+	content: '"Escribe aquí..."',
+	color: 'var(--bs-secondary-color)',
+	fontStyle: 'italic',
+	fontSize: '0.875em',
+})

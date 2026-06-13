@@ -26,7 +26,6 @@ export type EditorProps = {
 	editable?: boolean
 	size?: EditorSize
 	className?: string
-	showExport?: boolean
 	exportFilename?: string
 	onUpdate?: (editor: Editor) => void
 	onBlur?: (editor: Editor) => void

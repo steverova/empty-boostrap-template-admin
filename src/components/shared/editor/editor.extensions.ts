@@ -12,11 +12,13 @@ import TableRow from '@tiptap/extension-table-row'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 import TextAlign from '@tiptap/extension-text-align'
-import { TextStyle } from '@tiptap/extension-text-style'
 import Typography from '@tiptap/extension-typography'
 import Underline from '@tiptap/extension-underline'
 import StarterKit from '@tiptap/starter-kit'
 import { common, createLowlight } from 'lowlight'
+import { FontSize } from './extensions/font-size'
+import { Indent } from './extensions/indent'
+import { TwoColumns, ColumnBlock } from './extensions/two-columns'
 
 const lowlight = createLowlight(common)
 
@@ -38,7 +40,8 @@ export function getExtensions({
 		}),
 		Highlight,
 		Underline,
-		TextStyle,
+		FontSize,
+		Indent,
 		Color,
 		TextAlign.configure({
 			types: ['heading', 'paragraph'],
@@ -64,6 +67,8 @@ export function getExtensions({
 		CodeBlockLowlight.configure({
 			lowlight,
 		}),
+		TwoColumns,
+		ColumnBlock,
 	]
 
 	if (characterLimit) {

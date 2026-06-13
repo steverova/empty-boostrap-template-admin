@@ -12,20 +12,21 @@ import TableRow from '@tiptap/extension-table-row'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 import TextAlign from '@tiptap/extension-text-align'
-import { TextStyle } from '@tiptap/extension-text-style'
 import Typography from '@tiptap/extension-typography'
 import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { common, createLowlight } from 'lowlight'
 import { useEffect } from 'react'
+import { FontSize } from './extensions/font-size'
+import { Indent } from './extensions/indent'
+import { TwoColumns, ColumnBlock } from './extensions/two-columns'
 import { YouTube } from './extensions/youtube'
 import { useEditorStore } from './editor.store'
 import { editorWrapper } from './editor.styles.css'
 import type { EditorProps } from './editor.types'
 import EditorBubbleMenu from './editor-bubble-menu'
 import EditorContent from './editor-content'
-import EditorExportMenu from './editor-export-menu'
 import EditorStatusBar from './editor-status-bar'
 import EditorToolbar from './editor-toolbar'
 
@@ -37,7 +38,6 @@ export default function Editor({
 	editable = true,
 	size = 'md',
 	className,
-	showExport = false,
 	exportFilename,
 	onUpdate,
 	onBlur,
@@ -49,9 +49,10 @@ export default function Editor({
 	const extensions: any[] = [
 		StarterKit.configure({ codeBlock: false }),
 		Placeholder.configure({ placeholder }),
-		Highlight,
+		Highlight.configure({ multicolor: true }),
 		Underline,
-		TextStyle,
+		FontSize,
+		Indent,
 		Color,
 		TextAlign.configure({ types: ['heading', 'paragraph'] }),
 		Link.configure({ openOnClick: false, autolink: true }),
@@ -65,6 +66,8 @@ export default function Editor({
 		TaskItem.configure({ nested: true }),
 		CodeBlockLowlight.configure({ lowlight }),
 		YouTube,
+		TwoColumns,
+		ColumnBlock,
 		...(characterLimit
 			? [CharacterCount.configure({ limit: characterLimit })]
 			: []),
@@ -94,12 +97,7 @@ export default function Editor({
 
 	return (
 		<div className={`${editorWrapper} ${className ?? ''}`}>
-			{editable && (
-				<div className='d-flex justify-content-end px-2 pt-2'>
-					{showExport && <EditorExportMenu editor={editor} filename={exportFilename} />}
-				</div>
-			)}
-			{editable && <EditorToolbar editor={editor} />}
+			{editable && <EditorToolbar editor={editor} filename={exportFilename} />}
 			{editable && <EditorBubbleMenu editor={editor} />}
 			<EditorContent editor={editor} size={size} />
 			{editable && (
