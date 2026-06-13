@@ -52,6 +52,7 @@ export function getExtensions({
 		}),
 		Image.configure({
 			inline: true,
+			resize: { enabled: true, directions: ['right'] },
 		}),
 		Table.configure({
 			resizable: true,

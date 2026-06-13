@@ -56,7 +56,7 @@ export default function Editor({
 		Color,
 		TextAlign.configure({ types: ['heading', 'paragraph'] }),
 		Link.configure({ openOnClick: false, autolink: true }),
-		Image.configure({ inline: true }),
+		Image.configure({ inline: true, resize: { enabled: true, directions: ['right'] } }),
 		Table.configure({ resizable: true }),
 		TableRow,
 		TableCell,

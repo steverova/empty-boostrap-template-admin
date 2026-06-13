@@ -226,18 +226,38 @@ globalStyle(`${contentArea} .tiptap table .selectedCell`, {
 globalStyle(`${contentArea} .tiptap .ProseMirror-selectednode`, {
 	outline: '2px solid var(--bs-primary)',
 	borderRadius: 'var(--bs-border-radius)',
+	position: 'relative',
+})
+
+globalStyle(`${contentArea} .tiptap .ProseMirror-selectednode img`, {
+	display: 'block',
+	borderRadius: 'var(--bs-border-radius)',
+})
+
+globalStyle(`${contentArea} .tiptap .ProseMirror-resize-handle`, {
+	position: 'absolute',
+	bottom: -3,
+	right: -3,
+	width: 14,
+	height: 14,
+	cursor: 'nwse-resize',
+	backgroundColor: 'var(--bs-primary)',
+	borderRadius: '50%',
+	border: '2px solid white',
+	zIndex: 10,
+	boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
 })
 
 globalStyle(`${contentArea} .tiptap div[data-youtube]`, {
 	margin: '8px 0',
 	borderRadius: 'var(--bs-border-radius)',
-	overflow: 'hidden',
 })
 
 globalStyle(`${contentArea} .tiptap div[data-youtube] iframe`, {
 	width: '100%',
 	aspectRatio: '16 / 9',
 	border: 0,
+	borderRadius: 'var(--bs-border-radius)',
 })
 
 export const statusBar = style({
