@@ -3,8 +3,17 @@ import Editor from '@components/shared/editor'
 import { useState } from 'react'
 import Container from 'react-bootstrap/Container'
 
+const STORAGE_KEY = 'editor-example-content'
+
 export default function EditorExamplePage() {
-	const [content, setContent] = useState('')
+	const [content, setContent] = useState(() => {
+		return localStorage.getItem(STORAGE_KEY) || ''
+	})
+
+	const handleUpdate = (html: string) => {
+		setContent(html)
+		localStorage.setItem(STORAGE_KEY, html)
+	}
 
 	return (
 		<Container fluid className='py-4'>
@@ -16,34 +25,20 @@ export default function EditorExamplePage() {
 						content: (
 							<Editor
 								placeholder='Comienza a escribir...'
-								characterLimit={5000}
 								exportFilename='mi-documento'
-								onUpdate={(ed) => setContent(ed.getHTML())}
+								initialContent={content}
+								onUpdate={(ed) => handleUpdate(ed.getHTML())}
 							/>
 						),
 					},
 					{
-						label: 'HTML Preview',
+						label: 'Vista previa',
 						key: 'html-preview',
 						content: (
-							<div
-								className='border rounded p-3 bg-body-secondary'
-								style={{ minHeight: 200 }}
-							>
-								<h6 className='text-secondary mb-2'>
-									Vista previa (HTML):
-								</h6>
-
-								<pre
-									className='small mb-0'
-									style={{
-										whiteSpace: 'pre-wrap',
-										wordBreak: 'break-word',
-									}}
-								>
-									{content || '<p></p>'}
-								</pre>
-							</div>
+							<Editor
+								editable={false}
+								initialContent={content}
+							/>
 						),
 					},
 				]}

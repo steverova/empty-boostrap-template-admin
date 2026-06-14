@@ -22,11 +22,12 @@ export type ToolbarButtonConfig = {
 
 export type EditorProps = {
 	placeholder?: string
-	characterLimit?: number
+	characterLimit?: number | null
 	editable?: boolean
 	size?: EditorSize
 	className?: string
 	exportFilename?: string
+	initialContent?: string
 	onUpdate?: (editor: Editor) => void
 	onBlur?: (editor: Editor) => void
 	onFocus?: (editor: Editor) => void

@@ -17,6 +17,7 @@ import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import ImageResize from 'tiptap-extension-resize-image'
 import { common, createLowlight } from 'lowlight'
+import type { ReactNode } from 'react'
 import { useEffect } from 'react'
 import { FontSize } from './extensions/font-size'
 import { Indent } from './extensions/indent'
@@ -43,11 +44,12 @@ export default function Editor({
 	size = 'md',
 	className,
 	exportFilename,
+	initialContent,
 	onUpdate,
 	onBlur,
 	onFocus,
 	autofocus = false,
-}: EditorProps) {
+}: EditorProps): ReactNode {
 	const setEditor = useEditorStore((s) => s.setEditor)
 
 	const extensions: any[] = [
@@ -76,7 +78,7 @@ export default function Editor({
 		Callout,
 		Expandable,
 		PageBreak,
-		...(characterLimit
+		...(characterLimit && characterLimit > 0
 			? [CharacterCount.configure({ limit: characterLimit })]
 			: []),
 	]
@@ -85,6 +87,7 @@ export default function Editor({
 		extensions,
 		editable,
 		autofocus,
+		content: initialContent || '',
 		onUpdate: ({ editor: ed }) => {
 			onUpdate?.(ed)
 		},

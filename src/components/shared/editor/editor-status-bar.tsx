@@ -3,7 +3,7 @@ import { charCount, statusBar } from './editor.styles.css'
 
 type EditorStatusBarProps = {
 	editor: Editor
-	characterLimit?: number
+	characterLimit?: number | null
 }
 
 export default function EditorStatusBar({
