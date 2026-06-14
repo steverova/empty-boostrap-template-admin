@@ -1,9 +1,7 @@
-import CharacterCount from '@tiptap/extension-character-count'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import Color from '@tiptap/extension-color'
 import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
-import Placeholder from '@tiptap/extension-placeholder'
 import { Table } from '@tiptap/extension-table'
 import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
@@ -13,12 +11,10 @@ import TaskList from '@tiptap/extension-task-list'
 import TextAlign from '@tiptap/extension-text-align'
 import Typography from '@tiptap/extension-typography'
 import Underline from '@tiptap/extension-underline'
-import { useEditor } from '@tiptap/react'
+import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import ImageResize from 'tiptap-extension-resize-image'
 import { common, createLowlight } from 'lowlight'
-import type { ReactNode } from 'react'
-import { useEffect } from 'react'
 import { FontSize } from './extensions/font-size'
 import { Indent } from './extensions/indent'
 import { TwoColumns, ColumnBlock } from './extensions/two-columns'
@@ -27,38 +23,22 @@ import { UnderlineColor } from './extensions/underline-color'
 import { Callout } from './extensions/callout'
 import { Expandable } from './extensions/expandable'
 import { PageBreak } from './extensions/page-break'
-import { useEditorStore } from './editor.store'
-import { editorWrapper } from './editor.styles.css'
-import type { EditorProps } from './editor.types'
-import EditorBubbleMenu from './editor-bubble-menu'
-import EditorContent from './editor-content'
-import EditorStatusBar from './editor-status-bar'
-import EditorToolbar from './editor-toolbar'
-
-export { default as EditorPreview } from './editor-preview'
+import { contentArea, editorSize, editorPreview } from './editor.styles.css'
+import type { EditorSize } from './editor.types'
 
 const lowlight = createLowlight(common)
 
-export default function Editor({
-	placeholder = 'Escribe algo...',
-	characterLimit,
-	editable = true,
-	size = 'md',
-	className,
-	exportFilename,
-	initialContent,
-	onUpdate,
-	onBlur,
-	onFocus,
-	autofocus = false,
-	stickyToolbar = true,
-}: EditorProps): ReactNode {
-	const setEditor = useEditorStore((s) => s.setEditor)
-	const currentWidth = useEditorStore((s) => s.containerWidth)
+type EditorPreviewProps = {
+	content?: string
+	size?: EditorSize
+}
 
+export default function EditorPreview({
+	content = '',
+	size = 'md',
+}: EditorPreviewProps) {
 	const extensions: any[] = [
 		StarterKit.configure({ codeBlock: false }),
-		Placeholder.configure({ placeholder }),
 		Highlight.configure({ multicolor: true }),
 		Underline,
 		UnderlineColor,
@@ -82,48 +62,21 @@ export default function Editor({
 		Callout,
 		Expandable,
 		PageBreak,
-		...(characterLimit && characterLimit > 0
-			? [CharacterCount.configure({ limit: characterLimit })]
-			: []),
 	]
 
 	const editor = useEditor({
 		extensions,
-		editable,
-		autofocus,
-		content: initialContent || '',
-		onUpdate: ({ editor: ed }) => {
-			onUpdate?.(ed)
-		},
-		onBlur: ({ editor: ed }) => {
-			onBlur?.(ed)
-		},
-		onFocus: ({ editor: ed }) => {
-			onFocus?.(ed)
-		},
+		editable: false,
+		content,
 	})
-
-	useEffect(() => {
-		setEditor(editor)
-		return () => setEditor(null)
-	}, [editor, setEditor])
 
 	if (!editor) return null
 
 	return (
-		<div className={`${editorWrapper} ${className ?? ''}`}>
-			{editable && (
-				<EditorToolbar
-					editor={editor}
-					filename={exportFilename}
-					sticky={stickyToolbar}
-				/>
-			)}
-			{editable && <EditorBubbleMenu editor={editor} />}
-			<EditorContent editor={editor} size={size} width={currentWidth} />
-			{editable && (
-				<EditorStatusBar editor={editor} characterLimit={characterLimit} />
-			)}
+		<div className={editorPreview}>
+			<div className={`${contentArea} ${editorSize[size]}`} style={{ pointerEvents: 'none' }}>
+				<EditorContent editor={editor} />
+			</div>
 		</div>
 	)
 }

@@ -21,12 +21,13 @@ import {
 } from 'lucide-react'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
-import { toolbar, toolbarButton, toolbarGroup } from './editor.styles.css'
+import { toolbar, toolbarButton, toolbarGroup, toolbarSticky } from './editor.styles.css'
 import {
 	ToolbarButton,
 	ToolbarCallout,
 	ToolbarColumnsButton,
 	ToolbarColorPicker,
+	ToolbarContainerWidth,
 	ToolbarDivider,
 	ToolbarExportPdf,
 	ToolbarExportWord,
@@ -46,11 +47,13 @@ import {
 type EditorToolbarProps = {
 	editor: Editor
 	filename?: string
+	sticky?: boolean
 }
 
-export default function EditorToolbar({ editor, filename }: EditorToolbarProps) {
+export default function EditorToolbar({ editor, filename, sticky = true }: EditorToolbarProps) {
 	return (
-		<div className={toolbar}>
+		<div className={`${toolbar} ${sticky ? toolbarSticky : ''}`}>
+			{/* Text Style */}
 			<div className={toolbarGroup}>
 				<ToolbarButton
 					icon={Bold}
@@ -92,12 +95,20 @@ export default function EditorToolbar({ editor, filename }: EditorToolbarProps) 
 					isActive={(e) => e.isActive('code')}
 					editor={editor}
 				/>
-				<ToolbarHighlightButton editor={editor} />
-				<ToolbarUnderlineColor editor={editor} />
 			</div>
 
 			<ToolbarDivider />
 
+			{/* Color */}
+			<div className={toolbarGroup}>
+				<ToolbarHighlightButton editor={editor} />
+				<ToolbarUnderlineColor editor={editor} />
+				<ToolbarColorPicker editor={editor} />
+			</div>
+
+			<ToolbarDivider />
+
+			{/* Font */}
 			<div className={toolbarGroup}>
 				<ToolbarFontSize editor={editor} />
 				<ToolbarFontFamily editor={editor} />
@@ -105,6 +116,7 @@ export default function EditorToolbar({ editor, filename }: EditorToolbarProps) 
 
 			<ToolbarDivider />
 
+			{/* Paragraph */}
 			<div className={toolbarGroup}>
 				<Dropdown as={ButtonGroup}>
 					<ToolbarButton
@@ -154,10 +166,27 @@ export default function EditorToolbar({ editor, filename }: EditorToolbarProps) 
 						</Dropdown.Item>
 					</Dropdown.Menu>
 				</Dropdown>
+				<ToolbarButton
+					icon={Quote}
+					label='Cita'
+					tooltip='Bloque de cita'
+					action={(e) => e.chain().focus().toggleBlockquote().run()}
+					isActive={(e) => e.isActive('blockquote')}
+					editor={editor}
+				/>
+				<ToolbarButton
+					icon={Code}
+					label='Bloque de código'
+					tooltip='Bloque de código'
+					action={(e) => e.chain().focus().toggleCodeBlock().run()}
+					isActive={(e) => e.isActive('codeBlock')}
+					editor={editor}
+				/>
 			</div>
 
 			<ToolbarDivider />
 
+			{/* Lists */}
 			<div className={toolbarGroup}>
 				<ToolbarButton
 					icon={List}
@@ -183,16 +212,12 @@ export default function EditorToolbar({ editor, filename }: EditorToolbarProps) 
 					isActive={(e) => e.isActive('taskList')}
 					editor={editor}
 				/>
-			</div>
-
-			<ToolbarDivider />
-
-			<div className={toolbarGroup}>
 				<ToolbarIndentButtons editor={editor} />
 			</div>
 
 			<ToolbarDivider />
 
+			{/* Alignment */}
 			<div className={toolbarGroup}>
 				<ToolbarButton
 					icon={AlignLeft}
@@ -230,23 +255,8 @@ export default function EditorToolbar({ editor, filename }: EditorToolbarProps) 
 
 			<ToolbarDivider />
 
+			{/* Insert */}
 			<div className={toolbarGroup}>
-				<ToolbarButton
-					icon={Quote}
-					label='Cita'
-					tooltip='Bloque de cita'
-					action={(e) => e.chain().focus().toggleBlockquote().run()}
-					isActive={(e) => e.isActive('blockquote')}
-					editor={editor}
-				/>
-				<ToolbarButton
-					icon={Code}
-					label='Bloque de código'
-					tooltip='Bloque de código'
-					action={(e) => e.chain().focus().toggleCodeBlock().run()}
-					isActive={(e) => e.isActive('codeBlock')}
-					editor={editor}
-				/>
 				<ToolbarButton
 					icon={Minus}
 					label='Línea horizontal'
@@ -258,20 +268,6 @@ export default function EditorToolbar({ editor, filename }: EditorToolbarProps) 
 				<ToolbarCallout editor={editor} />
 				<ToolbarExpandable editor={editor} />
 				<ToolbarPageBreak editor={editor} />
-			</div>
-
-			<ToolbarDivider />
-
-			<div className={toolbarGroup}>
-				<ToolbarLinkPopover editor={editor} />
-				<ToolbarImagePopover editor={editor} />
-				<ToolbarYouTubePopover editor={editor} />
-				<ToolbarColorPicker editor={editor} />
-			</div>
-
-			<ToolbarDivider />
-
-			<div className={toolbarGroup}>
 				<ToolbarButton
 					icon={Table2}
 					label='Insertar tabla'
@@ -289,13 +285,25 @@ export default function EditorToolbar({ editor, filename }: EditorToolbarProps) 
 
 			<ToolbarDivider />
 
+			{/* Media */}
+			<div className={toolbarGroup}>
+				<ToolbarLinkPopover editor={editor} />
+				<ToolbarImagePopover editor={editor} />
+				<ToolbarYouTubePopover editor={editor} />
+			</div>
+
+			<ToolbarDivider />
+
+			{/* Import/Export */}
 			<div className={toolbarGroup}>
 				<ToolbarImportWord editor={editor} />
 				<ToolbarExportWord editor={editor} filename={filename} />
 				<ToolbarExportPdf editor={editor} filename={filename} />
 			</div>
 
+			{/* Right side */}
 			<div className={toolbarGroup} style={{ marginLeft: 'auto' }}>
+				<ToolbarContainerWidth />
 				<ToolbarButton
 					icon={Undo2}
 					label='Deshacer'

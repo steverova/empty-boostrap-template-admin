@@ -32,9 +32,12 @@ export type EditorProps = {
 	onBlur?: (editor: Editor) => void
 	onFocus?: (editor: Editor) => void
 	autofocus?: boolean
+	stickyToolbar?: boolean
 }
 
 export type EditorState = {
 	editor: Editor | null
 	setEditor: (editor: Editor | null) => void
+	containerWidth: 'auto' | 'sm' | 'md' | 'lg'
+	setContainerWidth: (width: 'auto' | 'sm' | 'md' | 'lg') => void
 }

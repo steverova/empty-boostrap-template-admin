@@ -1,5 +1,5 @@
 import BaseTabs from '@/components/shared/base-tabs'
-import Editor from '@components/shared/editor'
+import Editor, { EditorPreview } from '@components/shared/editor'
 import { useState } from 'react'
 import Container from 'react-bootstrap/Container'
 
@@ -35,9 +35,8 @@ export default function EditorExamplePage() {
 						label: 'Vista previa',
 						key: 'html-preview',
 						content: (
-							<Editor
-								editable={false}
-								initialContent={content}
+							<EditorPreview
+								content={content}
 							/>
 						),
 					},

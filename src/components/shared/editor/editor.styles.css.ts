@@ -19,6 +19,13 @@ export const editorSize = styleVariants({
 	lg: { fontSize: '1.125rem' },
 })
 
+export const containerWidth = styleVariants({
+	auto: {},
+	sm: { maxWidth: 600, marginInline: 'auto' },
+	md: { maxWidth: 900, marginInline: 'auto' },
+	lg: { maxWidth: 1200, marginInline: 'auto' },
+})
+
 export const toolbar = style({
 	display: 'flex',
 	flexWrap: 'wrap',
@@ -27,6 +34,12 @@ export const toolbar = style({
 	padding: '6px 8px',
 	borderBottom: '1px solid var(--bs-border-color)',
 	backgroundColor: 'var(--bs-tertiary-bg)',
+})
+
+export const toolbarSticky = style({
+	position: 'sticky',
+	top: 0,
+	zIndex: 10,
 })
 
 export const toolbarGroup = style({
@@ -255,6 +268,13 @@ export const statusBar = style({
 	backgroundColor: 'var(--bs-tertiary-bg)',
 	fontSize: '0.75rem',
 	color: 'var(--bs-secondary-color)',
+})
+
+export const editorPreview = style({
+	border: '1px solid var(--bs-border-color)',
+	borderRadius: 'var(--bs-border-radius)',
+	backgroundColor: 'var(--bs-body-bg)',
+	overflow: 'hidden',
 })
 
 export const charCount = styleVariants({
