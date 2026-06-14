@@ -4,29 +4,34 @@ import type { NodeViewProps } from '@tiptap/react'
 import { NodeViewWrapper } from '@tiptap/react'
 import { useCallback, useRef, useState } from 'react'
 
-const RESIZE_HANDLE_STYLE: React.CSSProperties = {
-	position: 'absolute',
-	bottom: 0,
-	right: 0,
-	width: 20,
-	height: 20,
-	cursor: 'nwse-resize',
-	display: 'flex',
-	alignItems: 'center',
-	justifyContent: 'center',
-	zIndex: 10,
-}
-
-const RESIZE_DOT_STYLE: React.CSSProperties = {
-	width: 8,
-	height: 8,
-	backgroundColor: 'var(--bs-primary)',
-	borderRadius: '50%',
-}
+const ALIGN_ICONS = {
+	left: (
+		<svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
+			<line x1='3' y1='6' x2='21' y2='6' />
+			<line x1='3' y1='12' x2='15' y2='12' />
+			<line x1='3' y1='18' x2='18' y2='18' />
+		</svg>
+	),
+	center: (
+		<svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
+			<line x1='3' y1='6' x2='21' y2='6' />
+			<line x1='6' y1='12' x2='18' y2='12' />
+			<line x1='4' y1='18' x2='20' y2='18' />
+		</svg>
+	),
+	right: (
+		<svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
+			<line x1='3' y1='6' x2='21' y2='6' />
+			<line x1='9' y1='12' x2='21' y2='12' />
+			<line x1='6' y1='18' x2='21' y2='18' />
+		</svg>
+	),
+} as const
 
 function YouTubePlayer({ node, updateAttributes }: NodeViewProps) {
 	const { src } = node.attrs
 	const width = (node.attrs.width as number) || 100
+	const align = (node.attrs.align as string) || 'center'
 	const wrapperRef = useRef<HTMLDivElement>(null)
 	const [hovered, setHovered] = useState(false)
 	const dragging = useRef(false)
@@ -63,22 +68,88 @@ function YouTubePlayer({ node, updateAttributes }: NodeViewProps) {
 		[updateAttributes],
 	)
 
+	const handleAlign = (newAlign: string) => {
+		updateAttributes({ align: newAlign })
+	}
+
+	const getContainerStyle = (): React.CSSProperties => {
+		const base: React.CSSProperties = {
+			position: 'relative',
+			width: `${width}%`,
+			maxWidth: '100%',
+			margin: '8px 0',
+			borderRadius: 'var(--bs-border-radius)',
+			border: hovered ? '2px solid var(--bs-primary)' : '2px solid transparent',
+			transition: 'border-color 0.15s ease',
+		}
+		if (align === 'center') {
+			base.marginLeft = 'auto'
+			base.marginRight = 'auto'
+		} else if (align === 'right') {
+			base.marginLeft = 'auto'
+		}
+		return base
+	}
+
 	return (
 		<NodeViewWrapper>
 			<div
 				ref={wrapperRef}
 				onMouseEnter={() => setHovered(true)}
 				onMouseLeave={() => setHovered(false)}
-				style={{
-					position: 'relative',
-					width: `${width}%`,
-					maxWidth: '100%',
-					margin: '8px 0',
-					borderRadius: 'var(--bs-border-radius)',
-					border: hovered ? '2px solid var(--bs-primary)' : '2px solid transparent',
-					transition: 'border-color 0.15s ease',
-				}}
+				style={getContainerStyle()}
 			>
+				{hovered && (
+					<div
+						style={{
+							position: 'absolute',
+							top: -32,
+							left: '50%',
+							transform: 'translateX(-50%)',
+							display: 'flex',
+							gap: 2,
+							zIndex: 20,
+							backgroundColor: 'var(--bs-body-bg)',
+							border: '1px solid var(--bs-border-color)',
+							borderRadius: 4,
+							padding: '2px 4px',
+							boxShadow: '0 2px 4px rgba(0,0,0,0.15)',
+						}}
+					>
+						{(['left', 'center', 'right'] as const).map((a) => (
+							<button
+								key={a}
+								type='button'
+								onClick={(e) => {
+									e.preventDefault()
+									e.stopPropagation()
+									handleAlign(a)
+								}}
+								style={{
+									display: 'flex',
+									alignItems: 'center',
+									justifyContent: 'center',
+									width: 24,
+									height: 24,
+									padding: 0,
+									border: 'none',
+									borderRadius: 3,
+									backgroundColor:
+										align === a ? 'var(--bs-primary)' : 'transparent',
+									color:
+										align === a
+											? 'var(--bs-primary-text)'
+											: 'var(--bs-secondary-color)',
+									cursor: 'pointer',
+									transition: 'background-color 0.1s ease',
+								}}
+								title={`Alinear a la ${a === 'left' ? 'izquierda' : a === 'center' ? 'centro' : 'derecha'}`}
+							>
+								{ALIGN_ICONS[a]}
+							</button>
+						))}
+					</div>
+				)}
 				<div
 					style={{
 						position: 'relative',
@@ -106,11 +177,29 @@ function YouTubePlayer({ node, updateAttributes }: NodeViewProps) {
 				</div>
 				{hovered && (
 					<div
-						style={RESIZE_HANDLE_STYLE}
+						style={{
+							position: 'absolute',
+							bottom: 0,
+							right: 0,
+							width: 20,
+							height: 20,
+							cursor: 'nwse-resize',
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+							zIndex: 10,
+						}}
 						onMouseDown={handleMouseDown}
 						title='Arrastrar para redimensionar'
 					>
-						<div style={RESIZE_DOT_STYLE} />
+						<div
+							style={{
+								width: 8,
+								height: 8,
+								backgroundColor: 'var(--bs-primary)',
+								borderRadius: '50%',
+							}}
+						/>
 					</div>
 				)}
 			</div>
@@ -153,6 +242,21 @@ export const YouTube = Node.create({
 				renderHTML: (attributes: Record<string, any>) => {
 					const w = attributes.width as number
 					if (w && w < 100) return { style: `width: ${w}%` }
+					return {}
+				},
+			},
+			align: {
+				default: 'center',
+				parseHTML: (element: HTMLElement) => {
+					const style = element.getAttribute('style') ?? ''
+					if (style.includes('margin-left: auto') && style.includes('margin-right: auto')) return 'center'
+					if (style.includes('margin-left: auto')) return 'right'
+					return 'left'
+				},
+				renderHTML: (attributes: Record<string, any>) => {
+					const a = attributes.align as string
+					if (a === 'center') return { style: 'margin-left: auto; margin-right: auto;' }
+					if (a === 'right') return { style: 'margin-left: auto;' }
 					return {}
 				},
 			},

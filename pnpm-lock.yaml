@@ -155,6 +155,9 @@ importers:
       styled-components:
         specifier: ^6.4.2
         version: 6.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      tiptap-extension-resize-image:
+        specifier: ^1.4.3
+        version: 1.4.3(@tiptap/core@3.26.1(@tiptap/pm@3.26.1))(@tiptap/extension-image@3.26.1(@tiptap/core@3.26.1(@tiptap/pm@3.26.1)))(@tiptap/pm@3.26.1)
       xlsx:
         specifier: ^0.18.5
         version: 0.18.5
@@ -2428,6 +2431,13 @@ packages:
   tinyglobby@0.2.17:
     resolution: {integrity: sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==}
     engines: {node: '>=12.0.0'}
+
+  tiptap-extension-resize-image@1.4.3:
+    resolution: {integrity: sha512-OfYgSCIdRgqvGKnNW1wd84AxryMyBTnI827iOYfkMUywORPxIQGG0QBUIanWeR5b6CJD2fmGE9aTVVvSt99y4w==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0 || ^3.0.0
+      '@tiptap/extension-image': ^2.0.0 || ^3.0.0
+      '@tiptap/pm': ^2.0.0 || ^3.0.0
 
   tmp@0.2.7:
     resolution: {integrity: sha512-e0votIpp4Uo2AJYSzVHV6xCcawuiez3DzqDAbrTc3YxBkplN6e+dM13ZeIcZnDg/QpSuU2zfZ3rzwY8ukEnaXw==}
@@ -4918,6 +4928,12 @@ snapshots:
     dependencies:
       fdir: 6.5.0(picomatch@4.0.4)
       picomatch: 4.0.4
+
+  tiptap-extension-resize-image@1.4.3(@tiptap/core@3.26.1(@tiptap/pm@3.26.1))(@tiptap/extension-image@3.26.1(@tiptap/core@3.26.1(@tiptap/pm@3.26.1)))(@tiptap/pm@3.26.1):
+    dependencies:
+      '@tiptap/core': 3.26.1(@tiptap/pm@3.26.1)
+      '@tiptap/extension-image': 3.26.1(@tiptap/core@3.26.1(@tiptap/pm@3.26.1))
+      '@tiptap/pm': 3.26.1
 
   tmp@0.2.7: {}
 

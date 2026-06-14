@@ -2,7 +2,6 @@ import CharacterCount from '@tiptap/extension-character-count'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import Color from '@tiptap/extension-color'
 import Highlight from '@tiptap/extension-highlight'
-import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
 import { Table } from '@tiptap/extension-table'
@@ -15,6 +14,7 @@ import TextAlign from '@tiptap/extension-text-align'
 import Typography from '@tiptap/extension-typography'
 import Underline from '@tiptap/extension-underline'
 import StarterKit from '@tiptap/starter-kit'
+import ImageResize from 'tiptap-extension-resize-image'
 import { common, createLowlight } from 'lowlight'
 import { FontSize } from './extensions/font-size'
 import { Indent } from './extensions/indent'
@@ -50,10 +50,7 @@ export function getExtensions({
 			openOnClick: false,
 			autolink: true,
 		}),
-		Image.configure({
-			inline: true,
-			resize: { enabled: true, directions: ['right'] },
-		}),
+		ImageResize,
 		Table.configure({
 			resizable: true,
 		}),
