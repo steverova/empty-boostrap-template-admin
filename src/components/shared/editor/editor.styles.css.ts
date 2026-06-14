@@ -320,3 +320,24 @@ globalStyle(`${contentArea} .tiptap .editor-column-block:empty::before`, {
 	fontStyle: 'italic',
 	fontSize: '0.875em',
 })
+
+globalStyle(`${contentArea} .tiptap pre code .hljs-keyword`, { color: '#cf222e' })
+globalStyle(`${contentArea} .tiptap pre code .hljs-string`, { color: '#0a3069' })
+globalStyle(`${contentArea} .tiptap pre code .hljs-comment`, { color: '#6e7781', fontStyle: 'italic' })
+globalStyle(`${contentArea} .tiptap pre code .hljs-function`, { color: '#8250df' })
+globalStyle(`${contentArea} .tiptap pre code .hljs-number`, { color: '#0550ae' })
+globalStyle(`${contentArea} .tiptap pre code .hljs-title`, { color: '#6639ba' })
+globalStyle(`${contentArea} .tiptap pre code .hljs-built_in`, { color: '#e36209' })
+globalStyle(`${contentArea} .tiptap pre code .hljs-params`, { color: '#953800' })
+globalStyle(`${contentArea} .tiptap pre code .hljs-attr`, { color: '#0550ae' })
+globalStyle(`${contentArea} .tiptap pre code .hljs-literal`, { color: '#0550ae' })
+globalStyle(`${contentArea} .tiptap pre code .hljs-type`, { color: '#953800' })
+globalStyle(`${contentArea} .tiptap pre code .hljs-meta`, { color: '#0550ae' })
+globalStyle(`${contentArea} .tiptap pre code .hljs-selector-class`, { color: '#6639ba' })
+globalStyle(`${contentArea} .tiptap pre code .hljs-selector-tag`, { color: '#116329' })
+globalStyle(`${contentArea} .tiptap pre code .hljs-addition`, { color: '#116329', backgroundColor: '#dafbe1' })
+globalStyle(`${contentArea} .tiptap pre code .hljs-deletion`, { color: '#cf222e', backgroundColor: '#ffebe9' })
+
+globalStyle(`${contentArea} .tiptap .editor-page-break`, {
+	margin: '16px 0',
+})

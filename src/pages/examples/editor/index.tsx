@@ -1,9 +1,7 @@
 import BaseTabs from '@/components/shared/base-tabs'
 import Editor from '@components/shared/editor'
 import { useState } from 'react'
-import Col from 'react-bootstrap/Col'
 import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
 
 export default function EditorExamplePage() {
 	const [content, setContent] = useState('')

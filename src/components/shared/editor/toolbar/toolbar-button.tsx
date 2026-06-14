@@ -32,6 +32,7 @@ export default function ToolbarButton({
 				data-active={active}
 				disabled={isDisabled}
 				aria-label={label}
+				onMouseDown={(e) => e.preventDefault()}
 				onClick={() => action(editor)}
 			>
 				<Icon size={16} strokeWidth={2} />

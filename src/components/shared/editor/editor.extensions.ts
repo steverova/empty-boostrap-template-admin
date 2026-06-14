@@ -19,6 +19,10 @@ import { common, createLowlight } from 'lowlight'
 import { FontSize } from './extensions/font-size'
 import { Indent } from './extensions/indent'
 import { TwoColumns, ColumnBlock } from './extensions/two-columns'
+import { UnderlineColor } from './extensions/underline-color'
+import { Callout } from './extensions/callout'
+import { Expandable } from './extensions/expandable'
+import { PageBreak } from './extensions/page-break'
 
 const lowlight = createLowlight(common)
 
@@ -40,6 +44,7 @@ export function getExtensions({
 		}),
 		Highlight,
 		Underline,
+		UnderlineColor,
 		FontSize,
 		Indent,
 		Color,
@@ -67,6 +72,9 @@ export function getExtensions({
 		}),
 		TwoColumns,
 		ColumnBlock,
+		Callout,
+		Expandable,
+		PageBreak,
 	]
 
 	if (characterLimit) {

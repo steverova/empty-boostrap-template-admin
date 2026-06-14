@@ -24,17 +24,22 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import { toolbar, toolbarButton, toolbarGroup } from './editor.styles.css'
 import {
 	ToolbarButton,
+	ToolbarCallout,
 	ToolbarColumnsButton,
 	ToolbarColorPicker,
 	ToolbarDivider,
 	ToolbarExportPdf,
 	ToolbarExportWord,
+	ToolbarExpandable,
+	ToolbarFontFamily,
 	ToolbarFontSize,
 	ToolbarHighlightButton,
 	ToolbarImagePopover,
 	ToolbarImportWord,
 	ToolbarIndentButtons,
 	ToolbarLinkPopover,
+	ToolbarPageBreak,
+	ToolbarUnderlineColor,
 	ToolbarYouTubePopover,
 } from './toolbar'
 
@@ -88,12 +93,14 @@ export default function EditorToolbar({ editor, filename }: EditorToolbarProps) 
 					editor={editor}
 				/>
 				<ToolbarHighlightButton editor={editor} />
+				<ToolbarUnderlineColor editor={editor} />
 			</div>
 
 			<ToolbarDivider />
 
 			<div className={toolbarGroup}>
 				<ToolbarFontSize editor={editor} />
+				<ToolbarFontFamily editor={editor} />
 			</div>
 
 			<ToolbarDivider />
@@ -248,6 +255,9 @@ export default function EditorToolbar({ editor, filename }: EditorToolbarProps) 
 					editor={editor}
 				/>
 				<ToolbarColumnsButton editor={editor} />
+				<ToolbarCallout editor={editor} />
+				<ToolbarExpandable editor={editor} />
+				<ToolbarPageBreak editor={editor} />
 			</div>
 
 			<ToolbarDivider />

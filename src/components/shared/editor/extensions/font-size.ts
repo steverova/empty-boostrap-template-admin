@@ -12,6 +12,15 @@ export const FontSize = TextStyle.extend({
 					return { style: `font-size: ${attributes.fontSize}` }
 				},
 			},
+			fontFamily: {
+				default: null,
+				parseHTML: (element: HTMLElement) =>
+					element.style.fontFamily?.replace(/['"]+/g, '') || null,
+				renderHTML: (attributes: Record<string, unknown>) => {
+					if (!attributes.fontFamily) return {}
+					return { style: `font-family: ${attributes.fontFamily}` }
+				},
+			},
 		}
 	},
 })

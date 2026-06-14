@@ -22,6 +22,10 @@ import { FontSize } from './extensions/font-size'
 import { Indent } from './extensions/indent'
 import { TwoColumns, ColumnBlock } from './extensions/two-columns'
 import { YouTube } from './extensions/youtube'
+import { UnderlineColor } from './extensions/underline-color'
+import { Callout } from './extensions/callout'
+import { Expandable } from './extensions/expandable'
+import { PageBreak } from './extensions/page-break'
 import { useEditorStore } from './editor.store'
 import { editorWrapper } from './editor.styles.css'
 import type { EditorProps } from './editor.types'
@@ -51,6 +55,7 @@ export default function Editor({
 		Placeholder.configure({ placeholder }),
 		Highlight.configure({ multicolor: true }),
 		Underline,
+		UnderlineColor,
 		FontSize,
 		Indent,
 		Color,
@@ -68,6 +73,9 @@ export default function Editor({
 		YouTube,
 		TwoColumns,
 		ColumnBlock,
+		Callout,
+		Expandable,
+		PageBreak,
 		...(characterLimit
 			? [CharacterCount.configure({ limit: characterLimit })]
 			: []),
