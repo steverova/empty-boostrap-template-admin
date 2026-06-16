@@ -50,6 +50,12 @@ export const exampleNavigation: NavItem[] = [
 				label: 'Chat',
 				type: 'item',
 			},
+			{
+				id: 'google-keep',
+				path: '/examples/google-keep',
+				label: 'Google Keep',
+				type: 'item',
+			},
 		],
 	},
 ]

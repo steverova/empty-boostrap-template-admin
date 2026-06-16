@@ -6,6 +6,7 @@ import KanbanExamplePage from './kan-ban/index copy'
 import TableExamplePage from './table'
 import EditorExamplePage from './editor'
 import ChatExamplePage from './chat'
+import GoogleKeepExamplePage from './google-keep'
 
 export const exampleRoutes: RouteObject[] = [
 	{
@@ -39,6 +40,10 @@ export const exampleRoutes: RouteObject[] = [
       {
         path: 'chat',
         Component: ChatExamplePage
+      },
+      {
+        path: 'google-keep',
+        Component: GoogleKeepExamplePage
       }
 		],
 	},

@@ -1,0 +1,108 @@
+import { StickyNote } from 'lucide-react'
+import GoogleKeep, { type KeepNote } from '@/components/shared/google-keep'
+
+const initialNotes: KeepNote[] = [
+	{
+		id: 'n1',
+		title: 'Reunión de equipo',
+		body: 'Discutir el roadmap del Q3. Pendientes:\n- Revisar métricas de engagement\n- Planificar sprint de innovación\n- Definir KPIs del trimestre',
+		color: 'yellow',
+		pinned: true,
+		labels: ['trabajo', 'reuniones'],
+		createdAt: new Date(2026, 5, 14, 9, 0),
+		updatedAt: new Date(2026, 5, 14, 9, 0),
+	},
+	{
+		id: 'n2',
+		title: '',
+		body: 'Comprar:\n- Leche\n- Huevos\n- Pan\n- Queso\n- Tomates\n- Aguacates',
+		color: 'green',
+		pinned: false,
+		labels: ['personal'],
+		createdAt: new Date(2026, 5, 14, 10, 30),
+		updatedAt: new Date(2026, 5, 14, 10, 30),
+	},
+	{
+		id: 'n3',
+		title: 'Ideas para el blog',
+		body: '1. Tutorial de React Hooks\n2. Guía de TypeScript avanzado\n3. Comparativa de frameworks CSS\n4. Mejores prácticas de testing\n5. Cómo configurar CI/CD desde cero',
+		color: 'blue',
+		pinned: true,
+		labels: ['ideas', 'blog'],
+		createdAt: new Date(2026, 5, 13, 14, 0),
+		updatedAt: new Date(2026, 5, 13, 14, 0),
+	},
+	{
+		id: 'n4',
+		title: 'Contraseñas importantes',
+		body: 'Servidor de producción: cambiar después del 20 de junio\nVPN: actualizar certificado\nAWS: rotar access keys',
+		color: 'red',
+		pinned: false,
+		labels: ['seguridad'],
+		createdAt: new Date(2026, 5, 12, 11, 0),
+		updatedAt: new Date(2026, 5, 12, 11, 0),
+	},
+	{
+		id: 'n5',
+		title: 'Checklist de deploy',
+		body: '',
+		color: 'purple',
+		pinned: false,
+		labels: ['devops'],
+		checklist: [
+			{ id: 'c1', text: 'Tests pasando en CI', checked: true },
+			{ id: 'c2', text: 'Changelog actualizado', checked: true },
+			{ id: 'c3', text: 'Build de producción OK', checked: false },
+			{ id: 'c4', text: 'Smoke test en staging', checked: false },
+			{ id: 'c5', text: 'Notificar al equipo', checked: false },
+		],
+		createdAt: new Date(2026, 5, 11, 16, 0),
+		updatedAt: new Date(2026, 5, 11, 16, 0),
+	},
+	{
+		id: 'n6',
+		title: '',
+		body: 'La vida es lo que pasa mientras estás busy making other plans.\n\n— John Lennon',
+		color: 'pink',
+		pinned: false,
+		labels: ['frases'],
+		imageUrl:
+			'https://verdecora.es/blog/wp-content/uploads/2015/07/flores-verano-jardin.jpg',
+		createdAt: new Date(2026, 5, 10, 8, 0),
+		updatedAt: new Date(2026, 5, 10, 8, 0),
+	},
+	{
+		id: 'n7',
+		title: 'Notas de la conferencia',
+		body: 'React Summit 2026\n\nCharlas interesantes:\n- Server Components en producción\n- El futuro de Suspense\n- TanStack Router vs React Router\n- Bun vs Deno vs Node',
+		color: 'cyan',
+		pinned: false,
+		labels: ['conferencia', 'react'],
+		createdAt: new Date(2026, 5, 9, 17, 0),
+		updatedAt: new Date(2026, 5, 9, 17, 0),
+	},
+	{
+		id: 'n8',
+		title: 'Por qué vanilla-extract',
+		body: 'Ventajas sobre Tailwind:\n- Type-safe (TypeScript)\n- Sin runtime CSS-in-JS\n- CSS Variables nativo\n- Zero config\n- Mejor performance',
+		color: 'orange',
+		pinned: false,
+		labels: ['css', 'tech'],
+		createdAt: new Date(2026, 5, 8, 12, 0),
+		updatedAt: new Date(2026, 5, 8, 12, 0),
+	},
+	{
+		id: 'n9',
+		title: 'Vacaciones',
+		body: 'Planear para agosto:\n- Reservar vuelos\n- Hotel en la playa\n- Alquilar auto\n- Seguro de viaje\n- Pasaporte al día',
+		color: 'default',
+		pinned: false,
+		labels: ['personal', 'viajes'],
+		createdAt: new Date(2026, 5, 7, 9, 0),
+		updatedAt: new Date(2026, 5, 7, 9, 0),
+	},
+]
+
+export default function GoogleKeepExamplePage() {
+	return <GoogleKeep initialNotes={initialNotes} />
+}
