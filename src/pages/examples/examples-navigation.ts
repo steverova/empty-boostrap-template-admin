@@ -27,6 +27,12 @@ export const exampleNavigation: NavItem[] = [
 				type: 'item',
 			},
 			{
+				id: 'full-calendar',
+				path: '/examples/full-calendar',
+				label: 'Full Calendar',
+				type: 'item',
+			},
+			{
 				id: 'kanban',
 				path: '/examples/kanban',
 				label: 'Kanban Board',

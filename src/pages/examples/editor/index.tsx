@@ -1,7 +1,8 @@
-import BaseTabs from '@/components/shared/base-tabs'
-import Editor, { EditorPreview } from '@components/shared/editor'
+import Editor from '@components/shared/editor'
+import EditorPreview from '@components/shared/editor/editor-preview'
 import { useState } from 'react'
 import Container from 'react-bootstrap/Container'
+import BaseTabs from '@/components/shared/base-tabs'
 
 const STORAGE_KEY = 'editor-example-content'
 
@@ -34,11 +35,7 @@ export default function EditorExamplePage() {
 					{
 						label: 'Vista previa',
 						key: 'html-preview',
-						content: (
-							<EditorPreview
-								content={content}
-							/>
-						),
+						content: <EditorPreview content={content} />,
 					},
 				]}
 			/>
