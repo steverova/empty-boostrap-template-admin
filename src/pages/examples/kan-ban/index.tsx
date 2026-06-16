@@ -97,7 +97,7 @@ export default function KanbanBoard() {
 	}))
 
 	return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
 			<Container fluid className='p-1' style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
 				<DndContext
 					sensors={sensors}
