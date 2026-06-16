@@ -1,4 +1,3 @@
-import { MessageSquare } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import Chat, {
 	type ChatAttachment,
@@ -729,22 +728,14 @@ export default function ChatExamplePage() {
 	)
 
 	return (
-		<div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-			<div className='mb-3 d-flex align-items-center gap-2'>
-				<MessageSquare size={20} />
-				<h4 className='mb-0'>Chat</h4>
-			</div>
-			<div style={{ flex: 1, minHeight: 0 }}>
-				<Chat
-					contacts={contacts}
-					messages={allMessages[selectedContactId] ?? []}
-					currentUserId={CURRENT_USER_ID}
-					selectedContactId={selectedContactId}
-					typingContactId={typingContactId}
-					onSelectContact={handleSelectContact}
-					onSendMessage={handleSendMessage}
-				/>
-			</div>
-		</div>
+		<Chat
+			contacts={contacts}
+			messages={allMessages[selectedContactId] ?? []}
+			currentUserId={CURRENT_USER_ID}
+			selectedContactId={selectedContactId}
+			typingContactId={typingContactId}
+			onSelectContact={handleSelectContact}
+			onSendMessage={handleSendMessage}
+		/>
 	)
 }

@@ -99,8 +99,6 @@ export default function KanbanBoard() {
 	return (
 		<div className='min-vh-100'>
 			<Container fluid>
-				<h1 className=''>Kanban Board</h1>
-
 				<DndContext
 					sensors={sensors}
 					collisionDetection={closestCenter}

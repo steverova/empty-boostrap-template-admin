@@ -206,9 +206,8 @@ export default function KanbanExamplePage() {
 	})
 
 	return (
-		<div className='min-vh-100'>
-			<Container fluid>
-				<h1 className='py-1'>Kanban Board Example zzz</h1>
+		<div className='min-vh-100 py-2'>
+			<Container fluid className='px-1'>
 				<DndContext
 					sensors={sensors}
 					collisionDetection={closestCenter}

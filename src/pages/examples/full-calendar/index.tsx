@@ -157,11 +157,10 @@ export default function FullCalendarExamplePage() {
   }
 
   return (
-    <Container fluid className="py-4">
+    <Container fluid className="px-1 py-2">
       <div className="d-flex align-items-center justify-content-between mb-4">
         <h4 className="mb-0">
           <CalendarDays size={24} className="me-2" />
-          Full Calendar
         </h4>
         <Button variant="primary" size="sm" onClick={() => handleDayClick(new Date())}>
           <Plus size={16} className="me-1" />

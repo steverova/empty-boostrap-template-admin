@@ -17,7 +17,7 @@ export default function EditorExamplePage() {
 	}
 
 	return (
-		<Container fluid className='py-4'>
+		<Container fluid className='py-2 px-1'>
 			<BaseTabs
 				tabs={[
 					{
