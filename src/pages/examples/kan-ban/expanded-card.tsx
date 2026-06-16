@@ -21,7 +21,7 @@ export default function ExpandedCard({
 	handleCollapse,
 }: ExpandedCardProps) {
 	return (
-		<Card className='border-0 shadow-sm d-flex flex-column flex-grow-1' style={{ overflow: 'hidden' }}>
+		<Card className='border-0 shadow-sm d-flex flex-column flex-grow-1 mb-2' style={{ overflow: 'hidden' }}>
 			<Card.Header
 				className='d-flex justify-content-between align-items-center py-3 border flex-shrink-0'
 				style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'var(--bs-body-bg)' }}

@@ -116,14 +116,11 @@ export default function KanbanBoard() {
 						return (
 							<Col
 								key={column.id}
-								{...(isCollapsed
-									? {}
-									: { xs: 11, sm: 9, md: 6, lg: 4, xxl: 3 })}
 								className='flex-shrink-0 d-flex flex-column'
 								style={
 									isCollapsed
 										? { width: 56, flex: '0 0 56px', padding: '0 4px', overflow: 'hidden' }
-										: { minWidth: 0, overflow: 'hidden' }
+										: { flex: '0 0 280px', minWidth: 0, overflow: 'hidden' }
 								}
                 >
                  
