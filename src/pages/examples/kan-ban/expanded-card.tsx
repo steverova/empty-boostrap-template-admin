@@ -21,7 +21,7 @@ export default function ExpandedCard({
 	handleCollapse,
 }: ExpandedCardProps) {
 	return (
-		<Card className='border-0 shadow-sm d-flex flex-column flex-grow-1'>
+		<Card className='border-0 shadow-sm d-flex flex-column flex-grow-1' style={{ overflow: 'hidden' }}>
 			<Card.Header
 				className='d-flex justify-content-between align-items-center py-3 border flex-shrink-0'
 				style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'var(--bs-body-bg)' }}
@@ -50,7 +50,7 @@ export default function ExpandedCard({
 			</Card.Header>
 			<Card.Body
 				className='p-3 border shadow flex-grow-1'
-				style={{ minHeight: 0 }}
+				style={{ overflowY: 'auto', minHeight: 0 }}
 			>
 				<DroppableColumn columnId={column.id}>
 					<SortableContext
