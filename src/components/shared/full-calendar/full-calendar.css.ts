@@ -14,12 +14,20 @@ export const calendarHeader = style({
   borderBottom: '1px solid var(--bs-border-color)',
   flexWrap: 'wrap',
   gap: 8,
+  '@media': {
+    '(max-width: 575.98px)': {
+      flexDirection: 'column',
+      alignItems: 'stretch',
+      gap: 8,
+    },
+  },
 })
 
 export const calendarNav = style({
   display: 'flex',
   alignItems: 'center',
   gap: 4,
+  justifyContent: 'center',
 })
 
 export const calendarGrid = style({
@@ -28,10 +36,14 @@ export const calendarGrid = style({
 
 export const calendarDayHeader = style({
   borderBottom: '1px solid var(--bs-border-color)',
+  position: 'sticky',
+  top: 0,
+  backgroundColor: 'var(--bs-body-bg)',
+  zIndex: 1,
 })
 
 export const calendarDay = style({
-  minHeight: 100,
+  minHeight: 80,
   padding: 4,
   borderBottom: '1px solid var(--bs-border-color)',
   borderRight: '1px solid var(--bs-border-color)',
@@ -43,6 +55,11 @@ export const calendarDay = style({
     },
     '&:nth-child(7n)': {
       borderRight: 'none',
+    },
+  },
+  '@media': {
+    '(min-width: 768px)': {
+      minHeight: 100,
     },
   },
 })
@@ -72,9 +89,10 @@ export const calendarDayInRange = style({
 })
 
 export const eventPill = style({
-  padding: '2px 6px',
+  padding: '2px 4px',
   borderRadius: 'var(--bs-border-radius-sm)',
-  fontSize: '0.7rem',
+  fontSize: '0.65rem',
+  lineHeight: '16px',
   color: 'var(--bs-white)',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -86,13 +104,20 @@ export const eventPill = style({
       opacity: 0.85,
     },
   },
+  '@media': {
+    '(min-width: 768px)': {
+      padding: '2px 6px',
+      fontSize: '0.7rem',
+      lineHeight: '18px',
+    },
+  },
 })
 
 export const eventPillContinuation = style({
-  padding: '2px 6px',
+  padding: '2px 4px',
   borderRadius: 0,
-  fontSize: '0.7rem',
-  lineHeight: '18px',
+  fontSize: '0.65rem',
+  lineHeight: '16px',
   color: 'var(--bs-white)',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -100,19 +125,27 @@ export const eventPillContinuation = style({
   cursor: 'pointer',
   opacity: 0.85,
   transition: 'opacity 0.15s ease',
-  minHeight: 20,
+  minHeight: 18,
   selectors: {
     '&:hover': {
       opacity: 0.7,
+    },
+  },
+  '@media': {
+    '(min-width: 768px)': {
+      padding: '2px 6px',
+      fontSize: '0.7rem',
+      lineHeight: '18px',
+      minHeight: 20,
     },
   },
 })
 
 export const eventPillEnd = style({
-  padding: '2px 6px',
+  padding: '2px 4px',
   borderRadius: '0 var(--bs-border-radius-sm) var(--bs-border-radius-sm) 0',
-  fontSize: '0.7rem',
-  lineHeight: '18px',
+  fontSize: '0.65rem',
+  lineHeight: '16px',
   color: 'var(--bs-white)',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -120,29 +153,36 @@ export const eventPillEnd = style({
   cursor: 'pointer',
   opacity: 0.85,
   transition: 'opacity 0.15s ease',
-  minHeight: 20,
+  minHeight: 18,
   selectors: {
     '&:hover': {
       opacity: 0.7,
     },
   },
+  '@media': {
+    '(min-width: 768px)': {
+      padding: '2px 6px',
+      fontSize: '0.7rem',
+      lineHeight: '18px',
+      minHeight: 20,
+    },
+  },
 })
 
 export const viewButton = style({
-  fontSize: '0.8rem',
+  fontSize: '0.75rem',
+  '@media': {
+    '(min-width: 768px)': {
+      fontSize: '0.8rem',
+    },
+  },
 })
 
 export const viewButtonActive = style({
-  fontSize: '0.8rem',
-})
-
-export const rangeIndicator = style({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: 8,
-  padding: '8px 16px',
-  borderBottom: '1px solid var(--bs-border-color)',
-  fontSize: '0.875rem',
-  color: 'var(--bs-primary)',
+  fontSize: '0.75rem',
+  '@media': {
+    '(min-width: 768px)': {
+      fontSize: '0.8rem',
+    },
+  },
 })

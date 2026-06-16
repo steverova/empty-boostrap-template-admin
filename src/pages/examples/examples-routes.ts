@@ -5,6 +5,7 @@ import FullCalendarExamplePage from './full-calendar'
 import KanbanExamplePage from './kan-ban/index copy'
 import TableExamplePage from './table'
 import EditorExamplePage from './editor'
+import ChatExamplePage from './chat'
 
 export const exampleRoutes: RouteObject[] = [
 	{
@@ -34,6 +35,10 @@ export const exampleRoutes: RouteObject[] = [
       {
         path: 'editor',
         Component: EditorExamplePage
+      },
+      {
+        path: 'chat',
+        Component: ChatExamplePage
       }
 		],
 	},

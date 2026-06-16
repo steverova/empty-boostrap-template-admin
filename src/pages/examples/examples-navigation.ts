@@ -44,6 +44,12 @@ export const exampleNavigation: NavItem[] = [
 				label: 'Editor',
 				type: 'item',
 			},
+			{
+				id: 'chat',
+				path: '/examples/chat',
+				label: 'Chat',
+				type: 'item',
+			},
 		],
 	},
 ]
