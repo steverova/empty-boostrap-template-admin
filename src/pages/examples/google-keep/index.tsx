@@ -104,5 +104,15 @@ const initialNotes: KeepNote[] = [
 ]
 
 export default function GoogleKeepExamplePage() {
-	return <GoogleKeep initialNotes={initialNotes} />
+	return (
+		<div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+			<div className='mb-3 d-flex align-items-center gap-2'>
+				<StickyNote size={20} />
+				<h4 className='mb-0'>Google Keep</h4>
+			</div>
+			<div style={{ flex: 1, minHeight: 0 }}>
+				<GoogleKeep initialNotes={initialNotes} />
+			</div>
+		</div>
+	)
 }
