@@ -97,7 +97,7 @@ export default function KanbanBoard() {
 	}))
 
 	return (
-    <div className='min-vh-100 '>
+    <div className='min-vh-100'>
 			<Container fluid className='p-1'>
 				<DndContext
 					sensors={sensors}
@@ -109,23 +109,22 @@ export default function KanbanBoard() {
 					onDragOver={handleDragOver}
 					onDragEnd={handleDragEnd}
 				>
-					<Row className='flex-nowrap g-2 align-items-start'>
-						{tasksByColumn.map(({ column, tasks: columnTasks }) => {
-							const isCollapsed = collapsedColumns.has(column.id)
+				<Row className='flex-nowrap g-2 align-items-stretch' style={{ height: '100vh', overflowX: 'auto', overflowY: 'hidden' }}>
+					{tasksByColumn.map(({ column, tasks: columnTasks }) => {
+						const isCollapsed = collapsedColumns.has(column.id)
 
-							return (
-								<Col
-									key={column.id}
-									// Columna colapsada: ancho mínimo fijo; expandida: ancho normal
-									style={
-										isCollapsed
-											? { width: 56, flex: '0 0 56px', padding: '0 4px' }
-											: undefined
-									}
-									{...(isCollapsed
-										? {}
-										: { xs: 11, sm: 9, md: 6, lg: 4, xxl: 3 })}
-									className='mb-4 flex-shrink-0'
+						return (
+							<Col
+								key={column.id}
+								{...(isCollapsed
+									? {}
+									: { xs: 11, sm: 9, md: 6, lg: 4, xxl: 3 })}
+								className='flex-shrink-0 d-flex flex-column'
+								style={
+									isCollapsed
+										? { width: 56, flex: '0 0 56px', padding: '0 4px', overflowY: 'auto', overflowX: 'hidden' }
+										: { minWidth: 0, overflowY: 'auto', overflowX: 'hidden' }
+								}
                 >
                  
 									{isCollapsed ? (

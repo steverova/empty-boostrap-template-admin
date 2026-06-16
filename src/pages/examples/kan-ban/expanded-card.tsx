@@ -21,15 +21,17 @@ export default function ExpandedCard({
 	handleCollapse,
 }: ExpandedCardProps) {
 	return (
-		<Card className='border-0 shadow-sm h-100'>
-			<Card.Header className='d-flex justify-content-between align-items-center py-3 border'>
-        <div className='d-flex align-items-center gap-2'>
-          
-				<IconButton
-					onClick={() => handleCollapse(column.id)}
-					aria-label='Collapse column'
-					style={{ color: 'var(--bs-body-color)' }}
-				>
+		<Card className='border-0 shadow-sm d-flex flex-column flex-grow-1'>
+			<Card.Header
+				className='d-flex justify-content-between align-items-center py-3 border flex-shrink-0'
+				style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'var(--bs-body-bg)' }}
+			>
+				<div className='d-flex align-items-center gap-2'>
+					<IconButton
+						onClick={() => handleCollapse(column.id)}
+						aria-label='Collapse column'
+						style={{ color: 'var(--bs-body-color)' }}
+					>
 						{React.createElement(ArrowLeftToLine, { size: 18 })}
 					</IconButton>
 					<div style={{ color: column.color }}>
@@ -46,7 +48,10 @@ export default function ExpandedCard({
 					{columnTasks.length}
 				</Badge>
 			</Card.Header>
-			<Card.Body className='p-3 border shadow' style={{ overflowY: 'auto' }}>
+			<Card.Body
+				className='p-3 border shadow flex-grow-1'
+				style={{ minHeight: 0 }}
+			>
 				<DroppableColumn columnId={column.id}>
 					<SortableContext
 						items={columnTasks.map((t: Task) => t.id)}
