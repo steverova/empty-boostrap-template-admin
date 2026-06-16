@@ -1,4 +1,4 @@
-import KanbanBoard from ".";
+import KanbanBoard from "@/components/shared/kan-ban";
 
 export default function KanbanExamplePage() {
 

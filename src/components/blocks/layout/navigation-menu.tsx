@@ -100,10 +100,12 @@ const StyledGroupButton = styled.button`
 
 type NavigationMenuProps = {
 	userRole?: string | undefined
+	onNavigate?: () => void
 }
 
 export default function NavigationMenu({
 	userRole,
+	onNavigate,
 }: NavigationMenuProps): JSX.Element {
 	const [openGroups, setOpenGroups] = useState<Set<string>>(new Set())
 	const location = useLocation()
@@ -145,10 +147,11 @@ export default function NavigationMenu({
 			const isActive = location.pathname === navItem.path
 			return (
 				<li className='nav-item' key={navItem.id}>
-					<StyledNavLink
-						className={`nav-link d-flex align-items-center text-decoration-none ${isActive ? 'text-body bg-body' : 'text-body-secondary'}`}
-						to={navItem.path ?? '/'}
-					>
+				<StyledNavLink
+					className={`nav-link d-flex align-items-center text-decoration-none ${isActive ? 'text-body bg-body' : 'text-body-secondary'}`}
+					to={navItem.path ?? '/'}
+					onClick={onNavigate}
+				>
 						<Icon className='me-2' name={navItem.icon ?? ''} />
 						{navItem.label}
 					</StyledNavLink>

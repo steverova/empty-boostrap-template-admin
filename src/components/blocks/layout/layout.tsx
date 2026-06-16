@@ -100,7 +100,7 @@ export default function Layout() {
 					</Button>
 
 					<Offcanvas.Body className='p-0 d-flex flex-1 overflow-x-hidden'>
-						<Sidebar />
+						<Sidebar onNavigate={() => setShowOffcanvas(false)} />
 					</Offcanvas.Body>
 				</Offcanvas>
 
