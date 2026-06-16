@@ -365,7 +365,7 @@ export default function AppTable<T extends Record<string, any>>({
 	const hasResizedColumns = Object.keys(columnSizing).length > 0
 
 	return (
-		<div className='border rounded-3 p-1'>
+		<div className='border rounded-3 p-1 w-100' style={{ minWidth: 0 }}>
 			<h1 className='fs-2'>Titulo de la tabla</h1>
 
 			<div className='d-flex align-items-center justify-content-between mb-2 gap-2'>
@@ -441,7 +441,7 @@ export default function AppTable<T extends Record<string, any>>({
       <div style={{ maxHeight: pagination.pageSize <= 10 ? 500 : 'none', overflow: 'auto', position: 'relative' }}>
       </div>  */}
 
-			<div>
+			<div style={{ overflowX: 'auto', minWidth: 0 }}>
 				<Table
 					className='mb-0 table-striped table-hover'
 					style={{ width: '100%' }}
