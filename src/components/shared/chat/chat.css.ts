@@ -2,13 +2,36 @@ import { style } from '@vanilla-extract/css'
 
 export const chatContainer = style({
   display: 'flex',
-  flexDirection: 'column',
+  flexDirection: 'row',
   height: '100%',
   minHeight: 0,
   border: '1px solid var(--bs-border-color)',
   borderRadius: 'var(--bs-border-radius)',
   backgroundColor: 'var(--bs-body-bg)',
   overflow: 'hidden',
+})
+
+export const chatSidebar = style({
+  width: '100%',
+  borderRight: '1px solid var(--bs-border-color)',
+  overflowY: 'auto',
+  flexShrink: 0,
+  '@media': {
+    '(min-width: 768px)': {
+      width: 280,
+    },
+    '(min-width: 992px)': {
+      width: 320,
+    },
+  },
+})
+
+export const chatLayout = style({
+  display: 'flex',
+  flexDirection: 'column',
+  flex: 1,
+  minWidth: 0,
+  minHeight: 0,
 })
 
 export const chatHeader = style({

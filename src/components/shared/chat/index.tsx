@@ -4,6 +4,8 @@ import { Send, Paperclip } from 'lucide-react'
 import { Avatar } from '@/components/shared/avatar'
 import {
 	chatContainer,
+	chatLayout,
+	chatSidebar,
 	chatHeader,
 	chatHeaderInfo,
 	chatHeaderName,
@@ -64,6 +66,7 @@ export interface ChatProps {
 	currentUserId: string
 	selectedContactId?: string
 	typingContactId?: string
+	onSelectContact?: (contactId: string) => void
 	onSendMessage?: (text: string) => void
 	onAttachFile?: () => void
 	className?: string
@@ -131,54 +134,6 @@ function groupMessagesByDate(messages: ChatMessage[]): ChatMessage[][] {
 	return groups
 }
 
-function ContactList({
-	contacts,
-	selectedContactId,
-	onSelectContact,
-}: {
-	contacts: ChatContact[]
-	selectedContactId?: string
-	onSelectContact?: (contactId: string) => void
-}) {
-	return (
-		<ul className={contactsList}>
-			{contacts.map((contact) => (
-				<li
-					key={contact.id}
-					className={
-						contact.id === selectedContactId ? contactItemActive : contactItem
-					}
-					onClick={() => onSelectContact?.(contact.id)}
-				>
-					<Avatar
-						seed={contact.id}
-						variant='emoji'
-						name={contact.name}
-						size='md'
-						status={contact.status}
-					/>
-					<div className={contactInfo}>
-						<div className={contactName}>{contact.name}</div>
-						<div className={contactLastMessage}>
-							{contact.lastMessage || 'Sin mensajes'}
-						</div>
-					</div>
-					<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
-						{contact.lastMessageTime && (
-							<span className={contactTime}>
-								{formatMessageTime(contact.lastMessageTime)}
-							</span>
-						)}
-						{contact.unreadCount && contact.unreadCount > 0 && (
-							<span className={unreadBadge}>{contact.unreadCount}</span>
-						)}
-					</div>
-				</li>
-			))}
-		</ul>
-	)
-}
-
 function TypingIndicator({ name }: { name: string }) {
 	return (
 		<div className={typingIndicator}>
@@ -198,6 +153,7 @@ export default function Chat({
 	currentUserId,
 	selectedContactId,
 	typingContactId,
+	onSelectContact,
 	onSendMessage,
 	onAttachFile,
 	className,
@@ -248,119 +204,153 @@ export default function Chat({
 		? contacts.find((c) => c.id === typingContactId)
 		: null
 
-	if (!selectedContactId) {
-		return (
-			<div className={`${chatContainer} ${className ?? ''}`}>
-				<div className={emptyChat}>
-					<Send size={48} strokeWidth={1} />
-					<h5 className='mb-0'>Selecciona una conversación</h5>
-					<p className='text-center mb-0'>
-						Elige un contacto de la lista para comenzar a chatear
-					</p>
-				</div>
-			</div>
-		)
-	}
-
 	return (
 		<div className={`${chatContainer} ${className ?? ''}`}>
-			{selectedContact && (
-				<div className={chatHeader}>
-					<Avatar
-						seed={selectedContact.id}
-						variant='emoji'
-						name={selectedContact.name}
-						size='md'
-						status={selectedContact.status}
-					/>
-					<div className={chatHeaderInfo}>
-						<div className={chatHeaderName}>{selectedContact.name}</div>
-						<div className={chatHeaderStatus}>
-							<span className={getStatusDotClass(selectedContact.status)} />
-							{getStatusLabel(selectedContact.status)}
-						</div>
-					</div>
-				</div>
-			)}
-
-			<div className={chatMessages}>
-				{messageGroups.map((group, gi) => (
-					<div key={gi}>
-						<div className={dateSeparator}>
-							{formatDateLabel(group[0]!.timestamp)}
-						</div>
-						{group.map((msg) => {
-							const isSent = msg.senderId === currentUserId
-							return (
-								<div
-									key={msg.id}
-									className={isSent ? messageRowSent : messageRowReceived}
-								>
-									{!isSent && (
-										<Avatar
-											seed={msg.senderId}
-											variant='emoji'
-											size='xs'
-										/>
-									)}
-									<div>
-										<div
-											className={
-												isSent ? messageBubbleSent : messageBubbleReceived
-											}
-										>
-											{msg.text}
-										</div>
-										<div
-											className={
-												isSent ? messageTimeSent : messageTimeReceived
-											}
-										>
-											{formatMessageTime(msg.timestamp)}
-										</div>
-									</div>
+			<div className={chatSidebar}>
+				<ul className={contactsList}>
+					{contacts.map((contact) => (
+						<li
+							key={contact.id}
+							className={
+								contact.id === selectedContactId ? contactItemActive : contactItem
+							}
+							onClick={() => onSelectContact?.(contact.id)}
+						>
+							<Avatar
+								seed={contact.id}
+								variant='emoji'
+								name={contact.name}
+								size='md'
+								status={contact.status}
+							/>
+							<div className={contactInfo}>
+								<div className={contactName}>{contact.name}</div>
+								<div className={contactLastMessage}>
+									{contact.lastMessage || 'Sin mensajes'}
 								</div>
-							)
-						})}
-					</div>
-				))}
-				<div ref={messagesEndRef} />
+							</div>
+							<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
+								{contact.lastMessageTime && (
+									<span className={contactTime}>
+										{formatMessageTime(contact.lastMessageTime)}
+									</span>
+								)}
+								{contact.unreadCount && contact.unreadCount > 0 && (
+									<span className={unreadBadge}>{contact.unreadCount}</span>
+								)}
+							</div>
+						</li>
+					))}
+				</ul>
 			</div>
 
-			{typingContact && (
-				<TypingIndicator name={typingContact.name} />
-			)}
+			<div className={chatLayout}>
+				{selectedContact ? (
+					<>
+						<div className={chatHeader}>
+							<Avatar
+								seed={selectedContact.id}
+								variant='emoji'
+								name={selectedContact.name}
+								size='md'
+								status={selectedContact.status}
+							/>
+							<div className={chatHeaderInfo}>
+								<div className={chatHeaderName}>{selectedContact.name}</div>
+								<div className={chatHeaderStatus}>
+									<span className={getStatusDotClass(selectedContact.status)} />
+									{getStatusLabel(selectedContact.status)}
+								</div>
+							</div>
+						</div>
 
-			<div className={chatInputArea}>
-				<Button
-					variant='outline-secondary'
-					size='sm'
-					onClick={onAttachFile}
-					style={{ borderRadius: '50%', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-				>
-					<Paperclip size={16} />
-				</Button>
-				<Form.Control
-					ref={textareaRef}
-					as='textarea'
-					rows={1}
-					className={chatInput}
-					placeholder='Escribe un mensaje...'
-					value={inputText}
-					onChange={handleInput}
-					onKeyDown={handleKeyDown}
-				/>
-				<Button
-					variant='primary'
-					className={chatSendButton}
-					onClick={handleSend}
-					disabled={!inputText.trim()}
-				>
-					<Send size={16} />
-				</Button>
+						<div className={chatMessages}>
+							{messageGroups.map((group, gi) => (
+								<div key={gi}>
+									<div className={dateSeparator}>
+										{formatDateLabel(group[0]!.timestamp)}
+									</div>
+									{group.map((msg) => {
+										const isSent = msg.senderId === currentUserId
+										return (
+											<div
+												key={msg.id}
+												className={isSent ? messageRowSent : messageRowReceived}
+											>
+												{!isSent && (
+													<Avatar
+														seed={msg.senderId}
+														variant='emoji'
+														size='xs'
+													/>
+												)}
+												<div>
+													<div
+														className={
+															isSent ? messageBubbleSent : messageBubbleReceived
+														}
+													>
+														{msg.text}
+													</div>
+													<div
+														className={
+															isSent ? messageTimeSent : messageTimeReceived
+														}
+													>
+														{formatMessageTime(msg.timestamp)}
+													</div>
+												</div>
+											</div>
+										)
+									})}
+								</div>
+							))}
+							<div ref={messagesEndRef} />
+						</div>
+
+						{typingContact && (
+							<TypingIndicator name={typingContact.name} />
+						)}
+
+						<div className={chatInputArea}>
+							<Button
+								variant='outline-secondary'
+								size='sm'
+								onClick={onAttachFile}
+								style={{ borderRadius: '50%', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+							>
+								<Paperclip size={16} />
+							</Button>
+							<Form.Control
+								ref={textareaRef}
+								as='textarea'
+								rows={1}
+								className={chatInput}
+								placeholder='Escribe un mensaje...'
+								value={inputText}
+								onChange={handleInput}
+								onKeyDown={handleKeyDown}
+							/>
+							<Button
+								variant='primary'
+								className={chatSendButton}
+								onClick={handleSend}
+								disabled={!inputText.trim()}
+							>
+								<Send size={16} />
+							</Button>
+						</div>
+					</>
+				) : (
+					<div className={emptyChat}>
+						<Send size={48} strokeWidth={1} />
+						<h5 className='mb-0'>Selecciona una conversación</h5>
+						<p className='text-center mb-0'>
+							Elige un contacto de la lista para comenzar a chatear
+						</p>
+					</div>
+				)}
 			</div>
 		</div>
 	)
 }
-
-export { ContactList }
