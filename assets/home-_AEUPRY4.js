@@ -1,0 +1,1 @@
+import{d as e,u as t}from"./index-CJn6TuF6.js";var n=e(),r=t();function i(){let e=(0,n.c)(1),t;return e[0]===Symbol.for(`react.memo_cache_sentinel`)?(t=(0,r.jsxs)(`div`,{children:[(0,r.jsx)(`h1`,{children:`Home`}),(0,r.jsx)(`button`,{type:`button`,className:`btn btn-secondary`,children:`Secondary`})]}),e[0]=t):t=e[0],t}export{i as Component};
