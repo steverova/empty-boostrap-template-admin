@@ -361,3 +361,84 @@ export const unreadBadge = style({
   justifyContent: 'center',
   flexShrink: 0,
 })
+
+export const attachmentImage = style({
+  maxWidth: 260,
+  maxHeight: 200,
+  borderRadius: 8,
+  objectFit: 'cover',
+  cursor: 'pointer',
+  transition: 'opacity 0.15s ease',
+  selectors: {
+    '&:hover': {
+      opacity: 0.9,
+    },
+  },
+  '@media': {
+    '(max-width: 575.98px)': {
+      maxWidth: 200,
+      maxHeight: 160,
+    },
+  },
+})
+
+export const attachmentVideo = style({
+  maxWidth: 300,
+  maxHeight: 220,
+  borderRadius: 8,
+  objectFit: 'cover',
+  cursor: 'pointer',
+  '@media': {
+    '(max-width: 575.98px)': {
+      maxWidth: 220,
+      maxHeight: 180,
+    },
+  },
+})
+
+export const attachmentDocument = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: 8,
+  padding: '8px 12px',
+  borderRadius: 8,
+  backgroundColor: 'rgba(0, 0, 0, 0.06)',
+  cursor: 'pointer',
+  textDecoration: 'none',
+  color: 'inherit',
+  transition: 'background-color 0.15s ease',
+  maxWidth: 260,
+  selectors: {
+    '&:hover': {
+      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    },
+  },
+})
+
+export const attachmentDocIcon = style({
+  flexShrink: 0,
+  color: 'var(--bs-secondary-color)',
+})
+
+export const attachmentDocInfo = style({
+  minWidth: 0,
+  display: 'flex',
+  flexDirection: 'column',
+})
+
+export const attachmentDocName = style({
+  fontSize: '0.8rem',
+  fontWeight: 500,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+})
+
+export const attachmentDocSize = style({
+  fontSize: '0.65rem',
+  color: 'var(--bs-secondary-color)',
+})
+
+export const attachmentPreview = style({
+  marginBottom: 8,
+})

@@ -1,7 +1,7 @@
 import { MessageSquare } from 'lucide-react'
 import { useCallback, useState } from 'react'
-import { Container } from 'react-bootstrap'
 import Chat, {
+	type ChatAttachment,
 	type ChatContact,
 	type ChatMessage,
 } from '@/components/shared/chat'
@@ -254,6 +254,60 @@ const mockMessages: Record<string, ChatMessage[]> = {
 			senderId: 'user-2',
 			text: 'Revisé el código, se ve bien 👍',
 			timestamp: new Date(2026, 5, 15, 9, 45),
+		},
+		{
+			id: 'm9a',
+			senderId: 'user-2',
+			text: 'Mira cómo se ve el dashboard:',
+			timestamp: new Date(2026, 5, 15, 9, 46),
+			attachment: {
+				url: 'https://media.vandal.net/i/1280x720/10-2023/18/202310181641400_2.jpg.webp',
+				type: 'image',
+				name: 'dashboard-preview.jpg',
+				size: 245760,
+			},
+		},
+		{
+			id: 'm9b',
+			senderId: CURRENT_USER_ID,
+			text: 'Se ve genial! Pero el gráfico de barras está cortado',
+			timestamp: new Date(2026, 5, 15, 9, 50),
+		},
+		{
+			id: 'm9c',
+			senderId: 'user-2',
+			text: 'Te mando las flores del jardín:',
+			timestamp: new Date(2026, 5, 15, 9, 51),
+			attachment: {
+				url: 'https://verdecora.es/blog/wp-content/uploads/2015/07/flores-verano-jardin.jpg',
+				type: 'image',
+				name: 'flores-jardin.jpg',
+				size: 184320,
+			},
+		},
+		{
+			id: 'm9c2',
+			senderId: 'user-2',
+			text: 'Y el video del bug:',
+			timestamp: new Date(2026, 5, 15, 9, 52),
+			attachment: {
+				url: 'https://avtshare01.rz.tu-ilmenau.de/avt-vqdb-uhd-1/test_1/segments/bigbuck_bunny_8bit_15000kbps_2160p_60.0fps_vp9.mkv',
+				type: 'video',
+				name: 'bug-reproduction.mkv',
+				size: 1572864,
+			},
+		},
+		{
+			id: 'm9d',
+			senderId: CURRENT_USER_ID,
+			text: 'Ya lo veo. Te paso el documento con la solución:',
+			timestamp: new Date(2026, 5, 15, 10, 0),
+			attachment: {
+				url: '#',
+				type: 'document',
+				name: 'fix-chart-height.pdf',
+				size: 102400,
+			},
 		},
 	],
 	'user-3': [
@@ -607,7 +661,7 @@ export default function ChatExamplePage() {
 	}, [])
 
 	const handleSendMessage = useCallback(
-		(text: string) => {
+		(text: string, attachment?: ChatAttachment) => {
 			if (!selectedContactId) return
 
 			const newMsg: ChatMessage = {
@@ -616,6 +670,7 @@ export default function ChatExamplePage() {
 				text,
 				timestamp: new Date(),
 				status: 'sent',
+				attachment,
 			}
 
 			setAllMessages((prev) => ({
@@ -623,10 +678,14 @@ export default function ChatExamplePage() {
 				[selectedContactId]: [...(prev[selectedContactId] ?? []), newMsg],
 			}))
 
+			const lastText = attachment
+				? text || `[${attachment.type === 'image' ? 'Imagen' : attachment.type === 'video' ? 'Video' : 'Archivo'}]`
+				: text
+
 			setContacts((prev) =>
 				prev.map((c) =>
 					c.id === selectedContactId
-						? { ...c, lastMessage: text, lastMessageTime: new Date() }
+						? { ...c, lastMessage: lastText, lastMessageTime: new Date() }
 						: c,
 				),
 			)
@@ -669,14 +728,22 @@ export default function ChatExamplePage() {
 	)
 
 	return (
-		<Chat
-			contacts={contacts}
-			messages={allMessages[selectedContactId] ?? []}
-			currentUserId={CURRENT_USER_ID}
-			selectedContactId={selectedContactId}
-			typingContactId={typingContactId}
-			onSelectContact={handleSelectContact}
-			onSendMessage={handleSendMessage}
-		/>
+		<div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+			<div className='mb-3 d-flex align-items-center gap-2'>
+				<MessageSquare size={20} />
+				<h4 className='mb-0'>Chat</h4>
+			</div>
+			<div style={{ flex: 1, minHeight: 0 }}>
+				<Chat
+					contacts={contacts}
+					messages={allMessages[selectedContactId] ?? []}
+					currentUserId={CURRENT_USER_ID}
+					selectedContactId={selectedContactId}
+					typingContactId={typingContactId}
+					onSelectContact={handleSelectContact}
+					onSendMessage={handleSendMessage}
+				/>
+			</div>
+		</div>
 	)
 }

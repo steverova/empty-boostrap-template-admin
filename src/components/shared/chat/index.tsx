@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
-import { Send, Paperclip } from 'lucide-react'
+import { Send, Paperclip, FileText } from 'lucide-react'
 import { Avatar } from '@/components/shared/avatar'
 import {
 	chatContainer,
@@ -37,11 +37,28 @@ import {
 	statusDotOffline,
 	statusDotAway,
 	statusDotBusy,
+	attachmentImage,
+	attachmentVideo,
+	attachmentDocument,
+	attachmentDocIcon,
+	attachmentDocInfo,
+	attachmentDocName,
+	attachmentDocSize,
+	attachmentPreview,
 } from './chat.css'
 
 export type MessageStatus = 'sent' | 'delivered' | 'read'
 
 export type ContactStatus = 'online' | 'offline' | 'away' | 'busy'
+
+export type AttachmentType = 'image' | 'video' | 'document'
+
+export interface ChatAttachment {
+	url: string
+	type: AttachmentType
+	name: string
+	size?: number
+}
 
 export interface ChatMessage {
 	id: string
@@ -49,6 +66,7 @@ export interface ChatMessage {
 	text: string
 	timestamp: Date
 	status?: MessageStatus
+	attachment?: ChatAttachment
 }
 
 export interface ChatContact {
@@ -67,8 +85,7 @@ export interface ChatProps {
 	selectedContactId?: string
 	typingContactId?: string
 	onSelectContact?: (contactId: string) => void
-	onSendMessage?: (text: string) => void
-	onAttachFile?: () => void
+	onSendMessage?: (text: string, attachment?: ChatAttachment) => void
 	className?: string
 }
 
@@ -134,6 +151,48 @@ function groupMessagesByDate(messages: ChatMessage[]): ChatMessage[][] {
 	return groups
 }
 
+function getAttachmentType(file: File): AttachmentType {
+	if (file.type.startsWith('image/')) return 'image'
+	if (file.type.startsWith('video/')) return 'video'
+	return 'document'
+}
+
+function formatFileSize(bytes: number): string {
+	if (bytes < 1024) return `${bytes} B`
+	if (bytes < 1048576) return `${(bytes / 1024).toFixed(1)} KB`
+	return `${(bytes / 1048576).toFixed(1)} MB`
+}
+
+function AttachmentRenderer({ attachment }: { attachment: ChatAttachment }) {
+	if (attachment.type === 'image') {
+		return (
+			<div className={attachmentPreview}>
+				<img src={attachment.url} alt={attachment.name} className={attachmentImage} />
+			</div>
+		)
+	}
+
+	if (attachment.type === 'video') {
+		return (
+			<div className={attachmentPreview}>
+				<video src={attachment.url} controls className={attachmentVideo} />
+			</div>
+		)
+	}
+
+	return (
+		<a href={attachment.url} target='_blank' rel='noopener noreferrer' className={attachmentDocument}>
+			<FileText size={24} className={attachmentDocIcon} />
+			<div className={attachmentDocInfo}>
+				<span className={attachmentDocName}>{attachment.name}</span>
+				{attachment.size != null && (
+					<span className={attachmentDocSize}>{formatFileSize(attachment.size)}</span>
+				)}
+			</div>
+		</a>
+	)
+}
+
 function TypingIndicator({ name }: { name: string }) {
 	return (
 		<div className={typingIndicator}>
@@ -155,12 +214,13 @@ export default function Chat({
 	typingContactId,
 	onSelectContact,
 	onSendMessage,
-	onAttachFile,
 	className,
 }: ChatProps) {
 	const [inputText, setInputText] = useState('')
+	const [pendingAttachment, setPendingAttachment] = useState<ChatAttachment | null>(null)
 	const messagesEndRef = useRef<HTMLDivElement>(null)
 	const textareaRef = useRef<HTMLTextAreaElement>(null)
+	const fileInputRef = useRef<HTMLInputElement>(null)
 
 	const selectedContact = contacts.find((c) => c.id === selectedContactId)
 
@@ -174,13 +234,14 @@ export default function Chat({
 
 	const handleSend = useCallback(() => {
 		const text = inputText.trim()
-		if (!text) return
-		onSendMessage?.(text)
+		if (!text && !pendingAttachment) return
+		onSendMessage?.(text, pendingAttachment ?? undefined)
 		setInputText('')
+		setPendingAttachment(null)
 		if (textareaRef.current) {
 			textareaRef.current.style.height = 'auto'
 		}
-	}, [inputText, onSendMessage])
+	}, [inputText, pendingAttachment, onSendMessage])
 
 	const handleKeyDown = useCallback(
 		(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -198,6 +259,28 @@ export default function Chat({
 		el.style.height = 'auto'
 		el.style.height = `${Math.min(el.scrollHeight, 120)}px`
 	}, [])
+
+	const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0]
+		if (!file) return
+
+		const url = URL.createObjectURL(file)
+		setPendingAttachment({
+			url,
+			type: getAttachmentType(file),
+			name: file.name,
+			size: file.size,
+		})
+
+		e.target.value = ''
+	}, [])
+
+	const handleRemoveAttachment = useCallback(() => {
+		if (pendingAttachment?.url.startsWith('blob:')) {
+			URL.revokeObjectURL(pendingAttachment.url)
+		}
+		setPendingAttachment(null)
+	}, [pendingAttachment])
 
 	const messageGroups = groupMessagesByDate(messages)
 	const typingContact = typingContactId
@@ -290,7 +373,10 @@ export default function Chat({
 															isSent ? messageBubbleSent : messageBubbleReceived
 														}
 													>
-														{msg.text}
+														{msg.attachment && (
+															<AttachmentRenderer attachment={msg.attachment} />
+														)}
+														{msg.text && <span>{msg.text}</span>}
 													</div>
 													<div
 														className={
@@ -312,11 +398,27 @@ export default function Chat({
 							<TypingIndicator name={typingContact.name} />
 						)}
 
+						{pendingAttachment && (
+							<div className='d-flex align-items-center gap-2 px-3 py-2 border-top bg-body'>
+								<AttachmentRenderer attachment={pendingAttachment} />
+								<Button variant='outline-danger' size='sm' onClick={handleRemoveAttachment}>
+									×
+								</Button>
+							</div>
+						)}
+
 						<div className={chatInputArea}>
+							<input
+								ref={fileInputRef}
+								type='file'
+								accept='image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip'
+								style={{ display: 'none' }}
+								onChange={handleFileChange}
+							/>
 							<Button
 								variant='outline-secondary'
 								size='sm'
-								onClick={onAttachFile}
+								onClick={() => fileInputRef.current?.click()}
 								style={{ borderRadius: '50%', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
 							>
 								<Paperclip size={16} />
@@ -335,7 +437,7 @@ export default function Chat({
 								variant='primary'
 								className={chatSendButton}
 								onClick={handleSend}
-								disabled={!inputText.trim()}
+								disabled={!inputText.trim() && !pendingAttachment}
 							>
 								<Send size={16} />
 							</Button>
