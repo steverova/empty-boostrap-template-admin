@@ -97,8 +97,8 @@ export default function KanbanBoard() {
 	}))
 
 	return (
-		<div className='min-vh-100'>
-			<Container fluid>
+    <div className='min-vh-100 '>
+			<Container fluid className='p-1'>
 				<DndContext
 					sensors={sensors}
 					collisionDetection={closestCenter}
@@ -126,7 +126,8 @@ export default function KanbanBoard() {
 										? {}
 										: { xs: 11, sm: 9, md: 6, lg: 4, xxl: 3 })}
 									className='mb-4 flex-shrink-0'
-								>
+                >
+                 
 									{isCollapsed ? (
 										// ── Vista colapsada: columna vertical angosta ──
 										<CollapseCard

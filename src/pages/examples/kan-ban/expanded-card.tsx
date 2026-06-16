@@ -23,11 +23,13 @@ export default function ExpandedCard({
 	return (
 		<Card className='border-0 shadow-sm h-100'>
 			<Card.Header className='d-flex justify-content-between align-items-center py-3 border'>
-				<div className='d-flex align-items-center gap-2'>
-					<IconButton
-						onClick={() => handleCollapse(column.id)}
-						aria-label='Collapse column'
-					>
+        <div className='d-flex align-items-center gap-2'>
+          
+				<IconButton
+					onClick={() => handleCollapse(column.id)}
+					aria-label='Collapse column'
+					style={{ color: 'var(--bs-body-color)' }}
+				>
 						{React.createElement(ArrowLeftToLine, { size: 18 })}
 					</IconButton>
 					<div style={{ color: column.color }}>

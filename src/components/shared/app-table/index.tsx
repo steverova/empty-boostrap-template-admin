@@ -437,17 +437,21 @@ export default function AppTable<T extends Record<string, any>>({
 				</div>
 			</div>
 
-			{/*para que no sea sticky
-      <div style={{ maxHeight: pagination.pageSize <= 10 ? 500 : 'none', overflow: 'auto', position: 'relative' }}>
-      </div>  */}
-
-			<div style={{ overflowX: 'auto', minWidth: 0 }}>
+			<div
+				style={{
+					overflowX: 'auto',
+					overflowY: 'auto',
+					maxHeight: pagination.pageSize <= 10 ? 500 : 'none',
+					position: 'relative',
+					minWidth: 0,
+				}}
+			>
 				<Table
 					className='mb-0 table-striped table-hover'
 					style={{ width: '100%' }}
 					{...props}
 				>
-					<thead>
+					<thead style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'var(--bs-body-bg)' }}>
 						{table.getHeaderGroups().map((headerGroup) => (
 							<tr key={headerGroup.id}>
 								{enableRowSelection && (

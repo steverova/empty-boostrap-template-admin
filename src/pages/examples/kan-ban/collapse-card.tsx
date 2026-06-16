@@ -21,10 +21,11 @@ export default function CollapseCard({
 				className='p-0 d-flex flex-column align-items-center py-3 gap-3'
 				style={{ cursor: 'default' }}
 			>
-				<IconButton
-					onClick={() => handleCollapse(column.id)}
-					aria-label='Expand column'
-				>
+			<IconButton
+				onClick={() => handleCollapse(column.id)}
+				aria-label='Expand column'
+				style={{ color: 'var(--bs-body-color)' }}
+			>
 					{React.createElement(ArrowRightToLine, { size: 18 })}
 				</IconButton>
 
