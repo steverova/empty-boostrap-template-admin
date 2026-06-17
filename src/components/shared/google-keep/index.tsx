@@ -1,67 +1,76 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
 import {
-	DndContext,
 	closestCenter,
+	DndContext,
+	type DragEndEvent,
 	PointerSensor,
 	useSensor,
 	useSensors,
-	type DragEndEvent,
 } from '@dnd-kit/core'
 import {
 	arrayMove,
+	rectSortingStrategy,
 	SortableContext,
 	useSortable,
-	rectSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import {
-	Pin,
-	PinOff,
-	Trash2,
-	Palette,
-	PaletteIcon,
-	Image as ImageIcon,
-	ListChecks,
-	X,
 	GripVertical,
+	Image as ImageIcon,
 	LayoutGrid,
 	List,
-	Tag,
+	ListChecks,
+	Palette,
+	PaletteIcon,
+	Pin,
+	PinOff,
 	Plus,
+	Tag,
+	Trash2,
+	X,
 } from 'lucide-react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import {
-	keepContainer,
-	keepHeader,
-	keepSearch,
-	keepGrid,
-	keepMasonry,
-	keepNote,
-	keepNotePinned,
-	keepNoteHeader,
-	keepNoteTitle,
-	keepNoteBody,
-	keepNoteImage,
-	keepNoteChecklist,
+	keepActionBtn,
 	keepCheckItem,
 	keepCheckItemDone,
-	keepNoteFooter,
-	keepNoteLabels,
-	keepLabel,
-	keepNoteActions,
-	keepActionBtn,
-	keepColorPicker,
 	keepColorDot,
 	keepColorDotActive,
-	keepEmptyState,
-	keepCreateBar,
-	keepCreateInput,
-	keepCreateExpanded,
-	keepCreateTitleInput,
-	keepCreateBodyInput,
+	keepColorPicker,
+	keepContainer,
 	keepCreateActions,
+	keepCreateBar,
+	keepCreateBodyInput,
+	keepCreateExpanded,
+	keepCreateInput,
+	keepCreateTitleInput,
+	keepEmptyState,
+	keepGrid,
+	keepHeader,
+	keepLabel,
+	keepMasonry,
+	keepNote,
+	keepNoteActions,
+	keepNoteBody,
+	keepNoteChecklist,
+	keepNoteFooter,
+	keepNoteHeader,
+	keepNoteImage,
+	keepNoteLabels,
+	keepNotePinned,
+	keepNoteTitle,
+	keepSearch,
 } from './google-keep.css'
 
-export type KeepColor = 'default' | 'red' | 'orange' | 'yellow' | 'green' | 'cyan' | 'blue' | 'purple' | 'pink'
+export type KeepColor =
+	| 'default'
+	| 'red'
+	| 'orange'
+	| 'yellow'
+	| 'green'
+	| 'cyan'
+	| 'blue'
+	| 'purple'
+	| 'pink'
 
 export interface KeepCheckItem {
 	id: string
@@ -202,13 +211,20 @@ function NoteCard({
 
 	const handleSave = useCallback(() => {
 		if (onUpdate) {
-			onUpdate({ ...note, title: editTitle, body: editBody, updatedAt: new Date() })
+			onUpdate({
+				...note,
+				title: editTitle,
+				body: editBody,
+				updatedAt: new Date(),
+			})
 		}
 		setIsEditing(false)
 	}, [editTitle, editBody, note, onUpdate])
 
 	const bootstrapColor = COLOR_BOOTSTRAP_MAP[note.color] || ''
-	const noteClass = isList ? `${keepNote} ${bootstrapColor}` : `${note.pinned ? keepNotePinned : keepNote} ${bootstrapColor}`
+	const noteClass = isList
+		? `${keepNote} ${bootstrapColor}`
+		: `${note.pinned ? keepNotePinned : keepNote} ${bootstrapColor}`
 
 	return (
 		<div
@@ -464,8 +480,14 @@ export default function GoogleKeep({
 		return result
 	}, [notes, search, selectedLabel])
 
-	const pinnedNotes = useMemo(() => filteredNotes.filter((n) => n.pinned), [filteredNotes])
-	const otherNotes = useMemo(() => filteredNotes.filter((n) => !n.pinned), [filteredNotes])
+	const pinnedNotes = useMemo(
+		() => filteredNotes.filter((n) => n.pinned),
+		[filteredNotes],
+	)
+	const otherNotes = useMemo(
+		() => filteredNotes.filter((n) => !n.pinned),
+		[filteredNotes],
+	)
 
 	const handleCreate = useCallback(() => {
 		const title = createTitle.trim()
@@ -499,7 +521,9 @@ export default function GoogleKeep({
 	const handleTogglePin = useCallback((noteId: string) => {
 		setNotes((prev) =>
 			prev.map((n) =>
-				n.id === noteId ? { ...n, pinned: !n.pinned, updatedAt: new Date() } : n,
+				n.id === noteId
+					? { ...n, pinned: !n.pinned, updatedAt: new Date() }
+					: n,
 			),
 		)
 	}, [])
@@ -528,26 +552,27 @@ export default function GoogleKeep({
 		)
 	}, [])
 
-	const handleDragEnd = useCallback(
-		(event: DragEndEvent) => {
-			const { active, over } = event
-			if (!over || active.id === over.id) return
+	const handleDragEnd = useCallback((event: DragEndEvent) => {
+		const { active, over } = event
+		if (!over || active.id === over.id) return
 
-			setNotes((prev) => {
-				const oldIndex = prev.findIndex((n) => n.id === active.id)
-				const newIndex = prev.findIndex((n) => n.id === over.id)
-				if (oldIndex === -1 || newIndex === -1) return prev
-				return arrayMove(prev, oldIndex, newIndex)
-			})
-		},
-		[],
-	)
+		setNotes((prev) => {
+			const oldIndex = prev.findIndex((n) => n.id === active.id)
+			const newIndex = prev.findIndex((n) => n.id === over.id)
+			if (oldIndex === -1 || newIndex === -1) return prev
+			return arrayMove(prev, oldIndex, newIndex)
+		})
+	}, [])
 
 	const handleRemoveLabel = useCallback((noteId: string, label: string) => {
 		setNotes((prev) =>
 			prev.map((n) =>
 				n.id === noteId
-					? { ...n, labels: n.labels?.filter((l) => l !== label) ?? [], updatedAt: new Date() }
+					? {
+							...n,
+							labels: n.labels?.filter((l) => l !== label) ?? [],
+							updatedAt: new Date(),
+						}
 					: n,
 			),
 		)
@@ -557,7 +582,11 @@ export default function GoogleKeep({
 		setNotes((prev) =>
 			prev.map((n) =>
 				n.id === noteId && !n.labels?.includes(label)
-					? { ...n, labels: [...(n.labels ?? []), label], updatedAt: new Date() }
+					? {
+							...n,
+							labels: [...(n.labels ?? []), label],
+							updatedAt: new Date(),
+						}
 					: n,
 			),
 		)
@@ -668,7 +697,9 @@ export default function GoogleKeep({
 							<button
 								key={label}
 								className={`btn btn-sm ${selectedLabel === label ? 'btn-primary' : 'btn-outline-secondary'}`}
-								onClick={() => setSelectedLabel(selectedLabel === label ? null : label)}
+								onClick={() =>
+									setSelectedLabel(selectedLabel === label ? null : label)
+								}
 							>
 								<Tag size={12} className='me-1' />
 								{label}
@@ -728,21 +759,39 @@ export default function GoogleKeep({
 					<div className={keepEmptyState}>
 						<PaletteIcon size={48} strokeWidth={1} />
 						<h5 className='mt-3 mb-1'>
-							{search || selectedLabel ? 'No se encontraron notas' : 'Las notas que agregues aparecerán aquí'}
+							{search || selectedLabel
+								? 'No se encontraron notas'
+								: 'Las notas que agregues aparecerán aquí'}
 						</h5>
 						<p className='text-muted mb-0'>
-							{search || selectedLabel ? 'Intenta con otros términos' : 'Haz clic en "Crear una nota..." para empezar'}
+							{search || selectedLabel
+								? 'Intenta con otros términos'
+								: 'Haz clic en "Crear una nota..." para empezar'}
 						</p>
 					</div>
 				) : (
-					<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+					<DndContext
+						sensors={sensors}
+						collisionDetection={closestCenter}
+						onDragEnd={handleDragEnd}
+					>
 						{pinnedNotes.length > 0 && (
 							<>
-								<h6 className='text-muted text-uppercase mb-2' style={{ fontSize: '0.7rem', letterSpacing: 1 }}>
+								<h6
+									className='text-muted text-uppercase mb-2'
+									style={{ fontSize: '0.7rem', letterSpacing: 1 }}
+								>
 									Fijadas
 								</h6>
-								<SortableContext items={pinnedNotes.map((n) => n.id)} strategy={rectSortingStrategy}>
-									<div className={isListView ? 'd-flex flex-column gap-2' : keepMasonry}>
+								<SortableContext
+									items={pinnedNotes.map((n) => n.id)}
+									strategy={rectSortingStrategy}
+								>
+									<div
+										className={
+											isListView ? 'd-flex flex-column gap-2' : keepMasonry
+										}
+									>
 										{pinnedNotes.map((note) => (
 											<NoteCard
 												key={note.id}
@@ -751,11 +800,19 @@ export default function GoogleKeep({
 												allLabels={allLabels}
 												onTogglePin={() => handleTogglePin(note.id)}
 												onDelete={() => handleDelete(note.id)}
-												onToggleCheck={(checkId) => handleToggleCheck(note.id, checkId)}
-												onColorChange={(color) => handleColorChange(note.id, color)}
+												onToggleCheck={(checkId) =>
+													handleToggleCheck(note.id, checkId)
+												}
+												onColorChange={(color) =>
+													handleColorChange(note.id, color)
+												}
 												onUpdate={handleUpdate}
-												onLabelRemove={(label) => handleRemoveLabel(note.id, label)}
-												onLabelAdd={(label) => handleAddLabelToNote(note.id, label)}
+												onLabelRemove={(label) =>
+													handleRemoveLabel(note.id, label)
+												}
+												onLabelAdd={(label) =>
+													handleAddLabelToNote(note.id, label)
+												}
 											/>
 										))}
 									</div>
@@ -766,12 +823,22 @@ export default function GoogleKeep({
 						{otherNotes.length > 0 && (
 							<>
 								{pinnedNotes.length > 0 && (
-									<h6 className='text-muted text-uppercase mb-2 mt-3' style={{ fontSize: '0.7rem', letterSpacing: 1 }}>
+									<h6
+										className='text-muted text-uppercase mb-2 mt-3'
+										style={{ fontSize: '0.7rem', letterSpacing: 1 }}
+									>
 										Otras
 									</h6>
 								)}
-								<SortableContext items={otherNotes.map((n) => n.id)} strategy={rectSortingStrategy}>
-									<div className={isListView ? 'd-flex flex-column gap-2' : keepMasonry}>
+								<SortableContext
+									items={otherNotes.map((n) => n.id)}
+									strategy={rectSortingStrategy}
+								>
+									<div
+										className={
+											isListView ? 'd-flex flex-column gap-2' : keepMasonry
+										}
+									>
 										{otherNotes.map((note) => (
 											<NoteCard
 												key={note.id}
@@ -780,11 +847,19 @@ export default function GoogleKeep({
 												allLabels={allLabels}
 												onTogglePin={() => handleTogglePin(note.id)}
 												onDelete={() => handleDelete(note.id)}
-												onToggleCheck={(checkId) => handleToggleCheck(note.id, checkId)}
-												onColorChange={(color) => handleColorChange(note.id, color)}
+												onToggleCheck={(checkId) =>
+													handleToggleCheck(note.id, checkId)
+												}
+												onColorChange={(color) =>
+													handleColorChange(note.id, color)
+												}
 												onUpdate={handleUpdate}
-												onLabelRemove={(label) => handleRemoveLabel(note.id, label)}
-												onLabelAdd={(label) => handleAddLabelToNote(note.id, label)}
+												onLabelRemove={(label) =>
+													handleRemoveLabel(note.id, label)
+												}
+												onLabelAdd={(label) =>
+													handleAddLabelToNote(note.id, label)
+												}
 											/>
 										))}
 									</div>

@@ -1,50 +1,50 @@
+import { FileText, Paperclip, Send } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
-import { Send, Paperclip, FileText } from 'lucide-react'
 import { Avatar } from '@/components/shared/avatar'
 import {
-	chatContainer,
-	chatLayout,
-	chatSidebar,
-	chatHeader,
-	chatHeaderInfo,
-	chatHeaderName,
-	chatHeaderStatus,
-	chatMessages,
-	chatInputArea,
-	chatInput,
-	chatSendButton,
-	messageRowSent,
-	messageRowReceived,
-	messageBubbleSent,
-	messageBubbleReceived,
-	messageTimeSent,
-	messageTimeReceived,
-	dateSeparator,
-	typingIndicator,
-	typingDots,
-	typingDot,
-	emptyChat,
-	contactsList,
-	contactItem,
-	contactItemActive,
-	contactInfo,
-	contactName,
-	contactLastMessage,
-	contactTime,
-	unreadBadge,
-	statusDotOnline,
-	statusDotOffline,
-	statusDotAway,
-	statusDotBusy,
-	attachmentImage,
-	attachmentVideo,
-	attachmentDocument,
 	attachmentDocIcon,
 	attachmentDocInfo,
 	attachmentDocName,
 	attachmentDocSize,
+	attachmentDocument,
+	attachmentImage,
 	attachmentPreview,
+	attachmentVideo,
+	chatContainer,
+	chatHeader,
+	chatHeaderInfo,
+	chatHeaderName,
+	chatHeaderStatus,
+	chatInput,
+	chatInputArea,
+	chatLayout,
+	chatMessages,
+	chatSendButton,
+	chatSidebar,
+	contactInfo,
+	contactItem,
+	contactItemActive,
+	contactLastMessage,
+	contactName,
+	contactsList,
+	contactTime,
+	dateSeparator,
+	emptyChat,
+	messageBubbleReceived,
+	messageBubbleSent,
+	messageRowReceived,
+	messageRowSent,
+	messageTimeReceived,
+	messageTimeSent,
+	statusDotAway,
+	statusDotBusy,
+	statusDotOffline,
+	statusDotOnline,
+	typingDot,
+	typingDots,
+	typingIndicator,
+	unreadBadge,
 } from './chat.css'
 
 export type MessageStatus = 'sent' | 'delivered' | 'read'
@@ -90,7 +90,10 @@ export interface ChatProps {
 }
 
 function formatMessageTime(date: Date): string {
-	return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
+	return date.toLocaleTimeString('es-ES', {
+		hour: '2-digit',
+		minute: '2-digit',
+	})
 }
 
 function formatDateLabel(date: Date): string {
@@ -167,7 +170,11 @@ function AttachmentRenderer({ attachment }: { attachment: ChatAttachment }) {
 	if (attachment.type === 'image') {
 		return (
 			<div className={attachmentPreview}>
-				<img src={attachment.url} alt={attachment.name} className={attachmentImage} />
+				<img
+					src={attachment.url}
+					alt={attachment.name}
+					className={attachmentImage}
+				/>
 			</div>
 		)
 	}
@@ -181,12 +188,19 @@ function AttachmentRenderer({ attachment }: { attachment: ChatAttachment }) {
 	}
 
 	return (
-		<a href={attachment.url} target='_blank' rel='noopener noreferrer' className={attachmentDocument}>
+		<a
+			href={attachment.url}
+			target='_blank'
+			rel='noopener noreferrer'
+			className={attachmentDocument}
+		>
 			<FileText size={24} className={attachmentDocIcon} />
 			<div className={attachmentDocInfo}>
 				<span className={attachmentDocName}>{attachment.name}</span>
 				{attachment.size != null && (
-					<span className={attachmentDocSize}>{formatFileSize(attachment.size)}</span>
+					<span className={attachmentDocSize}>
+						{formatFileSize(attachment.size)}
+					</span>
 				)}
 			</div>
 		</a>
@@ -217,7 +231,8 @@ export default function Chat({
 	className,
 }: ChatProps) {
 	const [inputText, setInputText] = useState('')
-	const [pendingAttachment, setPendingAttachment] = useState<ChatAttachment | null>(null)
+	const [pendingAttachment, setPendingAttachment] =
+		useState<ChatAttachment | null>(null)
 	const messagesEndRef = useRef<HTMLDivElement>(null)
 	const textareaRef = useRef<HTMLTextAreaElement>(null)
 	const fileInputRef = useRef<HTMLInputElement>(null)
@@ -253,27 +268,33 @@ export default function Chat({
 		[handleSend],
 	)
 
-	const handleInput = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-		setInputText(e.target.value)
-		const el = e.target
-		el.style.height = 'auto'
-		el.style.height = `${Math.min(el.scrollHeight, 120)}px`
-	}, [])
+	const handleInput = useCallback(
+		(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+			setInputText(e.target.value)
+			const el = e.target
+			el.style.height = 'auto'
+			el.style.height = `${Math.min(el.scrollHeight, 120)}px`
+		},
+		[],
+	)
 
-	const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0]
-		if (!file) return
+	const handleFileChange = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			const file = e.target.files?.[0]
+			if (!file) return
 
-		const url = URL.createObjectURL(file)
-		setPendingAttachment({
-			url,
-			type: getAttachmentType(file),
-			name: file.name,
-			size: file.size,
-		})
+			const url = URL.createObjectURL(file)
+			setPendingAttachment({
+				url,
+				type: getAttachmentType(file),
+				name: file.name,
+				size: file.size,
+			})
 
-		e.target.value = ''
-	}, [])
+			e.target.value = ''
+		},
+		[],
+	)
 
 	const handleRemoveAttachment = useCallback(() => {
 		if (pendingAttachment?.url.startsWith('blob:')) {
@@ -295,7 +316,9 @@ export default function Chat({
 						<li
 							key={contact.id}
 							className={
-								contact.id === selectedContactId ? contactItemActive : contactItem
+								contact.id === selectedContactId
+									? contactItemActive
+									: contactItem
 							}
 							onClick={() => onSelectContact?.(contact.id)}
 						>
@@ -312,7 +335,14 @@ export default function Chat({
 									{contact.lastMessage || 'Sin mensajes'}
 								</div>
 							</div>
-							<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
+							<div
+								style={{
+									display: 'flex',
+									flexDirection: 'column',
+									alignItems: 'flex-end',
+									gap: 4,
+								}}
+							>
 								{contact.lastMessageTime && (
 									<span className={contactTime}>
 										{formatMessageTime(contact.lastMessageTime)}
@@ -394,14 +424,16 @@ export default function Chat({
 							<div ref={messagesEndRef} />
 						</div>
 
-						{typingContact && (
-							<TypingIndicator name={typingContact.name} />
-						)}
+						{typingContact && <TypingIndicator name={typingContact.name} />}
 
 						{pendingAttachment && (
 							<div className='d-flex align-items-center gap-2 px-3 py-2 border-top bg-body'>
 								<AttachmentRenderer attachment={pendingAttachment} />
-								<Button variant='outline-danger' size='sm' onClick={handleRemoveAttachment}>
+								<Button
+									variant='outline-danger'
+									size='sm'
+									onClick={handleRemoveAttachment}
+								>
 									×
 								</Button>
 							</div>
@@ -419,7 +451,14 @@ export default function Chat({
 								variant='outline-secondary'
 								size='sm'
 								onClick={() => fileInputRef.current?.click()}
-								style={{ borderRadius: '50%', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+								style={{
+									borderRadius: '50%',
+									width: 36,
+									height: 36,
+									display: 'flex',
+									alignItems: 'center',
+									justifyContent: 'center',
+								}}
 							>
 								<Paperclip size={16} />
 							</Button>
