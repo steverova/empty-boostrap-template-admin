@@ -1,12 +1,11 @@
 import { useCallback, useMemo } from 'react'
-import { chatContainer, chatLayout } from './chat.css'
 import { ChatFooter } from './chat-footer'
 import { ChatHeader } from './chat-header'
 import { ChatMessages } from './chat-messages'
 import { ChatSidebar } from './chat-sidebar'
 import { EmptyChat } from './empty-chat'
-import type { ChatAttachment, ChatContact, ChatMessage } from './types'
 import { TypingIndicator } from './typing-indicator'
+import type { ChatAttachment, ChatContact, ChatMessage } from './types'
 
 interface ChatProps {
 	contacts: ChatContact[]
@@ -17,6 +16,7 @@ interface ChatProps {
 	onSelectContact: (contactId: string) => void
 	onSendMessage: (text: string, attachment?: ChatAttachment) => void
 	onBack?: () => void
+	onNewChat?: () => void
 	className?: string
 }
 
@@ -29,6 +29,7 @@ export function Chat({
 	onSelectContact,
 	onSendMessage,
 	onBack,
+	onNewChat,
 	className,
 }: ChatProps) {
 	const selectedContact = useMemo(
@@ -47,43 +48,53 @@ export function Chat({
 		[contacts, typingContactId],
 	)
 
-	const isMobile = useMemo(
-		() => typeof window !== 'undefined' && window.innerWidth < 768,
-		[],
-	)
-
 	const handleBack = useCallback(() => {
 		onBack?.()
 	}, [onBack])
 
 	return (
-		<div className={`${chatContainer} ${className ?? ''}`}>
-			{!(isMobile && selectedContactId) && (
+		<div
+			className={`d-flex flex-column flex-md-row h-100 border rounded bg-body overflow-hidden ${className ?? ''}`}
+		>
+			{/* Mobile: show sidebar OR chat */}
+			<div className='d-flex d-md-none flex-column h-100 w-100' style={{ flex: '1 1 0%' }}>
+				{selectedContact ? (
+					<div className='d-flex flex-column flex-grow-1 h-100 min-width-0 w-100'>
+						<ChatHeader contact={selectedContact} onBack={handleBack} />
+						<ChatMessages messages={currentMessages} currentUserId={currentUserId} />
+						{typingContact && <TypingIndicator name={typingContact.name} />}
+						<ChatFooter onSendMessage={onSendMessage} />
+					</div>
+				) : (
+					<ChatSidebar
+						contacts={contacts}
+						selectedContactId={selectedContactId}
+						onSelectContact={onSelectContact}
+						onNewChat={onNewChat}
+					/>
+				)}
+			</div>
+
+			{/* Desktop: sidebar + chat side by side */}
+			<div className='d-none d-md-flex flex-row h-100 flex-grow-1'>
 				<ChatSidebar
 					contacts={contacts}
 					selectedContactId={selectedContactId}
 					onSelectContact={onSelectContact}
+					onNewChat={onNewChat}
 				/>
-			)}
-
-			<div className={chatLayout}>
-				{selectedContact ? (
-					<>
-						<ChatHeader
-							contact={selectedContact}
-							isMobile={isMobile}
-							onBack={handleBack}
-						/>
-						<ChatMessages
-							messages={currentMessages}
-							currentUserId={currentUserId}
-						/>
-						{typingContact && <TypingIndicator name={typingContact.name} />}
-						<ChatFooter onSendMessage={onSendMessage} />
-					</>
-				) : selectedContactId ? (
-					<EmptyChat />
-				) : null}
+				<div className='d-flex flex-column flex-grow-1 h-100 min-width-0 overflow-hidden'>
+					{selectedContact ? (
+						<>
+							<ChatHeader contact={selectedContact} onBack={handleBack} />
+							<ChatMessages messages={currentMessages} currentUserId={currentUserId} />
+							{typingContact && <TypingIndicator name={typingContact.name} />}
+							<ChatFooter onSendMessage={onSendMessage} />
+						</>
+					) : (
+						<EmptyChat />
+					)}
+				</div>
 			</div>
 		</div>
 	)

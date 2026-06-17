@@ -41,4 +41,21 @@ body {
 	max-width: calc(100vw - 2rem);
 }
 
+@keyframes typingBounce {
+	0%, 60%, 100% { transform: translateY(0); }
+	30% { transform: translateY(-4px); }
+}
+
+.chat-sidebar {
+	width: 100%;
+	flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+	.chat-sidebar {
+		width: 320px !important;
+		flex-shrink: 0 !important;
+	}
+}
+
 

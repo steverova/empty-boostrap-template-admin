@@ -1,7 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import { Paperclip, Send } from 'lucide-react'
 import { Button, Form } from 'react-bootstrap'
-import { chatInput, chatInputArea, chatSendButton } from './chat.css'
 import { AttachmentRenderer } from './attachment-renderer'
 import { getAttachmentType } from './chat.helper'
 import type { ChatAttachment } from './types'
@@ -87,7 +86,7 @@ export function ChatFooter({ onSendMessage }: ChatFooterProps) {
 					</Button>
 				</div>
 			)}
-			<div className={chatInputArea}>
+			<div className='d-flex align-items-end gap-2 p-3 border-top bg-body flex-shrink-0'>
 				<input
 					ref={fileInputRef}
 					type='file'
@@ -99,14 +98,8 @@ export function ChatFooter({ onSendMessage }: ChatFooterProps) {
 					variant='outline-secondary'
 					size='sm'
 					onClick={() => fileInputRef.current?.click()}
-					style={{
-						borderRadius: '50%',
-						width: 36,
-						height: 36,
-						display: 'flex',
-						alignItems: 'center',
-						justifyContent: 'center',
-					}}
+					className='rounded-circle d-flex align-items-center justify-content-center'
+					style={{ width: 36, height: 36 }}
 				>
 					<Paperclip size={16} />
 				</Button>
@@ -114,7 +107,8 @@ export function ChatFooter({ onSendMessage }: ChatFooterProps) {
 					ref={textareaRef}
 					as='textarea'
 					rows={1}
-					className={chatInput}
+					className='flex-grow-1'
+					style={{ resize: 'none', borderRadius: 20, minHeight: 40, maxHeight: 120, fontSize: '0.875rem', lineHeight: 1.4 }}
 					placeholder='Escribe un mensaje...'
 					value={inputText}
 					onChange={handleInput}
@@ -122,9 +116,10 @@ export function ChatFooter({ onSendMessage }: ChatFooterProps) {
 				/>
 				<Button
 					variant='primary'
-					className={chatSendButton}
 					onClick={handleSend}
 					disabled={!inputText.trim() && !pendingAttachment}
+					className='rounded-circle d-flex align-items-center justify-content-center flex-shrink-0'
+					style={{ width: 40, height: 40 }}
 				>
 					<Send size={16} />
 				</Button>

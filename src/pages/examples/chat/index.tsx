@@ -236,6 +236,10 @@ export default function ChatExamplePage() {
 		navigate('/examples/chat', { replace: true })
 	}, [navigate])
 
+	const handleNewChat = useCallback(() => {
+		navigate('/examples/chat', { replace: true })
+	}, [navigate])
+
 	return (
 		<Chat
 			contacts={contacts}
@@ -246,6 +250,7 @@ export default function ChatExamplePage() {
 			onSelectContact={handleSelectContact}
 			onSendMessage={handleSendMessage}
 			onBack={handleBack}
+			onNewChat={handleNewChat}
 		/>
 	)
 }

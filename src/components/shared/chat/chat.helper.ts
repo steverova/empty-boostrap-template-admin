@@ -1,9 +1,3 @@
-import {
-	statusDotAway,
-	statusDotBusy,
-	statusDotOffline,
-	statusDotOnline,
-} from './chat.css'
 import type { AttachmentType, ChatMessage, ContactStatus } from './types'
 
 export function formatMessageTime(date: Date): string {
@@ -28,17 +22,17 @@ export function formatDateLabel(date: Date): string {
 	})
 }
 
+const statusDotBase = 'rounded-circle flex-shrink-0'
+
+const statusDotStyles: Record<ContactStatus, string> = {
+	online: `${statusDotBase} bg-success`,
+	away: `${statusDotBase} bg-warning`,
+	busy: `${statusDotBase} bg-danger`,
+	offline: `${statusDotBase} bg-secondary`,
+}
+
 export function getStatusDotClass(status: ContactStatus): string {
-	switch (status) {
-		case 'online':
-			return statusDotOnline
-		case 'away':
-			return statusDotAway
-		case 'busy':
-			return statusDotBusy
-		default:
-			return statusDotOffline
-	}
+	return statusDotStyles[status] ?? statusDotStyles.offline
 }
 
 export function getStatusLabel(status: ContactStatus): string {
