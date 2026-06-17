@@ -1,12 +1,12 @@
 import type { RouteObject } from 'react-router'
+import ChatExamplePage from './chat'
 import DatePickerExamplePage from './date-picker'
 import DropzoneExamplePage from './drop-zone'
+import EditorExamplePage from './editor'
 import FullCalendarExamplePage from './full-calendar'
+import GoogleKeepExamplePage from './google-keep'
 import KanbanExamplePage from './kan-ban/index copy'
 import TableExamplePage from './table'
-import EditorExamplePage from './editor'
-import ChatExamplePage from './chat'
-import GoogleKeepExamplePage from './google-keep'
 
 export const exampleRoutes: RouteObject[] = [
 	{
@@ -32,19 +32,19 @@ export const exampleRoutes: RouteObject[] = [
 			{
 				path: 'kanban',
 				Component: KanbanExamplePage,
-      },
-      {
-        path: 'editor',
-        Component: EditorExamplePage
-      },
-      {
-        path: 'chat',
-        Component: ChatExamplePage
-      },
-      {
-        path: 'google-keep',
-        Component: GoogleKeepExamplePage
-      }
+			},
+			{
+				path: 'editor',
+				Component: EditorExamplePage,
+			},
+			{
+				path: 'chat',
+				Component: ChatExamplePage,
+			},
+			{
+				path: 'google-keep',
+				Component: GoogleKeepExamplePage,
+			},
 		],
 	},
 ]

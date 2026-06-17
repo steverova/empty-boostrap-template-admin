@@ -1,4 +1,4 @@
-import { FileText, Paperclip, Send } from 'lucide-react'
+import { ArrowLeft, FileText, Paperclip, Send } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { Avatar } from '@/components/shared/avatar'
@@ -37,134 +37,21 @@ import {
 	messageRowSent,
 	messageTimeReceived,
 	messageTimeSent,
-	statusDotAway,
-	statusDotBusy,
-	statusDotOffline,
-	statusDotOnline,
 	typingDot,
 	typingDots,
 	typingIndicator,
 	unreadBadge,
 } from './chat.css'
-
-export type MessageStatus = 'sent' | 'delivered' | 'read'
-
-export type ContactStatus = 'online' | 'offline' | 'away' | 'busy'
-
-export type AttachmentType = 'image' | 'video' | 'document'
-
-export interface ChatAttachment {
-	url: string
-	type: AttachmentType
-	name: string
-	size?: number
-}
-
-export interface ChatMessage {
-	id: string
-	senderId: string
-	text: string
-	timestamp: Date
-	status?: MessageStatus
-	attachment?: ChatAttachment
-}
-
-export interface ChatContact {
-	id: string
-	name: string
-	status: ContactStatus
-	lastMessage?: string
-	lastMessageTime?: Date
-	unreadCount?: number
-}
-
-export interface ChatProps {
-	contacts: ChatContact[]
-	messages: ChatMessage[]
-	currentUserId: string
-	selectedContactId?: string
-	typingContactId?: string
-	onSelectContact?: (contactId: string) => void
-	onSendMessage?: (text: string, attachment?: ChatAttachment) => void
-	className?: string
-}
-
-function formatMessageTime(date: Date): string {
-	return date.toLocaleTimeString('es-ES', {
-		hour: '2-digit',
-		minute: '2-digit',
-	})
-}
-
-function formatDateLabel(date: Date): string {
-	const today = new Date()
-	const yesterday = new Date(today)
-	yesterday.setDate(yesterday.getDate() - 1)
-
-	if (date.toDateString() === today.toDateString()) return 'Hoy'
-	if (date.toDateString() === yesterday.toDateString()) return 'Ayer'
-
-	return date.toLocaleDateString('es-ES', {
-		weekday: 'long',
-		day: 'numeric',
-		month: 'long',
-	})
-}
-
-function getStatusDotClass(status: ContactStatus): string {
-	switch (status) {
-		case 'online':
-			return statusDotOnline
-		case 'away':
-			return statusDotAway
-		case 'busy':
-			return statusDotBusy
-		default:
-			return statusDotOffline
-	}
-}
-
-function getStatusLabel(status: ContactStatus): string {
-	switch (status) {
-		case 'online':
-			return 'En línea'
-		case 'away':
-			return 'Ausente'
-		case 'busy':
-			return 'Ocupado'
-		default:
-			return 'Desconectado'
-	}
-}
-
-function groupMessagesByDate(messages: ChatMessage[]): ChatMessage[][] {
-	const groups: ChatMessage[][] = []
-	let currentDate = ''
-
-	for (const msg of messages) {
-		const dateStr = msg.timestamp.toDateString()
-		if (dateStr !== currentDate) {
-			currentDate = dateStr
-			groups.push([msg])
-		} else {
-			groups[groups.length - 1]!.push(msg)
-		}
-	}
-
-	return groups
-}
-
-function getAttachmentType(file: File): AttachmentType {
-	if (file.type.startsWith('image/')) return 'image'
-	if (file.type.startsWith('video/')) return 'video'
-	return 'document'
-}
-
-function formatFileSize(bytes: number): string {
-	if (bytes < 1024) return `${bytes} B`
-	if (bytes < 1048576) return `${(bytes / 1024).toFixed(1)} KB`
-	return `${(bytes / 1048576).toFixed(1)} MB`
-}
+import {
+	formatDateLabel,
+	formatFileSize,
+	formatMessageTime,
+	getAttachmentType,
+	getStatusDotClass,
+	getStatusLabel,
+	groupMessagesByDate,
+} from './chat.helper'
+import type { ChatAttachment, ChatProps } from './types'
 
 function AttachmentRenderer({ attachment }: { attachment: ChatAttachment }) {
 	if (attachment.type === 'image') {
@@ -228,6 +115,7 @@ export default function Chat({
 	typingContactId,
 	onSelectContact,
 	onSendMessage,
+	onBack,
 	className,
 }: ChatProps) {
 	const [inputText, setInputText] = useState('')
@@ -237,7 +125,9 @@ export default function Chat({
 	const textareaRef = useRef<HTMLTextAreaElement>(null)
 	const fileInputRef = useRef<HTMLInputElement>(null)
 
-	const selectedContact = contacts.find((c) => c.id === selectedContactId)
+	const selectedContact = selectedContactId
+	? contacts.find((c) => c.id === selectedContactId)
+	: undefined
 
 	const scrollToBottom = useCallback(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -308,59 +198,86 @@ export default function Chat({
 		? contacts.find((c) => c.id === typingContactId)
 		: null
 
+	const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+
+	const handleBack = useCallback(() => {
+		if (onBack) {
+			onBack()
+		} else {
+			onSelectContact?.(undefined)
+		}
+	}, [onBack, onSelectContact])
+
 	return (
 		<div className={`${chatContainer} ${className ?? ''}`}>
-			<div className={chatSidebar}>
-				<ul className={contactsList}>
-					{contacts.map((contact) => (
-						<li
-							key={contact.id}
-							className={
-								contact.id === selectedContactId
-									? contactItemActive
-									: contactItem
-							}
-							onClick={() => onSelectContact?.(contact.id)}
-						>
-							<Avatar
-								seed={contact.id}
-								variant='emoji'
-								name={contact.name}
-								size='md'
-								status={contact.status}
-							/>
-							<div className={contactInfo}>
-								<div className={contactName}>{contact.name}</div>
-								<div className={contactLastMessage}>
-									{contact.lastMessage || 'Sin mensajes'}
-								</div>
-							</div>
-							<div
-								style={{
-									display: 'flex',
-									flexDirection: 'column',
-									alignItems: 'flex-end',
-									gap: 4,
-								}}
+			{isMobile && selectedContactId ? null : (
+				<div className={chatSidebar}>
+					<ul className={contactsList}>
+						{contacts.map((contact) => (
+							<li
+								key={contact.id}
+								className={
+									contact.id === selectedContactId
+										? contactItemActive
+										: contactItem
+								}
+								onClick={() => onSelectContact?.(contact.id)}
 							>
-								{contact.lastMessageTime && (
-									<span className={contactTime}>
-										{formatMessageTime(contact.lastMessageTime)}
-									</span>
-								)}
-								{contact.unreadCount && contact.unreadCount > 0 && (
-									<span className={unreadBadge}>{contact.unreadCount}</span>
-								)}
-							</div>
-						</li>
-					))}
-				</ul>
-			</div>
+								<Avatar
+									seed={contact.id}
+									variant='emoji'
+									name={contact.name}
+									size='md'
+									status={contact.status}
+								/>
+								<div className={contactInfo}>
+									<div className={contactName}>{contact.name}</div>
+									<div className={contactLastMessage}>
+										{contact.lastMessage || 'Sin mensajes'}
+									</div>
+								</div>
+								<div
+									style={{
+										display: 'flex',
+										flexDirection: 'column',
+										alignItems: 'flex-end',
+										gap: 4,
+									}}
+								>
+									{contact.lastMessageTime && (
+										<span className={contactTime}>
+											{formatMessageTime(contact.lastMessageTime)}
+										</span>
+									)}
+									{contact.unreadCount && contact.unreadCount > 0 && (
+										<span className={unreadBadge}>{contact.unreadCount}</span>
+									)}
+								</div>
+							</li>
+						))}
+					</ul>
+				</div>
+			)}
 
 			<div className={chatLayout}>
 				{selectedContact ? (
 					<>
 						<div className={chatHeader}>
+							{isMobile && (
+								<Button
+									variant='link'
+									onClick={handleBack}
+									style={{
+										padding: 0,
+										border: 'none',
+										background: 'none',
+										display: 'flex',
+										alignItems: 'center',
+									}}
+								>
+									<ArrowLeft size={24} />
+								</Button>
+							)}
 							<Avatar
 								seed={selectedContact.id}
 								variant='emoji'
@@ -482,7 +399,7 @@ export default function Chat({
 							</Button>
 						</div>
 					</>
-				) : (
+				) : selectedContactId ? (
 					<div className={emptyChat}>
 						<Send size={48} strokeWidth={1} />
 						<h5 className='mb-0'>Selecciona una conversación</h5>
@@ -490,7 +407,7 @@ export default function Chat({
 							Elige un contacto de la lista para comenzar a chatear
 						</p>
 					</div>
-				)}
+				) : null}
 			</div>
 		</div>
 	)

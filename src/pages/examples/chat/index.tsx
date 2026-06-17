@@ -1,9 +1,6 @@
 import { useCallback, useState } from 'react'
-import Chat, {
-	type ChatAttachment,
-	type ChatContact,
-	type ChatMessage,
-} from '@/components/shared/chat'
+import type { ChatAttachment, ChatContact, ChatMessage } from '@/components/shared/chat/types'
+import Chat from '@/components/shared/chat'
 
 const CURRENT_USER_ID = 'user-me'
 
@@ -660,7 +657,7 @@ export default function ChatExamplePage() {
 	}, [])
 
 	const handleSendMessage = useCallback(
-		(text: string, attachment?: ChatAttachment) => {
+		(text: string, attachment?: ChatAttachment  ) => {
 			if (!selectedContactId) return
 
 			const newMsg: ChatMessage = {
