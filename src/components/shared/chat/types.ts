@@ -35,7 +35,7 @@ export interface ChatProps {
 	currentUserId: string
 	selectedContactId?: string
 	typingContactId?: string
-	onSelectContact?: (contactId: string) => void
+	onSelectContact?: (contactId: string | undefined) => void
 	onSendMessage?: (text: string, attachment?: ChatAttachment) => void
 	onBack?: () => void
 	className?: string

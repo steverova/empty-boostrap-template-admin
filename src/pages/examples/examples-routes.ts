@@ -37,10 +37,14 @@ export const exampleRoutes: RouteObject[] = [
 				path: 'editor',
 				Component: EditorExamplePage,
 			},
-			{
-				path: 'chat',
-				Component: ChatExamplePage,
-			},
+		{
+			path: 'chat',
+			Component: ChatExamplePage,
+		},
+		{
+			path: 'chat/:contactId',
+			Component: ChatExamplePage,
+		},
 			{
 				path: 'google-keep',
 				Component: GoogleKeepExamplePage,
