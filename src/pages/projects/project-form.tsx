@@ -2,11 +2,14 @@ import { useCallback } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useDropzone } from 'react-dropzone'
 import Select from 'react-select'
-import { Upload, X, FileText, Plus } from 'lucide-react'
+import { Upload, X, FileText } from 'lucide-react'
 import { Badge, Button, Card, Col, Form, Row } from 'react-bootstrap'
 import { Controller, useForm } from 'react-hook-form'
 import DatePicker from '@/components/shared/date-picker'
 import { type ProjectFormData, projectSchema } from './project.schema'
+import type { Project } from './project.types'
+import type { Client } from '../clients/client.types'
+import type { Collaborator } from '../collaborators/collaborator.types'
 
 const statusOptions = [
 	{ value: 'development', label: 'In Development' },
@@ -23,11 +26,16 @@ const priorityOptions = [
 ]
 
 type ProjectFormProps = {
+	initialData?: Project
+	clients: Client[]
+	collaborators: Collaborator[]
 	onSubmit: (data: ProjectFormData) => void
 	onCancel?: () => void
 }
 
-export default function ProjectForm({ onSubmit, onCancel }: ProjectFormProps) {
+export default function ProjectForm({ initialData, clients, collaborators, onSubmit, onCancel }: ProjectFormProps) {
+	const isEdit = !!initialData
+
 	const {
 		register,
 		handleSubmit,
@@ -38,14 +46,20 @@ export default function ProjectForm({ onSubmit, onCancel }: ProjectFormProps) {
 	} = useForm<ProjectFormData>({
 		resolver: zodResolver(projectSchema),
 		defaultValues: {
-			status: 'development',
-			priority: 'medium',
-			team: [],
+			projectName: initialData?.projectName ?? '',
+			description: initialData?.description ?? '',
+			status: initialData?.status ?? 'development',
+			priority: initialData?.priority ?? 'medium',
+			owner: initialData?.owner ?? '',
+			startDate: initialData?.startDate ?? '',
+			endDate: initialData?.endDate ?? '',
+			team: initialData?.team ?? [],
+			repository: initialData?.repository ?? '',
+			demoUrl: initialData?.demoUrl ?? '',
 			files: [],
 		},
 	})
 
-	const team = watch('team')
 	const files = watch('files')
 
 	const onDrop = useCallback(
@@ -66,22 +80,10 @@ export default function ProjectForm({ onSubmit, onCancel }: ProjectFormProps) {
 		setValue('files', updated, { shouldValidate: true })
 	}
 
-	function addTeamMember(input: HTMLInputElement) {
-		const value = input.value.trim()
-		if (value && !team.includes(value)) {
-			setValue('team', [...team, value], { shouldValidate: true })
-			input.value = ''
-		}
-	}
-
-	function removeTeamMember(member: string) {
-		setValue('team', team.filter((m) => m !== member), { shouldValidate: true })
-	}
-
 	return (
 		<Card className='border-0 shadow-sm'>
 			<Card.Header className='bg-body border-bottom'>
-				<h5 className='mb-0 fw-semibold'>New Project</h5>
+				<h5 className='mb-0 fw-semibold'>{isEdit ? 'Edit Project' : 'New Project'}</h5>
 			</Card.Header>
 			<Card.Body>
 				<Form onSubmit={handleSubmit(onSubmit)}>
@@ -131,15 +133,29 @@ export default function ProjectForm({ onSubmit, onCancel }: ProjectFormProps) {
 						</Col>
 						<Col md={3}>
 							<Form.Label className='fw-semibold'>Owner</Form.Label>
-							<Form.Control
-								{...register('owner')}
-								isInvalid={!!errors.owner}
-								placeholder='Owner name'
+							<Controller
+								control={control}
+								name='owner'
+								render={({ field }) => (
+									<Select
+										{...field}
+										options={clients.map((c) => ({
+											value: c.id,
+											label: c.companyName ? `${c.name} (${c.companyName})` : c.name,
+										}))}
+										onChange={(val) => field.onChange(val?.value)}
+										value={clients
+											.map((c) => ({
+												value: c.id,
+												label: c.companyName ? `${c.name} (${c.companyName})` : c.name,
+											}))
+											.find((o) => o.value === field.value)}
+										placeholder='Select owner'
+									/>
+								)}
 							/>
 							{errors.owner && (
-								<Form.Control.Feedback type='invalid'>
-									{errors.owner.message}
-								</Form.Control.Feedback>
+								<small className='text-danger'>{errors.owner.message}</small>
 							)}
 						</Col>
 					</Row>
@@ -181,48 +197,33 @@ export default function ProjectForm({ onSubmit, onCancel }: ProjectFormProps) {
 						</Col>
 						<Col md={4}>
 							<Form.Label className='fw-semibold'>Team Members</Form.Label>
-							<div className='d-flex gap-2 mb-2'>
-								<Form.Control
-									id='teamInput'
-									placeholder='Add member + Enter'
-									onKeyDown={(e) => {
-										if (e.key === 'Enter') {
-											e.preventDefault()
-											addTeamMember(e.target as HTMLInputElement)
-										}
-									}}
-								/>
-								<Button
-									variant='outline-secondary'
-									onClick={() => {
-										const input = document.getElementById('teamInput') as HTMLInputElement
-										if (input) addTeamMember(input)
-									}}
-								>
-									<Plus size={16} />
-								</Button>
-							</div>
+							<Controller
+								control={control}
+								name='team'
+								render={({ field }) => (
+									<Select
+										{...field}
+										isMulti
+										options={collaborators.map((c) => ({
+											value: c.id,
+											label: c.name,
+										}))}
+										onChange={(vals) => field.onChange(vals?.map((v) => v.value) ?? [])}
+										value={collaborators
+											.map((c) => ({
+												value: c.id,
+												label: c.name,
+											}))
+											.filter((o) => field.value?.includes(o.value))}
+										placeholder='Select team members'
+									/>
+								)}
+							/>
 							{errors.team && (
 								<small className='text-danger d-block mb-1'>
 									{errors.team.message}
 								</small>
 							)}
-							<div className='d-flex flex-wrap gap-1'>
-								{team.map((member) => (
-									<Badge
-										key={member}
-										bg='primary'
-										className='d-flex align-items-center gap-1'
-									>
-										{member}
-										<X
-											size={12}
-											style={{ cursor: 'pointer' }}
-											onClick={() => removeTeamMember(member)}
-										/>
-									</Badge>
-								))}
-							</div>
 						</Col>
 					</Row>
 
@@ -306,9 +307,9 @@ export default function ProjectForm({ onSubmit, onCancel }: ProjectFormProps) {
 								Cancel
 							</Button>
 						)}
-						<Button variant='primary' type='submit'>
-							Create Project
-						</Button>
+					<Button variant='primary' type='submit'>
+						{isEdit ? 'Update Project' : 'Create Project'}
+					</Button>
 					</div>
 				</Form>
 			</Card.Body>

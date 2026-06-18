@@ -9,21 +9,22 @@ import type { Client } from './client.types'
 
 const initialClients: Client[] = [
 	{
-		id: 'c1',
+		id: 'cli1',
 		type: 'company',
-		name: 'Alice Chen',
-		companyName: 'TechCorp',
-		phone: '+1 555 123 4567',
-		email: 'alice@techcorp.com',
-		address: '100 Tech Ave, San Francisco, CA',
+		name: 'Acme Corp',
+		companyName: 'Acme Corporation',
+		contactPerson: 'Alice Johnson',
+		phone: '+1 555 100 2000',
+		email: 'alice@acme.com',
+		address: '123 Main St, New York, NY',
 	},
 	{
-		id: 'c2',
+		id: 'cli2',
 		type: 'individual',
 		name: 'Bob Williams',
-		phone: '+1 555 987 6543',
-		email: 'bob@mail.com',
-		address: '200 Main St, Austin, TX',
+		phone: '+1 555 300 4000',
+		email: 'bob@personal.dev',
+		address: '456 Oak Ave, Austin, TX',
 	},
 ]
 

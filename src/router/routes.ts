@@ -7,6 +7,7 @@ import NotFound from '@/components/blocks/not-found'
 import { exampleRoutes } from '@/pages/examples/examples-routes'
 import { projectsRoutes } from '@/pages/projects/projects-routes'
 import { clientsRoutes } from '@/pages/clients/clients-routes'
+import { collaboratorsRoutes } from '@/pages/collaborators/collaborators-routes'
 
 export const routes: RouteObject[] = [
 	{
@@ -26,6 +27,7 @@ export const routes: RouteObject[] = [
           ...exampleRoutes,
 					...projectsRoutes,
 					...clientsRoutes,
+					...collaboratorsRoutes,
 				],
 			},
 			{

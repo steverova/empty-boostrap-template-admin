@@ -18,6 +18,13 @@ export const navigationMenu: NavItem[] = [
     icon: 'people'
   },
   {
+		path: '/collaborators',
+		label: 'Collaborators',
+		type: 'item',
+    id: 'collaborators',
+    icon: 'people'
+  },
+  {
 		path: '/tasks',
 		label: 'Tasks',
 		type: 'item',
