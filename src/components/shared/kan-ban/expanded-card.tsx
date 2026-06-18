@@ -12,6 +12,7 @@ type ExpandedCardProps = {
 	column: Column
 	columnTasks: Task[]
 	handleCollapse: (columnId: string) => void
+	onMove?: (taskId: string, targetColumnId: string) => void
 }
 
 export default function ExpandedCard({
@@ -19,6 +20,7 @@ export default function ExpandedCard({
 	column,
 	columnTasks,
 	handleCollapse,
+	onMove,
 }: ExpandedCardProps) {
 	return (
 		<Card className='border-0 shadow-sm d-flex flex-column flex-grow-1 mb-2' style={{ overflow: 'hidden' }}>
@@ -57,8 +59,14 @@ export default function ExpandedCard({
 						items={columnTasks.map((t: Task) => t.id)}
 						strategy={verticalListSortingStrategy}
 					>
-						{columnTasks.map((task: Task) => (
-							<SortableItem key={task.id} task={task} />
+						{columnTasks.map((task: Task, index: number) => (
+							<SortableItem
+								key={task.id}
+								task={task}
+								onMove={onMove}
+								taskIndex={index + 1}
+								totalTasks={columnTasks.length}
+							/>
 						))}
 					</SortableContext>
 				</DroppableColumn>

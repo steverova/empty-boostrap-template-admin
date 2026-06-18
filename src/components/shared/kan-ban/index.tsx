@@ -9,7 +9,7 @@ import {
 	useSensors,
 } from '@dnd-kit/core'
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import CollapseCard from './collapse-card'
 import ExpandedCard from './expanded-card'
@@ -17,6 +17,7 @@ import type { Task } from './kanban.types'
 import { columns } from './kanban-helper'
 import { initialTasks } from './kanban-mock'
 import TaskCard from './task-card'
+import KanbanToolbar, { type KanbanFilters } from './kanban-toolbar'
 
 // ─── Main board ───────────────────────────────────────────────────────────────
 
@@ -26,9 +27,38 @@ export default function KanbanBoard() {
 	const [collapsedColumns, setCollapsedColumns] = useState<Set<string>>(
 		new Set(),
 	)
+	const [filters, setFilters] = useState<KanbanFilters>({
+		search: '',
+		priority: '',
+		assignee: '',
+		project: '',
+	})
+
+	const assignees = useMemo(
+		() => [...new Set(tasks.map((t) => t.assignee).filter(Boolean))] as string[],
+		[tasks],
+	)
+	const projects = useMemo(
+		() => [...new Set(tasks.map((t) => t.project).filter(Boolean))] as string[],
+		[tasks],
+	)
+
+	const filteredTasks = useMemo(() => {
+		return tasks.filter((t) => {
+			if (filters.search && !t.title.toLowerCase().includes(filters.search.toLowerCase())) return false
+			if (filters.priority && t.priority !== filters.priority) return false
+			if (filters.assignee && t.assignee !== filters.assignee) return false
+			if (filters.project && t.project !== filters.project) return false
+			return true
+		})
+	}, [tasks, filters])
 
 	const sensors = useSensors(
-		useSensor(PointerSensor),
+		useSensor(PointerSensor, {
+			activationConstraint: {
+				distance: 10,
+			},
+		}),
 		useSensor(KeyboardSensor, {
 			coordinateGetter: sortableKeyboardCoordinates,
 		}),
@@ -91,14 +121,28 @@ export default function KanbanBoard() {
 		})
 	}
 
+	function handleMove(taskId: string, targetColumnId: string) {
+		setTasks((prev) =>
+			prev.map((t) => (t.id === taskId ? { ...t, columnId: targetColumnId } : t)),
+		)
+	}
+
 	const tasksByColumn = columns.map((column) => ({
 		column,
-		tasks: tasks.filter((t) => t.columnId === column.id),
+		tasks: filteredTasks.filter((t) => t.columnId === column.id),
 	}))
 
 	return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-			<Container fluid className='p-1' style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+      <Container fluid className='p-1' style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+
+        <KanbanToolbar
+						filters={filters}
+						assignees={assignees}
+						projects={projects}
+						onChange={setFilters}
+					/>
+        
 				<DndContext
 					sensors={sensors}
 					collisionDetection={closestCenter}
@@ -141,6 +185,7 @@ export default function KanbanBoard() {
 											handleCollapse={handleCollapse}
 											column={column}
 											columnTasks={columnTasks}
+											onMove={handleMove}
 										/>
 									)}
 								</Col>
@@ -149,7 +194,7 @@ export default function KanbanBoard() {
 					</Row>
 
 					<DragOverlay>
-						{activeTask ? <TaskCard task={activeTask} /> : null}
+						{activeTask ? <TaskCard task={activeTask} isDragging /> : null}
 					</DragOverlay>
 				</DndContext>
 			</Container>

@@ -1,8 +1,11 @@
+import { nanoid } from 'nanoid'
 import type { Task } from "./kanban.types";
+
+const t = () => nanoid(10)
 
 export const initialTasks: Task[] = [
  	{
-		id: 'task-1',
+		id: t(),
 		columnId: 'inprogress',
 		title: 'Design user authentication flow',
 		description:
@@ -10,27 +13,33 @@ export const initialTasks: Task[] = [
 		priority: 'high',
 		assignee: 'John Doe',
 		dueDate: '2024-01-15',
+		project: 'Auth System',
+		members: ['JD', 'JS', 'MJ'],
 	},
 	{
-		id: 'task-2',
+		id: t(),
 		columnId: 'inprogress',
 		title: 'Implement API endpoints',
 		description: 'Set up RESTful API endpoints for user management',
 		priority: 'medium',
 		assignee: 'Jane Smith',
 		dueDate: '2024-01-20',
+		project: 'Backend API',
+		members: ['JS', 'SW'],
 	},
 	{
-		id: 'task-3',
+		id: t(),
 		columnId: 'inprogress',
 		title: 'Write unit tests',
 		description: 'Create comprehensive test coverage for all new features',
 		priority: 'low',
 		assignee: 'Mike Johnson',
 		dueDate: '2024-01-25',
+		project: 'QA Suite',
+		members: ['MJ'],
 	},
 	{
-		id: 'task-4',
+		id: t(),
 		columnId: 'inprogress',
 		title: 'Setup CI/CD pipeline',
 		description:
@@ -38,18 +47,22 @@ export const initialTasks: Task[] = [
 		priority: 'high',
 		assignee: 'Sarah Williams',
 		dueDate: '2024-01-18',
+		project: 'DevOps',
+		members: ['SW', 'TB', 'AC'],
 	},
 	{
-		id: 'task-5',
+		id: t(),
 		columnId: 'inprogress',
 		title: 'Update documentation',
 		description: 'Document new API endpoints and usage examples',
 		priority: 'medium',
 		assignee: 'Tom Brown',
 		dueDate: '2024-01-22',
+		project: 'Docs',
+		members: ['TB'],
 	},
   {
-    id: 'task-6',
+	id: t(),
     columnId: 'backlog',
     title: 'Migrate to React 19',
     description: 'Evaluar breaking changes y actualizar dependencias',
@@ -58,7 +71,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-03-01',
   },
   {
-    id: 'task-7',
+	id: t(),
     columnId: 'backlog',
     title: 'Add dark mode support',
     description: 'Implementar tema oscuro con CSS variables',
@@ -67,7 +80,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-02-28',
   },
   {
-    id: 'task-8',
+	id: t(),
     columnId: 'backlog',
     title: 'Optimize bundle size',
     description: 'Analizar y reducir el tamaño del bundle final',
@@ -76,7 +89,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-03-10',
   },
   {
-    id: 'task-9',
+	id: t(),
     columnId: 'backlog',
     title: 'Integrate Sentry for error tracking',
     description: 'Configurar monitoreo de errores en producción',
@@ -85,7 +98,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-02-20',
   },
   {
-    id: 'task-10',
+	id: t(),
     columnId: 'backlog',
     title: 'Write E2E tests with Playwright',
     description: 'Cubrir flujos críticos del usuario',
@@ -94,7 +107,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-03-05',
   },
   {
-    id: 'task-11',
+	id: t(),
     columnId: 'backlog',
     title: 'Add i18n support',
     description: 'Soporte para español e inglés',
@@ -103,7 +116,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-03-15',
   },
   {
-    id: 'task-12',
+	id: t(),
     columnId: 'backlog',
     title: 'Implement WebSocket notifications',
     description: 'Notificaciones en tiempo real para cambios',
@@ -112,7 +125,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-03-20',
   },
   {
-    id: 'task-13',
+	id: t(),
     columnId: 'backlog',
     title: 'Add keyboard shortcuts',
     description: 'Mejorar accesibilidad con atajos de teclado',
@@ -121,7 +134,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-04-01',
   },
   {
-    id: 'task-14',
+	id: t(),
     columnId: 'backlog',
     title: 'Create user onboarding tutorial',
     description: 'Tour guiado para nuevos usuarios',
@@ -130,7 +143,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-03-25',
   },
   {
-    id: 'task-15',
+	id: t(),
     columnId: 'backlog',
     title: 'Implement rate limiting',
     description: 'Proteger endpoints públicos de abuso',
@@ -141,7 +154,7 @@ export const initialTasks: Task[] = [
 
   // TODO (10)
   {
-    id: 'task-16',
+	id: t(),
     columnId: 'todo',
     title: 'Design system component library',
     description: 'Crear Storybook con todos los componentes reusables',
@@ -150,7 +163,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-02-10',
   },
   {
-    id: 'task-17',
+	id: t(),
     columnId: 'todo',
     title: 'Implement forgot password flow',
     description: 'Recuperación de contraseña vía email',
@@ -159,7 +172,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-02-05',
   },
   {
-    id: 'task-18',
+	id: t(),
     columnId: 'todo',
     title: 'Add drag-and-drop file upload',
     description: 'Subida de archivos con vista previa',
@@ -168,7 +181,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-02-12',
   },
   {
-    id: 'task-19',
+	id: t(),
     columnId: 'todo',
     title: 'Improve mobile responsiveness',
     description: 'Ajustar layouts para tablets y móviles',
@@ -177,7 +190,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-02-18',
   },
   {
-    id: 'task-20',
+	id: t(),
     columnId: 'todo',
     title: 'Set up database indexes',
     description: 'Optimizar consultas lentas en PostgreSQL',
@@ -186,7 +199,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-30',
   },
   {
-    id: 'task-21',
+	id: t(),
     columnId: 'todo',
     title: 'Implement search functionality',
     description: 'Búsqueda global con filtros',
@@ -195,7 +208,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-02-20',
   },
   {
-    id: 'task-22',
+	id: t(),
     columnId: 'todo',
     title: 'Add export to CSV/PDF',
     description: 'Exportar reportes y tablas',
@@ -204,7 +217,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-03-01',
   },
   {
-    id: 'task-23',
+	id: t(),
     columnId: 'todo',
     title: 'Create landing page',
     description: 'Página de marketing con características del producto',
@@ -213,7 +226,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-02-25',
   },
   {
-    id: 'task-24',
+	id: t(),
     columnId: 'todo',
     title: 'Set up staging environment',
     description: 'Entorno de pre-producción para testing',
@@ -222,7 +235,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-02-08',
   },
   {
-    id: 'task-25',
+	id: t(),
     columnId: 'todo',
     title: 'Implement OAuth2 (Google/GitHub)',
     description: 'Login social con proveedores externos',
@@ -233,7 +246,7 @@ export const initialTasks: Task[] = [
 
   // INPROGRESS (10 más, aparte de las 5 originales)
   {
-    id: 'task-26',
+	id: t(),
     columnId: 'inprogress',
     title: 'Refactor API error handling',
     description: 'Estandarizar respuestas de error',
@@ -242,7 +255,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-28',
   },
   {
-    id: 'task-27',
+	id: t(),
     columnId: 'inprogress',
     title: 'Add logging service',
     description: 'Implementar Winston para logs estructurados',
@@ -251,7 +264,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-29',
   },
   {
-    id: 'task-28',
+	id: t(),
     columnId: 'inprogress',
     title: 'Update user profile UI',
     description: 'Rediseñar página de perfil con nuevos campos',
@@ -260,7 +273,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-27',
   },
   {
-    id: 'task-29',
+	id: t(),
     columnId: 'inprogress',
     title: 'Fix memory leak in dashboard',
     description: 'Investigar y corregir fuga de memoria',
@@ -269,7 +282,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-26',
   },
   {
-    id: 'task-30',
+	id: t(),
     columnId: 'inprogress',
     title: 'Implement caching with Redis',
     description: 'Cachear respuestas frecuentes',
@@ -280,7 +293,7 @@ export const initialTasks: Task[] = [
 
   // TEST (10)
   {
-    id: 'task-31',
+	id: t(),
     columnId: 'test',
     title: 'Test authentication flow',
     description: 'Validar login, registro y recuperación',
@@ -289,7 +302,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-25',
   },
   {
-    id: 'task-32',
+	id: t(),
     columnId: 'test',
     title: 'Test drag-and-drop stability',
     description: 'Asegurar que no haya bugs al mover tareas',
@@ -298,7 +311,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-26',
   },
   {
-    id: 'task-33',
+	id: t(),
     columnId: 'test',
     title: 'Cross-browser testing',
     description: 'Chrome, Firefox, Safari, Edge',
@@ -307,7 +320,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-27',
   },
   {
-    id: 'task-34',
+	id: t(),
     columnId: 'test',
     title: 'Load testing API',
     description: 'Simular 1000 usuarios concurrentes',
@@ -316,7 +329,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-28',
   },
   {
-    id: 'task-35',
+	id: t(),
     columnId: 'backlog',
     title: 'Security audit',
     description: 'Revisar vulnerabilidades comunes (XSS, CSRF)',
@@ -325,7 +338,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-29',
   },
   {
-    id: 'task-36',
+	id: t(),
     columnId: 'backlog',
     title: 'Test responsive layouts',
     description: 'Dispositivos: iPhone, iPad, Pixel, Galaxy',
@@ -334,7 +347,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-30',
   },
   {
-    id: 'task-37',
+	id: t(),
     columnId: 'backlog',
     title: 'Test notification system',
     description: 'Validar que lleguen emails y notificaciones',
@@ -343,7 +356,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-31',
   },
   {
-    id: 'task-38',
+	id: t(),
     columnId: 'done',
     title: 'Test file upload limits',
     description: 'Probar con archivos grandes y formatos inválidos',
@@ -352,7 +365,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-02-01',
   },
   {
-    id: 'task-39',
+	id: t(),
     columnId: 'done',
     title: 'Test export features',
     description: 'Verificar CSV/PDF generados',
@@ -361,7 +374,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-02-02',
   },
   {
-    id: 'task-40',
+	id: t(),
     columnId: 'test',
     title: 'Test keyboard navigation',
     description: 'Accesibilidad con solo teclado',
@@ -372,7 +385,7 @@ export const initialTasks: Task[] = [
 
   // DONE (10)
   {
-    id: 'task-41',
+	id: t(),
     columnId: 'done',
     title: 'Set up project repository',
     description: 'GitHub con branch protection rules',
@@ -381,7 +394,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-05',
   },
   {
-    id: 'task-42',
+	id: t(),
     columnId: 'done',
     title: 'Initial project setup (Vite + TS)',
     description: 'Configuración inicial del frontend',
@@ -390,7 +403,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-06',
   },
   {
-    id: 'task-43',
+	id: t(),
     columnId: 'done',
     title: 'Design database schema',
     description: 'Modelado de usuarios, tareas, columnas',
@@ -399,7 +412,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-07',
   },
   {
-    id: 'task-44',
+	id: t(),
     columnId: 'done',
     title: 'Create basic kanban board UI',
     description: 'Implementación inicial con drag & drop',
@@ -408,7 +421,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-10',
   },
   {
-    id: 'task-45',
+	id: t(),
     columnId: 'done',
     title: 'Add task modal form',
     description: 'Crear/editar tareas',
@@ -417,7 +430,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-12',
   },
   {
-    id: 'task-46',
+	id: t(),
     columnId: 'done',
     title: 'Persist data in localStorage',
     description: 'Guardar tareas en el navegador',
@@ -426,7 +439,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-14',
   },
   {
-    id: 'task-47',
+	id: t(),
     columnId: 'done',
     title: 'Add priority badges',
     description: 'Mostrar prioridad con colores',
@@ -435,7 +448,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-15',
   },
   {
-    id: 'task-48',
+	id: t(),
     columnId: 'done',
     title: 'Implement delete task',
     description: 'Botón para eliminar tareas',
@@ -444,7 +457,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-16',
   },
   {
-    id: 'task-49',
+	id: t(),
     columnId: 'done',
     title: 'Add due date picker',
     description: 'Selector de fecha en el formulario',
@@ -453,7 +466,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-17',
   },
   {
-    id: 'task-50',
+	id: t(),
     columnId: 'done',
     title: 'Create initial documentation',
     description: 'README con instrucciones de uso',
@@ -464,7 +477,7 @@ export const initialTasks: Task[] = [
 
   // CANCELLED (5)
   {
-    id: 'task-51',
+	id: t(),
     columnId: 'cancelled',
     title: 'Integrate with Jira (deprecated)',
     description: 'Decidimos usar GitHub Projects en su lugar',
@@ -473,7 +486,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-09',
   },
   {
-    id: 'task-52',
+	id: t(),
     columnId: 'cancelled',
     title: 'Blockchain-based verification',
     description: 'Overkill para el alcance actual',
@@ -482,7 +495,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-11',
   },
   {
-    id: 'task-53',
+	id: t(),
     columnId: 'cancelled',
     title: 'Native mobile app (iOS/Android)',
     description: 'Prioridad: web responsive primero',
@@ -491,7 +504,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-13',
   },
   {
-    id: 'task-54',
+	id: t(),
     columnId: 'cancelled',
     title: 'Voice command support',
     description: 'No hay demanda de usuarios',
@@ -500,7 +513,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-01-19',
   },
   {
-    id: 'task-55',
+	id: t(),
     columnId: 'cancelled',
     title: 'Augmented reality preview',
     description: 'Idea descartada por complejidad',

@@ -8,6 +8,8 @@ export interface Task {
 	assignee?: string
 	dueDate?: string
 	columnId: string
+	project?: string
+	members?: string[]
 }
 
 export interface Column {
