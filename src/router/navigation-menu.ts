@@ -31,4 +31,11 @@ export const navigationMenu: NavItem[] = [
     id: 'tasks',
     icon: 'clipboard-check'
 	},
+  {
+		path: '/time-tracking',
+		label: 'Time Tracking',
+		type: 'item',
+    id: 'time-tracking',
+    icon: 'clock'
+	},
 ]

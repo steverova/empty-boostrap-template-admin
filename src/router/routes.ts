@@ -9,6 +9,7 @@ import { projectsRoutes } from '@/pages/projects/projects-routes'
 import { clientsRoutes } from '@/pages/clients/clients-routes'
 import { collaboratorsRoutes } from '@/pages/collaborators/collaborators-routes'
 import { tasksRoutes } from '@/pages/tasks/tasks-routes'
+import { timeTrackingRoutes } from '@/pages/time-tracking/time-tracking-routes'
 
 export const routes: RouteObject[] = [
 	{
@@ -29,8 +30,9 @@ export const routes: RouteObject[] = [
 					...projectsRoutes,
 					...clientsRoutes,
 					...collaboratorsRoutes,
-					...tasksRoutes,
-				],
+				...tasksRoutes,
+				...timeTrackingRoutes,
+			],
 			},
 			{
 				path: 'signin',
