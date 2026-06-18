@@ -1,12 +1,4 @@
 import type { RouteObject } from 'react-router'
-import ChatExamplePage from './chat'
-import DatePickerExamplePage from './date-picker'
-import DropzoneExamplePage from './drop-zone'
-import EditorExamplePage from './editor'
-import FullCalendarExamplePage from './full-calendar'
-import GoogleKeepExamplePage from './google-keep'
-import KanbanExamplePage from './kan-ban/index copy'
-import TableExamplePage from './table'
 
 export const exampleRoutes: RouteObject[] = [
 	{
@@ -15,39 +7,39 @@ export const exampleRoutes: RouteObject[] = [
 			{
 				index: true,
 				path: 'table',
-				Component: TableExamplePage,
+				lazy: () => import('./table'),
 			},
 			{
 				path: 'date-picker',
-				Component: DatePickerExamplePage,
+				lazy: () => import('./date-picker'),
 			},
 			{
 				path: 'dropzone',
-				Component: DropzoneExamplePage,
+				lazy: () => import('./drop-zone'),
 			},
 			{
 				path: 'full-calendar',
-				Component: FullCalendarExamplePage,
+				lazy: () => import('./full-calendar'),
 			},
 			{
 				path: 'kanban',
-				Component: KanbanExamplePage,
+				lazy: () => import('./kan-ban'),
 			},
 			{
 				path: 'editor',
-				Component: EditorExamplePage,
+				lazy: () => import('./editor'),
 			},
-		{
-			path: 'chat',
-			Component: ChatExamplePage,
-		},
-		{
-			path: 'chat/:contactId',
-			Component: ChatExamplePage,
-		},
+			{
+				path: 'chat',
+				lazy: () => import('./table'),
+			},
+			{
+				path: 'chat/:contactId',
+				lazy: () => import('./chat'),
+			},
 			{
 				path: 'google-keep',
-				Component: GoogleKeepExamplePage,
+				lazy: () => import('./google-keep'),
 			},
 		],
 	},

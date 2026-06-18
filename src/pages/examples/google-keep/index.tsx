@@ -102,6 +102,6 @@ const initialNotes: KeepNote[] = [
 	},
 ]
 
-export default function GoogleKeepExamplePage() {
+export function Component() {
 	return <GoogleKeep initialNotes={initialNotes} />
 }

@@ -6,7 +6,7 @@ import Dropzone from '@/components/shared/dropzone'
 import { thumbnailGrid } from '@/components/shared/dropzone/dropzone.css'
 import FilePreview from '@/components/shared/dropzone/file-preview'
 
-export default function DropzoneExamplePage() {
+export function Component() {
 	const [singleFile, setSingleFile] = useState<File | null>(null)
 	const [multipleFiles, setMultipleFiles] = useState<File[]>([])
 	const [imageFiles, setImageFiles] = useState<File[]>([])

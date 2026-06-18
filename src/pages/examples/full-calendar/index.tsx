@@ -47,7 +47,7 @@ const initialEvents: CalendarEvent[] = [
   { id: '9', title: 'Capacitación', date: addDays(today, 3), endDate: addDays(today, 6), color: '#6f42c1' },
 ]
 
-export default function FullCalendarExamplePage() {
+export function Component() {
   const [events, setEvents] = useState<CalendarEvent[]>(initialEvents)
   const [selectedRange, setSelectedRange] = useState<DateRange | null>(null)
   const [showModal, setShowModal] = useState(false)

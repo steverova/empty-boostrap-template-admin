@@ -1,6 +1,6 @@
 import KanbanBoard from "@/components/shared/kan-ban";
 
-export default function KanbanExamplePage() {
+export function Component() {
 
 	return (
 		<KanbanBoard/>

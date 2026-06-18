@@ -1,82 +1,19 @@
+import { navigationMenu } from '@router/navigation-menu'
 import { type JSX, useState } from 'react'
 import { Link, useLocation } from 'react-router'
 import styled from 'styled-components'
-import {
-	Award,
-	BarChart3,
-	Building2,
-	Calendar,
-	CalendarDays,
-	CheckCircle,
-	ChevronDown,
-	ChevronUp,
-	CreditCard,
-	ExternalLink,
-	FileText,
-	Flag,
-	Folder,
-	Gift,
-	Globe,
-	Gauge,
-	Hourglass,
-	HelpCircle,
-	Image,
-	ListChecks,
-	Mail,
-	MessageSquare,
-	Package,
-	PenSquare,
-	RefreshCw,
-	ShieldCheck,
-	StickyNote,
-	Tag,
-	Ticket,
-	Upload,
-	Users,
-	XCircle,
-	Zap,
-} from 'lucide-react'
 import type { NavItem } from '@/types/navigation-menu'
-import { navigationMenu } from '@router/navigation-menu'
+import { iconMap } from './icon-map'
 
-const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string; 'aria-label'?: string }>> = {
-	speedometer2: Gauge,
-	people: Users,
-	'shield-lock': ShieldCheck,
-	'file-earmark-text': FileText,
-	'file-text': FileText,
-	folder: Folder,
-	globe: Globe,
-	gift: Gift,
-	'question-circle': HelpCircle,
-	tag: Tag,
-	building: Building2,
-	'lightning-charge': Zap,
-	'box-seam': Package,
-	'arrow-repeat': RefreshCw,
-	award: Award,
-	'list-check': ListChecks,
-	'cloud-upload': Upload,
-	'card-list': CreditCard,
-	'check-circle': CheckCircle,
-	'hourglass-split': Hourglass,
-	'x-circle': XCircle,
-	'bar-chart': BarChart3,
-	ticket: Ticket,
-	'envelope-paper': Mail,
-	whatsapp: ExternalLink,
-	'flag-fill': Flag,
-	'chevron-up': ChevronUp,
-	'chevron-down': ChevronDown,
-	calendar: Calendar,
-	'calendar-days': CalendarDays,
-	'pen-square': PenSquare,
-	'message-square': MessageSquare,
-	'sticky-note': StickyNote,
-	image: Image,
-}
-
-function Icon({ name, size = 18, className }: { name: string; size?: number; className?: string }) {
+function Icon({
+	name,
+	size = 18,
+	className,
+}: {
+	name: string
+	size?: number
+	className?: string
+}) {
 	const Component = iconMap[name]
 	if (!Component) return null
 	return <Component size={size} className={className} />
@@ -147,11 +84,11 @@ export default function NavigationMenu({
 			const isActive = location.pathname === navItem.path
 			return (
 				<li className='nav-item' key={navItem.id}>
-				<StyledNavLink
-					className={`nav-link d-flex align-items-center text-decoration-none ${isActive ? 'text-body bg-body' : 'text-body-secondary'}`}
-					to={navItem.path ?? '/'}
-					onClick={onNavigate}
-				>
+					<StyledNavLink
+						className={`nav-link d-flex align-items-center text-decoration-none ${isActive ? 'text-body bg-body' : 'text-body-secondary'}`}
+						to={navItem.path ?? '/'}
+						onClick={onNavigate}
+					>
 						<Icon className='me-2' name={navItem.icon ?? ''} />
 						{navItem.label}
 					</StyledNavLink>
@@ -186,7 +123,9 @@ export default function NavigationMenu({
 						<Icon className='me-1' name={navItem.icon ?? ''} />
 						{navItem.label}
 					</span>
-					<Icon name={openGroups.has(navItem.id) ? 'chevron-up' : 'chevron-down'} />
+					<Icon
+						name={openGroups.has(navItem.id) ? 'chevron-up' : 'chevron-down'}
+					/>
 				</StyledGroupButton>
 				{openGroups.has(navItem.id) && navItem.children && (
 					<ul className='nav flex-column ms-3'>

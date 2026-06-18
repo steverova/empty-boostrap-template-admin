@@ -5,7 +5,7 @@ import Calendar from '@/components/shared/calendar'
 import DateField from '@/components/shared/date-field'
 import DatePicker from '@/components/shared/date-picker'
 
-export default function DatePickerExamplePage() {
+export function Component() {
 	const [selectedDate, setSelectedDate] = useState<Date | null>(null)
 	const [weekDates, setWeekDates] = useState<Date[]>([])
 	const [rangeStart, setRangeStart] = useState<Date | null>(null)

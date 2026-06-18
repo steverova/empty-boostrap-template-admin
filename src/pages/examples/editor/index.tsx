@@ -6,7 +6,7 @@ import BaseTabs from '@/components/shared/base-tabs'
 
 const STORAGE_KEY = 'editor-example-content'
 
-export default function EditorExamplePage() {
+export function Component() {
 	const [content, setContent] = useState(() => {
 		return localStorage.getItem(STORAGE_KEY) || ''
 	})

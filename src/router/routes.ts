@@ -3,7 +3,9 @@ import RootPage from '@components/root'
 import LoadingFallback from '@components/shared/loading-fallback'
 import { RouteErrorBoundary } from '@components/shared/route-error-boundary'
 import type { RouteObject } from 'react-router'
+import NotFound from '@/components/blocks/not-found'
 import { exampleRoutes } from '@/pages/examples/examples-routes'
+import { projectsRoutes } from '@/pages/projects/projects-routes'
 
 export const routes: RouteObject[] = [
 	{
@@ -20,7 +22,8 @@ export const routes: RouteObject[] = [
 						index: true,
 						lazy: () => import('../pages/home'),
 					},
-					...exampleRoutes,
+          ...exampleRoutes,
+					...projectsRoutes
 				],
 			},
 			{
@@ -28,5 +31,9 @@ export const routes: RouteObject[] = [
 				lazy: () => import('../pages/signin'),
 			},
 		],
+	},
+	{
+		path: '*',
+		Component: NotFound,
 	},
 ]
