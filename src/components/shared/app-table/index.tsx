@@ -57,7 +57,8 @@ declare module '@tanstack/react-table' {
 }
 
 export interface AppTableProps<T extends Record<string, any>>
-	extends Omit<TableProps, 'onSelect'> {
+  extends Omit<TableProps, 'onSelect'> {
+	tableName?: string
 	columns: ColumnDef<T, any>[]
 	data: T[]
 	isLoading?: boolean
@@ -83,6 +84,7 @@ export interface AppTableProps<T extends Record<string, any>>
 }
 
 export default function AppTable<T extends Record<string, any>>({
+  tableName,
 	columns,
 	data,
 	isLoading = false,
@@ -365,8 +367,10 @@ export default function AppTable<T extends Record<string, any>>({
 	const hasResizedColumns = Object.keys(columnSizing).length > 0
 
 	return (
-		<div className='border rounded-3 p-1 w-100 d-flex flex-column' style={{ minWidth: 0, height: '100%' }}>
-			<h1 className='fs-2'>Titulo de la tabla</h1>
+    <div className='border rounded-3 p-1 w-100 d-flex flex-column' style={{ minWidth: 0, height: '100%' }}>
+
+      { tableName && <h1 className='fs-2'>{tableName}</h1> }
+      
 
 			<div className='d-flex align-items-center justify-content-between mb-2 gap-2'>
 				<div className='d-flex align-items-center gap-2'>

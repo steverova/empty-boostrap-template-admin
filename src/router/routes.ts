@@ -6,6 +6,7 @@ import type { RouteObject } from 'react-router'
 import NotFound from '@/components/blocks/not-found'
 import { exampleRoutes } from '@/pages/examples/examples-routes'
 import { projectsRoutes } from '@/pages/projects/projects-routes'
+import { clientsRoutes } from '@/pages/clients/clients-routes'
 
 export const routes: RouteObject[] = [
 	{
@@ -23,7 +24,8 @@ export const routes: RouteObject[] = [
 						lazy: () => import('../pages/home'),
 					},
           ...exampleRoutes,
-					...projectsRoutes
+					...projectsRoutes,
+					...clientsRoutes,
 				],
 			},
 			{

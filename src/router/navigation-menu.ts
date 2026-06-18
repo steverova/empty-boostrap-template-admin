@@ -11,6 +11,13 @@ export const navigationMenu: NavItem[] = [
     icon: 'folder-open'
   },
   {
+		path: '/clients',
+		label: 'Clients',
+		type: 'item',
+    id: 'clients',
+    icon: 'people'
+  },
+  {
 		path: '/tasks',
 		label: 'Tasks',
 		type: 'item',
