@@ -5,6 +5,7 @@ import { Badge } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import AppTable from '@/components/shared/app-table'
 import IconButton from '@/components/shared/icon-button'
+import { mockProjects } from '@/mocks'
 import type { Project } from './project.types'
 
 const statusLabel: Record<string, string> = {
@@ -29,37 +30,8 @@ const priorityBg: Record<string, string> = {
 	high: 'danger',
 }
 
-const initialProjects: Project[] = [
-	{
-		id: 'proj1',
-		projectName: 'E-Commerce Platform',
-		description: 'Full stack e-commerce solution',
-		startDate: '2026-01-15',
-		endDate: '2026-06-30',
-		status: 'active',
-		priority: 'high',
-		repository: 'https://github.com/acme/ecommerce',
-		demoUrl: 'https://demo.acme.com',
-		owner: 'cli1',
-		team: ['col1', 'col2'],
-	},
-	{
-		id: 'proj2',
-		projectName: 'Mobile App Redesign',
-		description: 'UI/UX overhaul for mobile app',
-		startDate: '2026-03-01',
-		endDate: '2026-08-15',
-		status: 'development',
-		priority: 'medium',
-		repository: 'https://github.com/acme/mobile-redesign',
-		demoUrl: '',
-		owner: 'cli2',
-		team: ['col2'],
-	},
-]
-
 export default function ProjectsPage() {
-	const [projects] = useState<Project[]>(initialProjects)
+	const [projects] = useState<Project[]>(mockProjects)
 	const navigate = useNavigate()
 
 	const columns: ColumnDef<Project, any>[] = [

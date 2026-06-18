@@ -11,6 +11,9 @@ export default defineConfig({
 		vanillaExtractPlugin(),
 		babel({ presets: [reactCompilerPreset()] }),
 	],
+	optimizeDeps: {
+		include: ['recharts'],
+	},
 	resolve: {
 		alias: {
 			'@': path.resolve(__dirname, './src'),

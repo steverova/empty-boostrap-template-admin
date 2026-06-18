@@ -9,6 +9,7 @@ export interface TimeEntry {
 	comment: string
 	hours?: number
 	hourType?: HourType
+	collaboratorId?: string
 	clientId?: string
 	projectId?: string
 	taskId?: string

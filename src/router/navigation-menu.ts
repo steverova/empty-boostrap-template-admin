@@ -4,6 +4,13 @@ import type { NavItem } from '@/types/navigation-menu'
 export const navigationMenu: NavItem[] = [
 	...exampleNavigation,
 	{
+		path: '/',
+		label: 'Dashboard',
+		type: 'item',
+    id: 'dashboard',
+    icon: 'speedometer2'
+  },
+	{
 		path: '/projects',
 		label: 'Projects',
 		type: 'item',

@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { nanoid } from 'nanoid'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Select from 'react-select'
@@ -9,6 +10,7 @@ import type { TimeEntry } from './time-entry.types'
 import type { Client } from '../clients/client.types'
 import type { Project } from '../projects/project.types'
 import type { Task } from '../tasks/task.types'
+import type { Collaborator } from '../collaborators/collaborator.types'
 
 const categoryOptions = [
 	{ value: 'actividad_empresarial', label: 'Actividad Empresarial' },
@@ -29,6 +31,7 @@ type TimeEntryFormProps = {
 	clients: Client[]
 	projects: Project[]
 	tasks: Task[]
+	collaborators: Collaborator[]
 	onSubmit: (data: TimeEntry) => void
 	onCancel?: () => void
 }
@@ -38,6 +41,7 @@ export default function TimeEntryForm({
 	clients,
 	projects,
 	tasks,
+	collaborators,
 	onSubmit,
 	onCancel,
 }: TimeEntryFormProps) {
@@ -47,6 +51,7 @@ export default function TimeEntryForm({
 		register,
 		handleSubmit,
 		watch,
+		setValue,
 		control,
 		formState: { errors },
 	} = useForm<TimeEntryFormData>({
@@ -57,6 +62,7 @@ export default function TimeEntryForm({
 			comment: initialData?.comment ?? '',
 			hours: initialData?.hours ?? undefined,
 			hourType: initialData?.hourType ?? undefined,
+			collaboratorId: initialData?.collaboratorId ?? undefined,
 			clientId: initialData?.clientId ?? undefined,
 			projectId: initialData?.projectId ?? undefined,
 			taskId: initialData?.taskId ?? undefined,
@@ -64,11 +70,54 @@ export default function TimeEntryForm({
 	})
 
 	const category = watch('category')
+	const clientId = watch('clientId')
+	const projectId = watch('projectId')
 	const isOperational = category === 'operacional'
+
+	const filteredProjects = useMemo(() => {
+		if (!clientId) return projects
+		return projects.filter((p) => p.owner === clientId)
+	}, [clientId, projects])
+
+	const filteredTasks = useMemo(() => {
+		if (!projectId) return tasks
+		return tasks.filter((t) => t.project === projectId)
+	}, [projectId, tasks])
+
+	function handleClientChange(val: { value: string; label: string } | null) {
+		setValue('clientId', val?.value ?? '', { shouldValidate: true })
+		setValue('projectId', '', { shouldValidate: true })
+		setValue('taskId', '', { shouldValidate: true })
+	}
+
+	function handleProjectChange(val: { value: string; label: string } | null) {
+		setValue('projectId', val?.value ?? '', { shouldValidate: true })
+		setValue('taskId', '', { shouldValidate: true })
+	}
 
 	function handleFormSubmit(data: TimeEntryFormData) {
 		onSubmit({ ...data, id: initialData?.id ?? nanoid(10) })
 	}
+
+	const collaboratorOptions = collaborators.map((c) => ({
+		value: c.id,
+		label: c.name,
+	}))
+
+	const clientOptions = clients.map((c) => ({
+		value: c.id,
+		label: c.companyName ? `${c.name} (${c.companyName})` : c.name,
+	}))
+
+	const projectOptions = filteredProjects.map((p) => ({
+		value: p.id,
+		label: p.projectName,
+	}))
+
+	const taskOptions = filteredTasks.map((t) => ({
+		value: t.id,
+		label: `${t.title} (#${t.id})`,
+	}))
 
 	return (
 		<Card className='border-0 shadow-sm'>
@@ -80,7 +129,27 @@ export default function TimeEntryForm({
 			<Card.Body>
 				<Form onSubmit={handleSubmit(handleFormSubmit)}>
 					<Row className='mb-3'>
-						<Col md={4}>
+						<Col md={3}>
+							<Form.Label className='fw-semibold'>Collaborator</Form.Label>
+							<Controller
+								control={control}
+								name='collaboratorId'
+								render={({ field }) => (
+									<Select
+										{...field}
+										options={collaboratorOptions}
+										onChange={(val) => field.onChange(val?.value ?? '')}
+										value={collaboratorOptions.find((o) => o.value === field.value) ?? null}
+										isClearable
+										placeholder='Select collaborator...'
+									/>
+								)}
+							/>
+							{errors.collaboratorId && (
+								<small className='text-danger'>{errors.collaboratorId.message}</small>
+							)}
+						</Col>
+						<Col md={3}>
 							<Form.Label className='fw-semibold'>Category</Form.Label>
 							<Controller
 								control={control}
@@ -99,7 +168,7 @@ export default function TimeEntryForm({
 								<small className='text-danger'>{errors.category.message}</small>
 							)}
 						</Col>
-						<Col md={4}>
+						<Col md={3}>
 							<Form.Label className='fw-semibold'>Day</Form.Label>
 							<Controller
 								control={control}
@@ -184,25 +253,9 @@ export default function TimeEntryForm({
 										render={({ field }) => (
 											<Select
 												{...field}
-												options={clients.map((c) => ({
-													value: c.id,
-													label: c.companyName
-														? `${c.name} (${c.companyName})`
-														: c.name,
-												}))}
-												onChange={(val) => field.onChange(val?.value)}
-												value={
-													field.value
-														? clients
-																.map((c) => ({
-																	value: c.id,
-																	label: c.companyName
-																		? `${c.name} (${c.companyName})`
-																		: c.name,
-																}))
-																.find((o) => o.value === field.value)
-														: null
-												}
+												options={clientOptions}
+												onChange={handleClientChange}
+												value={clientOptions.find((o) => o.value === field.value) ?? null}
 												isClearable
 												placeholder='Search client...'
 											/>
@@ -220,23 +273,12 @@ export default function TimeEntryForm({
 										render={({ field }) => (
 											<Select
 												{...field}
-												options={projects.map((p) => ({
-													value: p.id,
-													label: p.projectName,
-												}))}
-												onChange={(val) => field.onChange(val?.value)}
-												value={
-													field.value
-														? projects
-																.map((p) => ({
-																	value: p.id,
-																	label: p.projectName,
-																}))
-																.find((o) => o.value === field.value)
-														: null
-												}
+												options={projectOptions}
+												onChange={handleProjectChange}
+												value={projectOptions.find((o) => o.value === field.value) ?? null}
 												isClearable
-												placeholder='Search project...'
+												isDisabled={!clientId}
+												placeholder={clientId ? 'Search project...' : 'Select client first'}
 											/>
 										)}
 									/>
@@ -254,24 +296,13 @@ export default function TimeEntryForm({
 										render={({ field }) => (
 											<Select
 												{...field}
-												options={tasks.map((t) => ({
-													value: t.id,
-													label: `${t.title} (#${t.id})`,
-												}))}
-												onChange={(val) => field.onChange(val?.value)}
-												value={
-													field.value
-														? tasks
-																.map((t) => ({
-																	value: t.id,
-																	label: `${t.title} (#${t.id})`,
-																}))
-																.find((o) => o.value === field.value)
-														: null
-												}
+												options={taskOptions}
+												onChange={(val) => field.onChange(val?.value ?? '')}
+												value={taskOptions.find((o) => o.value === field.value) ?? null}
 												isClearable
 												isSearchable
-												placeholder='Search task by name or number...'
+												isDisabled={!projectId}
+												placeholder={projectId ? 'Search task...' : 'Select project first'}
 											/>
 										)}
 									/>

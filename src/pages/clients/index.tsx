@@ -5,31 +5,11 @@ import { Badge } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import AppTable from '@/components/shared/app-table'
 import IconButton from '@/components/shared/icon-button'
+import { mockClients } from '@/mocks'
 import type { Client } from './client.types'
 
-const initialClients: Client[] = [
-	{
-		id: 'cli1',
-		type: 'company',
-		name: 'Acme Corp',
-		companyName: 'Acme Corporation',
-		contactPerson: 'Alice Johnson',
-		phone: '+1 555 100 2000',
-		email: 'alice@acme.com',
-		address: '123 Main St, New York, NY',
-	},
-	{
-		id: 'cli2',
-		type: 'individual',
-		name: 'Bob Williams',
-		phone: '+1 555 300 4000',
-		email: 'bob@personal.dev',
-		address: '456 Oak Ave, Austin, TX',
-	},
-]
-
 export default function ClientsPage() {
-	const [clients] = useState<Client[]>(initialClients)
+	const [clients] = useState<Client[]>(mockClients)
 	const navigate = useNavigate()
 
 	const columns: ColumnDef<Client, any>[] = [

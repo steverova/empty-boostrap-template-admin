@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router'
 import AppTable from '@/components/shared/app-table'
 import IconButton from '@/components/shared/icon-button'
 import KanbanBoard from '@/components/shared/kan-ban'
-import { initialTasks } from '@/components/shared/kan-ban/kanban-mock'
+import { mockTasks } from '@/mocks'
 import type { Task } from './task.types'
 
 const priorityBg: Record<string, string> = {
@@ -107,7 +107,7 @@ export default function TasksPage() {
 							tableName='Tasks'
 							enableExport
 							columns={columns}
-							data={initialTasks}
+							data={mockTasks}
 							onAddFn={() => navigate('/tasks/record')}
 							rowActions={(row) => (
 								<IconButton

@@ -7,6 +7,7 @@ export const timeEntrySchema = z
 		comment: z.string().min(1, 'Comment is required'),
 		hours: z.number().optional(),
 		hourType: z.enum(['develop', 'qa', 'design', 'mantenimiento']).optional(),
+		collaboratorId: z.string().optional(),
 		clientId: z.string().optional(),
 		projectId: z.string().optional(),
 		taskId: z.string().optional(),

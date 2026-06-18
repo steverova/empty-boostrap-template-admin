@@ -4,26 +4,11 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import AppTable from '@/components/shared/app-table'
 import IconButton from '@/components/shared/icon-button'
+import { mockCollaborators } from '@/mocks'
 import type { Collaborator } from './collaborator.types'
 
-const initialCollaborators: Collaborator[] = [
-	{
-		id: 'col1',
-		name: 'John Doe',
-		email: 'john@example.com',
-		role: 'developer',
-		phone: '+1 555 111 2222',
-	},
-	{
-		id: 'col2',
-		name: 'Jane Smith',
-		email: 'jane@example.com',
-		role: 'design',
-	},
-]
-
 export default function CollaboratorsPage() {
-	const [collaborators] = useState<Collaborator[]>(initialCollaborators)
+	const [collaborators] = useState<Collaborator[]>(mockCollaborators)
 	const navigate = useNavigate()
 
 	const columns: ColumnDef<Collaborator, any>[] = [

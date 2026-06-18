@@ -2,27 +2,12 @@ import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router'
 import CollaboratorForm from './collaborator-form'
 import type { Collaborator } from './collaborator.types'
-
-const initialCollaborators: Collaborator[] = [
-	{
-		id: 'col1',
-		name: 'John Doe',
-		email: 'john@example.com',
-		role: 'Developer',
-		phone: '+1 555 111 2222',
-	},
-	{
-		id: 'col2',
-		name: 'Jane Smith',
-		email: 'jane@example.com',
-		role: 'Designer',
-	},
-]
+import { mockCollaborators } from '@/mocks'
 
 export default function CollaboratorRecordPage() {
 	const { id } = useParams()
 	const navigate = useNavigate()
-	const [collaborators] = useState<Collaborator[]>(initialCollaborators)
+	const [collaborators] = useState<Collaborator[]>(mockCollaborators)
 
 	const collaborator = id ? collaborators.find((c) => c.id === id) : null
 

@@ -1,28 +1,15 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router'
 import TaskForm from './task-form'
-import { initialTasks } from '@/components/shared/kan-ban/kanban-mock'
 import type { Task } from './task.types'
-
-const mockCollaborators = [
-	{ id: 'col1', name: 'John Doe' },
-	{ id: 'col2', name: 'Jane Smith' },
-	{ id: 'col3', name: 'Mike Johnson' },
-	{ id: 'col4', name: 'Sarah Williams' },
-	{ id: 'col5', name: 'Tom Brown' },
-]
-
-const mockProjects = [
-	{ id: 'proj1', projectName: 'E-Commerce Platform' },
-	{ id: 'proj2', projectName: 'Mobile App Redesign' },
-]
+import { mockTasks, mockCollaborators, mockProjects } from '@/mocks'
 
 export default function TaskRecordPage() {
 	const { id } = useParams()
 	const navigate = useNavigate()
 	const [submitted, setSubmitted] = useState(false)
 
-	const initialData = id ? initialTasks.find((t) => t.id === id) : undefined
+	const initialData = id ? mockTasks.find((t) => t.id === id) : undefined
 
 	function handleSubmit(data: Task) {
 		console.log('Task data:', data)
