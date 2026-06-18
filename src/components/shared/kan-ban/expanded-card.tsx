@@ -1,7 +1,7 @@
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { ArrowLeftToLine, type LucideIcon, Plus } from 'lucide-react'
 import React from 'react'
-import { Badge, Button, Card } from 'react-bootstrap'
+import { Badge, Card } from 'react-bootstrap'
 import IconButton from '@/components/shared/icon-button'
 import DroppableColumn from './droppable-column'
 import type { Column, Task } from './kanban.types'
@@ -23,7 +23,7 @@ export default function ExpandedCard({
 	onMove,
 }: ExpandedCardProps) {
 	return (
-		<Card className='border-0 shadow-sm d-flex flex-column flex-grow-1 mb-2' style={{ overflow: 'hidden' }}>
+		<Card className='border-0 shadow-sm d-flex flex-column flex-grow-1' style={{ overflow: 'hidden' }}>
 			<Card.Header
 				className='d-flex justify-content-between align-items-center py-3 border flex-shrink-0'
 				style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'var(--bs-body-bg)' }}
@@ -46,12 +46,17 @@ export default function ExpandedCard({
 						{column.title}
 					</Card.Title>
 				</div>
-				<Badge bg='light' text='dark' className='rounded-pill'>
-					{columnTasks.length}
-				</Badge>
+				<div className='d-flex align-items-center gap-2'>
+					<Badge bg='light' text='dark' className='rounded-pill'>
+						{columnTasks.length}
+					</Badge>
+					<IconButton aria-label='Add task' style={{ color: column.color }}>
+						<Plus size={18} />
+					</IconButton>
+				</div>
 			</Card.Header>
 			<Card.Body
-				className='p-3 border shadow flex-grow-1'
+				className='p-1 border shadow flex-grow-1'
 				style={{ overflowY: 'auto', minHeight: 0 }}
 			>
 				<DroppableColumn columnId={column.id}>
@@ -70,9 +75,6 @@ export default function ExpandedCard({
 						))}
 					</SortableContext>
 				</DroppableColumn>
-				<Button variant='outline-secondary' className='w-100 mt-3' size='sm'>
-					<Plus size={16} className='me-2' /> Add Task
-				</Button>
 			</Card.Body>
 		</Card>
 	)

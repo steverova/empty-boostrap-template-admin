@@ -9,15 +9,15 @@ import {
 	useSensors,
 } from '@dnd-kit/core'
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
-import { useState, useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import CollapseCard from './collapse-card'
 import ExpandedCard from './expanded-card'
 import type { Task } from './kanban.types'
 import { columns } from './kanban-helper'
 import { initialTasks } from './kanban-mock'
-import TaskCard from './task-card'
 import KanbanToolbar, { type KanbanFilters } from './kanban-toolbar'
+import TaskCard from './task-card'
 
 // ─── Main board ───────────────────────────────────────────────────────────────
 
@@ -35,7 +35,8 @@ export default function KanbanBoard() {
 	})
 
 	const assignees = useMemo(
-		() => [...new Set(tasks.map((t) => t.assignee).filter(Boolean))] as string[],
+		() =>
+			[...new Set(tasks.map((t) => t.assignee).filter(Boolean))] as string[],
 		[tasks],
 	)
 	const projects = useMemo(
@@ -45,7 +46,11 @@ export default function KanbanBoard() {
 
 	const filteredTasks = useMemo(() => {
 		return tasks.filter((t) => {
-			if (filters.search && !t.title.toLowerCase().includes(filters.search.toLowerCase())) return false
+			if (
+				filters.search &&
+				!t.title.toLowerCase().includes(filters.search.toLowerCase())
+			)
+				return false
 			if (filters.priority && t.priority !== filters.priority) return false
 			if (filters.assignee && t.assignee !== filters.assignee) return false
 			if (filters.project && t.project !== filters.project) return false
@@ -123,7 +128,9 @@ export default function KanbanBoard() {
 
 	function handleMove(taskId: string, targetColumnId: string) {
 		setTasks((prev) =>
-			prev.map((t) => (t.id === taskId ? { ...t, columnId: targetColumnId } : t)),
+			prev.map((t) =>
+				t.id === taskId ? { ...t, columnId: targetColumnId } : t,
+			),
 		)
 	}
 
@@ -133,16 +140,24 @@ export default function KanbanBoard() {
 	}))
 
 	return (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Container fluid className='p-1' style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+		<div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+			<Container
+				fluid
+				className='p-1'
+				style={{
+					flex: 1,
+					display: 'flex',
+					flexDirection: 'column',
+					minHeight: 0,
+				}}
+			>
+				<KanbanToolbar
+					filters={filters}
+					assignees={assignees}
+					projects={projects}
+					onChange={setFilters}
+				/>
 
-        <KanbanToolbar
-						filters={filters}
-						assignees={assignees}
-						projects={projects}
-						onChange={setFilters}
-					/>
-        
 				<DndContext
 					sensors={sensors}
 					collisionDetection={closestCenter}
@@ -153,24 +168,31 @@ export default function KanbanBoard() {
 					onDragOver={handleDragOver}
 					onDragEnd={handleDragEnd}
 				>
-				<Row className='flex-nowrap g-2 align-items-stretch' style={{ flex: 1, overflowX: 'auto', minHeight: 0 }}>
-					{tasksByColumn.map(({ column, tasks: columnTasks }) => {
-						const isCollapsed = collapsedColumns.has(column.id)
+					<Row
+						className='flex-nowrap g-2 align-items-stretch'
+						style={{ flex: 1, overflowX: 'auto', minHeight: 0 }}
+					>
+						{tasksByColumn.map(({ column, tasks: columnTasks }) => {
+							const isCollapsed = collapsedColumns.has(column.id)
 
-						return (
-							<Col
-								key={column.id}
-								{...(isCollapsed
-									? {}
-									: { xs: 9, sm: 9, md: 6, lg: 4, xxl: 3 })}
-								className='flex-shrink-0 d-flex flex-column'
-								style={
-									isCollapsed
-										? { width: 56, flex: '0 0 56px', padding: '0 4px', overflow: 'hidden' }
-										: { minWidth: 0, overflow: 'hidden' }
-								}
-                >
-                 
+							return (
+								<Col
+									key={column.id}
+									{...(isCollapsed
+										? {}
+										: { xs: 9, sm: 9, md: 6, lg: 4, xxl: 3 })}
+									className='flex-shrink-0 d-flex flex-column'
+									style={
+										isCollapsed
+											? {
+													width: 56,
+													flex: '0 0 56px',
+													padding: '0 4px',
+													overflow: 'hidden',
+												}
+											: { minWidth: 0, overflow: 'hidden' }
+									}
+								>
 									{isCollapsed ? (
 										// ── Vista colapsada: columna vertical angosta ──
 										<CollapseCard

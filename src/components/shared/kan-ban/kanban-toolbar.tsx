@@ -31,7 +31,7 @@ export default function KanbanToolbar({
 		(filters.project ? 1 : 0)
 
 	return (
-		<div className='card d-flex flex-row align-items-center gap-2 flex-wrap p-2'>
+		<div className='card d-flex flex-row align-items-center gap-2 flex-wrap p-2 mb-2'>
 			<InputGroup style={{ maxWidth: 260 }}>
 				<InputGroup.Text className='border-end-0 bg-transparent'>
 					<Search size={14} />

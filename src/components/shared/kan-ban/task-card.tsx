@@ -67,10 +67,10 @@ export default function TaskCard({
 	}
 	return (
 		<Card
-			className='mb-3 border-2 shadow-sm bg-body-tertiary'
+			className='mb-1 border-2 shadow-sm bg-body-tertiary'
 			style={{ opacity: isDragging ? 0.5 : 1 }}
 		>
-			<Card.Body className='p-4 pt-3'>
+			<Card.Body className='px-3 py-1'>
 				<div className='d-flex justify-content-between align-items-center mb-2'>
 					<Dropdown>
 						<Dropdown.Toggle
