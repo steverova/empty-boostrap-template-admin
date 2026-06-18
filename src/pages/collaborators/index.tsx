@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router'
 import type { ColumnDef } from '@tanstack/react-table'
 import { Pencil } from 'lucide-react'
+import { useState } from 'react'
+import { useNavigate } from 'react-router'
 import AppTable from '@/components/shared/app-table'
 import IconButton from '@/components/shared/icon-button'
 import type { Collaborator } from './collaborator.types'
@@ -34,7 +34,8 @@ export default function CollaboratorsPage() {
 		{
 			accessorKey: 'role',
 			header: 'Role',
-			cell: ({ row }) => row.original.role.charAt(0).toUpperCase() + row.original.role.slice(1),
+			cell: ({ row }) =>
+				row.original.role.charAt(0).toUpperCase() + row.original.role.slice(1),
 		},
 		{
 			accessorKey: 'email',
@@ -48,23 +49,21 @@ export default function CollaboratorsPage() {
 	]
 
 	return (
-		<div className='p-4 h-100 d-flex flex-column'>
-			<AppTable
-				columns={columns}
-				data={collaborators}
-				onAddFn={() => navigate('/collaborators/record')}
-				rowActions={(row) => (
-					<IconButton
-						aria-label='Edit Collaborator'
-						onClick={(e) => {
-							e.stopPropagation()
-							navigate(`/collaborators/record/${row.id}`)
-						}}
-					>
-						<Pencil size={16} />
-					</IconButton>
-				)}
-			/>
-		</div>
+		<AppTable
+			columns={columns}
+			data={collaborators}
+			onAddFn={() => navigate('/collaborators/record')}
+			rowActions={(row) => (
+				<IconButton
+					aria-label='Edit Collaborator'
+					onClick={(e) => {
+						e.stopPropagation()
+						navigate(`/collaborators/record/${row.id}`)
+					}}
+				>
+					<Pencil size={16} />
+				</IconButton>
+			)}
+		/>
 	)
 }
