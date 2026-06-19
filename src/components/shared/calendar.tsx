@@ -296,7 +296,7 @@ export default function Calendar({
 			if (!keyboardNav) return
 
 			const base = focusedDate ?? value ?? new Date()
-			let next: Date | null = null
+			let next: Date | null
 
 			switch (e.key) {
 				case 'ArrowLeft':

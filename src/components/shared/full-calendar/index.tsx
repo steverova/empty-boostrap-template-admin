@@ -135,7 +135,7 @@ export default function FullCalendar({
 			result.push(week)
 		}
 		return result
-	}, [calendarStart.getTime(), calendarEnd.getTime()])
+	}, [calendarStart, calendarEnd])
 
 	const weekDays = useMemo(() => {
 		const days: Date[] = []
@@ -145,7 +145,7 @@ export default function FullCalendar({
 			day = addDays(day, 1)
 		}
 		return days
-	}, [currentDate.getTime(), weekStartsOn])
+	}, [currentDate, weekStartsOn])
 
 	const hours = Array.from({ length: 24 }, (_, i) => i)
 

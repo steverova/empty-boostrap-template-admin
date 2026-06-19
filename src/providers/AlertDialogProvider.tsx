@@ -162,6 +162,7 @@ export function AlertDialogProvider({
 /*                                     HOOK                                   */
 /* -------------------------------------------------------------------------- */
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAlertDialog(): AlertDialogContextType {
 	const context = useContext(AlertDialogContext)
 

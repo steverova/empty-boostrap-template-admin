@@ -1,26 +1,51 @@
 import { InputRule } from '@tiptap/core'
-import { mergeAttributes, Node, ReactNodeViewRenderer } from '@tiptap/react'
 import type { NodeViewProps } from '@tiptap/react'
-import { NodeViewWrapper } from '@tiptap/react'
+import {
+	mergeAttributes,
+	Node,
+	NodeViewWrapper,
+	ReactNodeViewRenderer,
+} from '@tiptap/react'
 import { useCallback, useRef, useState } from 'react'
 
 const ALIGN_ICONS = {
 	left: (
-		<svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
+		<svg
+			width='16'
+			height='16'
+			viewBox='0 0 24 24'
+			fill='none'
+			stroke='currentColor'
+			strokeWidth='2'
+		>
 			<line x1='3' y1='6' x2='21' y2='6' />
 			<line x1='3' y1='12' x2='15' y2='12' />
 			<line x1='3' y1='18' x2='18' y2='18' />
 		</svg>
 	),
 	center: (
-		<svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
+		<svg
+			width='16'
+			height='16'
+			viewBox='0 0 24 24'
+			fill='none'
+			stroke='currentColor'
+			strokeWidth='2'
+		>
 			<line x1='3' y1='6' x2='21' y2='6' />
 			<line x1='6' y1='12' x2='18' y2='12' />
 			<line x1='4' y1='18' x2='20' y2='18' />
 		</svg>
 	),
 	right: (
-		<svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
+		<svg
+			width='16'
+			height='16'
+			viewBox='0 0 24 24'
+			fill='none'
+			stroke='currentColor'
+			strokeWidth='2'
+		>
 			<line x1='3' y1='6' x2='21' y2='6' />
 			<line x1='9' y1='12' x2='21' y2='12' />
 			<line x1='6' y1='18' x2='21' y2='18' />
@@ -34,6 +59,7 @@ function YouTubePlayer({ node, updateAttributes }: NodeViewProps) {
 	const align = (node.attrs.align as string) || 'center'
 	const wrapperRef = useRef<HTMLDivElement>(null)
 	const [hovered, setHovered] = useState(false)
+	const [isDragging, setIsDragging] = useState(false)
 	const dragging = useRef(false)
 	const startX = useRef(0)
 	const startWidth = useRef(0)
@@ -43,21 +69,28 @@ function YouTubePlayer({ node, updateAttributes }: NodeViewProps) {
 			e.preventDefault()
 			e.stopPropagation()
 			dragging.current = true
+			setIsDragging(true)
 			startX.current = e.clientX
-			startWidth.current = wrapperRef.current?.getBoundingClientRect().width ?? 0
+			startWidth.current =
+				wrapperRef.current?.getBoundingClientRect().width ?? 0
 
 			const onMouseMove = (ev: MouseEvent) => {
 				if (!dragging.current) return
 				const dx = ev.clientX - startX.current
 				const editorWidth =
-					wrapperRef.current?.parentElement?.getBoundingClientRect().width ?? 600
-				const newWidthPx = Math.max(80, Math.min(editorWidth, startWidth.current + dx))
+					wrapperRef.current?.parentElement?.getBoundingClientRect().width ??
+					600
+				const newWidthPx = Math.max(
+					80,
+					Math.min(editorWidth, startWidth.current + dx),
+				)
 				const newWidthPct = Math.round((newWidthPx / editorWidth) * 100)
 				updateAttributes({ width: newWidthPct })
 			}
 
 			const onMouseUp = () => {
 				dragging.current = false
+				setIsDragging(false)
 				document.removeEventListener('mousemove', onMouseMove)
 				document.removeEventListener('mouseup', onMouseUp)
 			}
@@ -168,7 +201,7 @@ function YouTubePlayer({ node, updateAttributes }: NodeViewProps) {
 							width: '100%',
 							height: '100%',
 							border: 0,
-							pointerEvents: dragging.current ? 'none' : 'auto',
+							pointerEvents: isDragging ? 'none' : 'auto',
 						}}
 						allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
 						allowFullScreen
@@ -249,13 +282,18 @@ export const YouTube = Node.create({
 				default: 'center',
 				parseHTML: (element: HTMLElement) => {
 					const style = element.getAttribute('style') ?? ''
-					if (style.includes('margin-left: auto') && style.includes('margin-right: auto')) return 'center'
+					if (
+						style.includes('margin-left: auto') &&
+						style.includes('margin-right: auto')
+					)
+						return 'center'
 					if (style.includes('margin-left: auto')) return 'right'
 					return 'left'
 				},
 				renderHTML: (attributes: Record<string, any>) => {
 					const a = attributes.align as string
-					if (a === 'center') return { style: 'margin-left: auto; margin-right: auto;' }
+					if (a === 'center')
+						return { style: 'margin-left: auto; margin-right: auto;' }
 					if (a === 'right') return { style: 'margin-left: auto;' }
 					return {}
 				},
@@ -268,10 +306,7 @@ export const YouTube = Node.create({
 	},
 
 	renderHTML({ HTMLAttributes }) {
-		return [
-			'div',
-			mergeAttributes(HTMLAttributes, { 'data-youtube': '' }),
-		]
+		return ['div', mergeAttributes(HTMLAttributes, { 'data-youtube': '' })]
 	},
 
 	addNodeView() {

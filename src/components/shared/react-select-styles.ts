@@ -1,5 +1,6 @@
 import type { StylesConfig } from 'react-select'
 
+
 export const reactSelectStyles: StylesConfig = {
 	singleValue: (base) => ({
 		...base,
@@ -10,7 +11,9 @@ export const reactSelectStyles: StylesConfig = {
 		minHeight: '38px',
 		borderColor: state.isFocused ? '#86b7fe' : 'var(--bs-border-color)',
 		backgroundColor: 'var(--bs-body-bg)',
-		boxShadow: state.isFocused ? '0 0 0 0.25rem rgba(13, 110, 253, 0.25)' : 'none',
+		boxShadow: state.isFocused
+			? '0 0 0 0.25rem rgba(13, 110, 253, 0.25)'
+			: 'none',
 		'&:hover': {
 			borderColor: '#86b7fe',
 		},

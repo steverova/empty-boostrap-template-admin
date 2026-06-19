@@ -59,6 +59,7 @@ const ToastContext: React.Context<ToastContextType | undefined> = createContext<
 	ToastContextType | undefined
 >(undefined)
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useToast(): ToastContextType {
 	const context = useContext(ToastContext)
 	if (!context) {

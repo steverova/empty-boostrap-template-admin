@@ -1,5 +1,5 @@
 import { ClipboardPaste, RotateCcw } from 'lucide-react'
-import { type ClipboardEvent, type KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react'
+import { type ClipboardEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { Button, Form, InputGroup } from 'react-bootstrap'
 
 interface OtpProps {
@@ -30,11 +30,12 @@ export default function Otp({
 	})
 	const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
-	useEffect(() => {
-		const arr = value.split('').slice(0, length)
-		while (arr.length < length) arr.push('')
-		setDigits(arr)
-	}, [value, length])
+	const expectedDigits = value.split('').slice(0, length)
+	while (expectedDigits.length < length) expectedDigits.push('')
+	const digitsMatch = expectedDigits.length === digits.length && expectedDigits.every((d, i) => d === digits[i])
+	if (!digitsMatch) {
+		setDigits(expectedDigits)
+	}
 
 	useEffect(() => {
 		if (autoFocus) {
@@ -75,7 +76,7 @@ export default function Otp({
 	)
 
 	const handleKeyDown = useCallback(
-		(index: number, e: KeyboardEvent<HTMLInputElement>) => {
+		(index: number, e: React.KeyboardEvent) => {
 			if (e.key === 'Backspace') {
 				e.preventDefault()
 				const next = [...digits]

@@ -42,24 +42,22 @@ export default function DatePicker({ align = 'start', ...calendarProps }: DatePi
 	const [selectedDates, setSelectedDates] = useState<Date[]>(calendarProps.selectedDates ?? [])
 	const [showCalendar, setShowCalendar] = useState(false)
 	const triggerRef = useRef<HTMLDivElement>(null)
+	const [target, setTarget] = useState<HTMLDivElement | null>(null)
 	const isSmallScreen = useIsSmallScreen()
 	const [placement, setPlacement] = useState<'bottom-start' | 'bottom-end' | 'top-start' | 'top-end'>(`bottom-${align}` as const)
 
-	useEffect(() => {
+	if (calendarProps.value !== undefined && calendarProps.value?.getTime() !== selectedDate?.getTime()) {
 		setSelectedDate(calendarProps.value ?? null)
-	}, [calendarProps.value])
-
-	useEffect(() => {
+	}
+	if (calendarProps.rangeStart !== undefined && calendarProps.rangeStart?.getTime() !== rangeStart?.getTime()) {
 		setRangeStart(calendarProps.rangeStart ?? null)
-	}, [calendarProps.rangeStart])
-
-	useEffect(() => {
+	}
+	if (calendarProps.rangeEnd !== undefined && calendarProps.rangeEnd?.getTime() !== rangeEnd?.getTime()) {
 		setRangeEnd(calendarProps.rangeEnd ?? null)
-	}, [calendarProps.rangeEnd])
-
-	useEffect(() => {
+	}
+	if (calendarProps.selectedDates !== undefined && calendarProps.selectedDates.length !== selectedDates.length) {
 		setSelectedDates(calendarProps.selectedDates ?? [])
-	}, [calendarProps.selectedDates])
+	}
 
 	const handleToggle = useCallback(() => {
 		if (!showCalendar && triggerRef.current) {
@@ -150,7 +148,7 @@ export default function DatePicker({ align = 'start', ...calendarProps }: DatePi
 	return (
 		<div onKeyDown={handleKeyDown} className='position-relative w-100'>
 			<div
-				ref={triggerRef}
+				ref={(el) => { triggerRef.current = el; setTarget(el); }}
 				role='combobox'
 				aria-expanded={showCalendar}
 				aria-haspopup='dialog'
@@ -234,7 +232,7 @@ export default function DatePicker({ align = 'start', ...calendarProps }: DatePi
 			) : (
 				<Overlay
 					show={showCalendar}
-					target={triggerRef.current}
+					target={target}
 					placement={placement}
 					onHide={() => setShowCalendar(false)}
 					rootClose

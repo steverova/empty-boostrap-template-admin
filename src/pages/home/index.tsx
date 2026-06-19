@@ -1,32 +1,44 @@
-import { useMemo, useState } from 'react'
-import { Card, Col, Row, Badge, Form, Table } from 'react-bootstrap'
 import {
-	BarChart,
-	Bar,
-	XAxis,
-	YAxis,
-	CartesianGrid,
-	Tooltip,
-	Legend,
-	ResponsiveContainer,
-	PieChart,
-	Pie,
-	Cell,
-	LineChart,
-	Line,
-} from 'recharts'
-import {
+	AlertCircle,
+	Calendar,
 	ClipboardCheck,
 	Clock,
 	FolderOpen,
-	Users,
 	TrendingUp,
-	AlertCircle,
-	Calendar,
+	Users,
 } from 'lucide-react'
-import { mockProjects, mockTasks, mockCollaborators, mockTimeEntries } from '@/mocks'
+import { useMemo, useState } from 'react'
+import { Badge, Card, Col, Form, Row, Table } from 'react-bootstrap'
+import {
+	Bar,
+	BarChart,
+	CartesianGrid,
+	Cell,
+	Legend,
+	Line,
+	LineChart,
+	Pie,
+	PieChart,
+	ResponsiveContainer,
+	Tooltip,
+	XAxis,
+	YAxis,
+} from 'recharts'
+import {
+	mockCollaborators,
+	mockProjects,
+	mockTasks,
+	mockTimeEntries,
+} from '@/mocks'
 
-const COLORS = ['#0d6efd', '#198754', '#ffc107', '#dc3545', '#6f42c1', '#fd7e14']
+const COLORS = [
+	'#0d6efd',
+	'#198754',
+	'#ffc107',
+	'#dc3545',
+	'#6f42c1',
+	'#fd7e14',
+]
 
 const categoryLabels: Record<string, string> = {
 	actividad_empresarial: 'Actividad Empresarial',
@@ -44,7 +56,11 @@ const statusLabels: Record<string, string> = {
 	cancelled: 'Cancelled',
 }
 
-function getWeekRange(dateStr: string): { start: string; end: string; label: string } {
+function getWeekRange(dateStr: string): {
+	start: string
+	end: string
+	label: string
+} {
 	const d = new Date(dateStr)
 	const day = d.getDay()
 	const diff = d.getDate() - day + (day === 0 ? -6 : 1)
@@ -89,7 +105,10 @@ export function Component() {
 	}, [selectedWeekStart])
 
 	const stats = useMemo(() => {
-		const totalHours = mockTimeEntries.reduce((sum, e) => sum + (e.hours ?? 0), 0)
+		const totalHours = mockTimeEntries.reduce(
+			(sum, e) => sum + (e.hours ?? 0),
+			0,
+		)
 		const operationalHours = mockTimeEntries
 			.filter((e) => e.category === 'operacional')
 			.reduce((sum, e) => sum + (e.hours ?? 0), 0)
@@ -98,8 +117,12 @@ export function Component() {
 		).length
 		const completedTasks = mockTasks.filter((t) => t.status === 'done').length
 		const totalTasks = mockTasks.length
-		const sickDays = mockTimeEntries.filter((e) => e.category === 'enfermedad').length
-		const vacationDays = mockTimeEntries.filter((e) => e.category === 'vacaciones').length
+		const sickDays = mockTimeEntries.filter(
+			(e) => e.category === 'enfermedad',
+		).length
+		const vacationDays = mockTimeEntries.filter(
+			(e) => e.category === 'vacaciones',
+		).length
 
 		return {
 			totalHours,
@@ -109,8 +132,9 @@ export function Component() {
 			totalTasks,
 			sickDays,
 			vacationDays,
-			totalClients: new Set(mockTimeEntries.filter((e) => e.clientId).map((e) => e.clientId))
-				.size,
+			totalClients: new Set(
+				mockTimeEntries.filter((e) => e.clientId).map((e) => e.clientId),
+			).size,
 		}
 	}, [])
 
@@ -131,7 +155,10 @@ export function Component() {
 	const hoursByCategory = useMemo(() => {
 		const map = new Map<string, number>()
 		for (const entry of mockTimeEntries) {
-			map.set(entry.category, (map.get(entry.category) ?? 0) + (entry.hours ?? 0.5))
+			map.set(
+				entry.category,
+				(map.get(entry.category) ?? 0) + (entry.hours ?? 0.5),
+			)
 		}
 		return Array.from(map.entries()).map(([name, value]) => ({
 			name: categoryLabels[name] ?? name,
@@ -197,7 +224,10 @@ export function Component() {
 	const weeklyHoursByCollaborator = useMemo(() => {
 		if (!selectedWeek) return []
 
-		const collabMap = new Map<string, { name: string; hours: number; entries: number }>()
+		const collabMap = new Map<
+			string,
+			{ name: string; hours: number; entries: number }
+		>()
 
 		for (const collab of mockCollaborators) {
 			collabMap.set(collab.id, { name: collab.name, hours: 0, entries: 0 })
@@ -205,7 +235,8 @@ export function Component() {
 
 		for (const entry of mockTimeEntries) {
 			if (!entry.collaboratorId) continue
-			if (entry.day < selectedWeek.start || entry.day > selectedWeek.end) continue
+			if (entry.day < selectedWeek.start || entry.day > selectedWeek.end)
+				continue
 
 			const collab = collabMap.get(entry.collaboratorId)
 			if (collab) {
@@ -274,7 +305,11 @@ export function Component() {
 								className='rounded-3 d-flex align-items-center justify-content-center'
 								style={{ width: 48, height: 48, backgroundColor: '#6f42c11a' }}
 							>
-								<ClipboardCheck size={24} className='text-purple' style={{ color: '#6f42c1' }} />
+								<ClipboardCheck
+									size={24}
+									className='text-purple'
+									style={{ color: '#6f42c1' }}
+								/>
 							</div>
 							<div>
 								<div className='text-muted small'>Tasks Done</div>
@@ -344,7 +379,10 @@ export function Component() {
 										<Tooltip />
 										<Bar dataKey='hours' radius={[4, 4, 0, 0]}>
 											{weeklyHoursChart.map((_, index) => (
-												<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+												<Cell
+													key={`cell-${index}`}
+													fill={COLORS[index % COLORS.length]}
+												/>
 											))}
 										</Bar>
 									</BarChart>
@@ -384,7 +422,10 @@ export function Component() {
 										<tr className='border-top'>
 											<td className='fw-bold'>Total</td>
 											<td className='text-end fw-bold'>
-												{weeklyHoursByCollaborator.reduce((s, c) => s + c.entries, 0)}
+												{weeklyHoursByCollaborator.reduce(
+													(s, c) => s + c.entries,
+													0,
+												)}
 											</td>
 											<td className='text-end fw-bold'>{weeklyTotalHours}h</td>
 										</tr>
@@ -433,7 +474,10 @@ export function Component() {
 										dataKey='value'
 									>
 										{hoursByCategory.map((_, index) => (
-											<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+											<Cell
+												key={`cell-${index}`}
+												fill={COLORS[index % COLORS.length]}
+											/>
 										))}
 									</Pie>
 									<Tooltip />
@@ -480,11 +524,19 @@ export function Component() {
 								<BarChart data={hoursByType} layout='vertical'>
 									<CartesianGrid strokeDasharray='3 3' stroke='#e9ecef' />
 									<XAxis type='number' tick={{ fontSize: 12 }} />
-									<YAxis type='category' dataKey='name' tick={{ fontSize: 12 }} width={100} />
+									<YAxis
+										type='category'
+										dataKey='name'
+										tick={{ fontSize: 12 }}
+										width={100}
+									/>
 									<Tooltip />
 									<Bar dataKey='hours' radius={[0, 4, 4, 0]}>
 										{hoursByType.map((_, index) => (
-											<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+											<Cell
+												key={`cell-${index}`}
+												fill={COLORS[index % COLORS.length]}
+											/>
 										))}
 									</Bar>
 								</BarChart>
@@ -509,12 +561,15 @@ export function Component() {
 										cy='50%'
 										outerRadius={90}
 										dataKey='value'
-									label={({ name, percent }) =>
-										`${name} ${((percent ?? 0) * 100).toFixed(0)}%`
-									}
+										label={({ name, percent }) =>
+											`${name} ${((percent ?? 0) * 100).toFixed(0)}%`
+										}
 									>
 										{taskStatusCounts.map((_, index) => (
-											<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+											<Cell
+												key={`cell-${index}`}
+												fill={COLORS[index % COLORS.length]}
+											/>
 										))}
 									</Pie>
 									<Tooltip />
@@ -592,17 +647,26 @@ export function Component() {
 										<span className='small'>Completed Projects</span>
 									</div>
 									<span className='fw-semibold'>
-										{mockProjects.filter((p) => p.status === 'completed').length}/
-										{mockProjects.length}
+										{
+											mockProjects.filter((p) => p.status === 'completed')
+												.length
+										}
+										/{mockProjects.length}
 									</span>
 								</div>
 								<hr className='my-0' />
 								<div className='d-flex justify-content-between align-items-center'>
 									<div className='d-flex align-items-center gap-2'>
-										<ClipboardCheck size={16} className='text-purple' style={{ color: '#6f42c1' }} />
+										<ClipboardCheck
+											size={16}
+											className='text-purple'
+											style={{ color: '#6f42c1' }}
+										/>
 										<span className='small'>Team Members</span>
 									</div>
-									<span className='fw-semibold'>{mockCollaborators.length}</span>
+									<span className='fw-semibold'>
+										{mockCollaborators.length}
+									</span>
 								</div>
 							</div>
 						</Card.Body>

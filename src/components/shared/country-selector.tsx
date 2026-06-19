@@ -1,6 +1,12 @@
-import { useMemo } from 'react'
-import Select, { type GroupBase, type Props as SelectProps, components } from 'react-select'
 import countryData from 'country-list/data.json'
+import { useMemo } from 'react'
+import Select, {
+	components,
+	type GroupBase,
+	type OptionProps,
+	type Props as SelectProps,
+	type SingleValueProps as SingleValuePropsTyped,
+} from 'react-select'
 import { reactSelectStyles } from './react-select-styles'
 
 function codeToFlag(code: string): string {
@@ -17,13 +23,13 @@ interface CountryItem {
 	flag: string
 }
 
-const ALL_COUNTRIES: CountryItem[] = (countryData as Array<{ code: string; name: string }>).map(
-	(c) => ({
-		code: c.code,
-		name: c.name,
-		flag: codeToFlag(c.code),
-	}),
-)
+const ALL_COUNTRIES: CountryItem[] = (
+	countryData as Array<{ code: string; name: string }>
+).map((c) => ({
+	code: c.code,
+	name: c.name,
+	flag: codeToFlag(c.code),
+}))
 
 const COUNTRY_OPTIONS: GroupBase<CountryItem>[] = [
 	{
@@ -32,13 +38,19 @@ const COUNTRY_OPTIONS: GroupBase<CountryItem>[] = [
 	},
 ]
 
-interface CountrySelectorProps extends Omit<SelectProps<CountryItem>, 'options' | 'formatOptionLabel'> {
+interface CountrySelectorProps
+	extends Omit<
+		SelectProps<CountryItem>,
+		'options' | 'formatOptionLabel' | 'components' | 'styles'
+	> {
 	showFlag?: boolean
 	showCode?: boolean
 	placeholder?: string
+	components?: SelectProps<CountryItem>['components']
+	styles?: SelectProps<CountryItem>['styles']
 }
 
-function CountryOption(props: React.ComponentProps<typeof components.Option<CountryItem, false>>) {
+function CountryOption(props: OptionProps<CountryItem, false>) {
 	const { data, isSelected } = props
 	return (
 		<components.Option {...props}>
@@ -51,14 +63,17 @@ function CountryOption(props: React.ComponentProps<typeof components.Option<Coun
 	)
 }
 
-function CountrySingleValue(props: React.ComponentProps<typeof components.SingleValue<CountryItem, false>>) {
+function CountrySingleValue(props: SingleValuePropsTyped<CountryItem, false>) {
 	const { data, selectProps } = props
-	const showFlag = (selectProps as unknown as { showFlag?: boolean }).showFlag !== false
+	const showFlag =
+		(selectProps as unknown as { showFlag?: boolean }).showFlag !== false
 	const showCode = (selectProps as unknown as { showCode?: boolean }).showCode
 	return (
 		<components.SingleValue {...props}>
 			<div className='d-flex align-items-center gap-2'>
-				{showFlag && <span style={{ fontSize: '1.2em', lineHeight: 1 }}>{data.flag}</span>}
+				{showFlag && (
+					<span style={{ fontSize: '1.2em', lineHeight: 1 }}>{data.flag}</span>
+				)}
 				<span>{data.name}</span>
 				{showCode && <span className='text-muted small'>({data.code})</span>}
 			</div>
@@ -70,9 +85,14 @@ export default function CountrySelector({
 	showFlag = true,
 	showCode = false,
 	placeholder = 'Selecciona un país',
+	components: customComponents,
+	styles: customStyles,
 	...rest
 }: CountrySelectorProps) {
-	const styles = useMemo(() => ({ ...reactSelectStyles }), [])
+	const stylesMerged = useMemo(
+		() => ({ ...reactSelectStyles(), ...customStyles }),
+		[customStyles],
+	)
 
 	return (
 		<Select<CountryItem, false, GroupBase<CountryItem>>
@@ -82,20 +102,27 @@ export default function CountrySelector({
 			isSearchable
 			formatOptionLabel={(option) => (
 				<div className='d-flex align-items-center gap-2'>
-					{showFlag && <span style={{ fontSize: '1.2em', lineHeight: 1 }}>{option.flag}</span>}
+					{showFlag && (
+						<span style={{ fontSize: '1.2em', lineHeight: 1 }}>
+							{option.flag}
+						</span>
+					)}
 					<span>{option.name}</span>
-					{showCode && <span className='text-muted small'>({option.code})</span>}
+					{showCode && (
+						<span className='text-muted small'>({option.code})</span>
+					)}
 				</div>
 			)}
 			components={{
 				Option: CountryOption,
 				SingleValue: CountrySingleValue,
-				...rest.components,
+				...customComponents,
 			}}
-			styles={styles}
+			styles={stylesMerged as any}
 			classNamePrefix='country-selector'
 		/>
 	)
 }
 
-export { codeToFlag, type CountryItem }
+// eslint-disable-next-line react-refresh/only-export-components
+export { type CountryItem, codeToFlag }
