@@ -1,5 +1,5 @@
 import AppTooltip from '@components/shared/tooltip'
-import { Maximize2 } from 'lucide-react'
+import { MoveHorizontal } from 'lucide-react'
 import { toolbarButton } from '../editor.styles.css'
 import { useEditorStore } from '../editor.store'
 
@@ -24,7 +24,7 @@ export default function ToolbarContainerWidth() {
 	}
 
 	return (
-		<AppTooltip label={labels[containerWidth]} placement='top'>
+		<AppTooltip label={labels[containerWidth]} placement='bottom'>
 			<button
 				type='button'
 				className={toolbarButton}
@@ -32,7 +32,7 @@ export default function ToolbarContainerWidth() {
 				onMouseDown={(e) => e.preventDefault()}
 				onClick={nextWidth}
 			>
-				<Maximize2 size={16} strokeWidth={2} />
+				<MoveHorizontal size={16} strokeWidth={2} />
 			</button>
 		</AppTooltip>
 	)

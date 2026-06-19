@@ -29,7 +29,7 @@ export default function ToolbarFontFamily({ editor }: ToolbarFontFamilyProps) {
 
 	return (
 		<Dropdown as='div' className='d-inline-flex'>
-			<AppTooltip label='Fuente' placement='top'>
+			<AppTooltip label='Fuente' placement='bottom'>
 				<Dropdown.Toggle
 					variant=''
 					className={toolbarButton}

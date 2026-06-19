@@ -27,7 +27,7 @@ export default function ToolbarFontSize({ editor }: ToolbarFontSizeProps) {
 
 	return (
 		<Dropdown as='div' className='d-inline-flex'>
-			<AppTooltip label='Tamaño de texto' placement='top'>
+			<AppTooltip label='Tamaño de texto' placement='bottom'>
 				<Dropdown.Toggle
 					variant=''
 					className={toolbarButton}

@@ -17,7 +17,7 @@ import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { common, createLowlight } from 'lowlight'
 import type { ReactNode } from 'react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import ImageResize from 'tiptap-extension-resize-image'
 import { useEditorStore } from './editor.store'
 import { editorWrapper } from './editor.styles.css'
@@ -55,6 +55,7 @@ export default function Editor({
 }: EditorProps): ReactNode {
 	const setEditor = useEditorStore((s) => s.setEditor)
 	const currentWidth = useEditorStore((s) => s.containerWidth)
+	const [isFullscreen, setIsFullscreen] = useState(false)
 
 	const extensions: any[] = [
 		StarterKit.configure({ codeBlock: false }),
@@ -108,15 +109,31 @@ export default function Editor({
 		return () => setEditor(null)
 	}, [editor, setEditor])
 
+	useEffect(() => {
+		function handleKeyDown(e: KeyboardEvent) {
+			if (e.key === 'Escape' && isFullscreen) {
+				setIsFullscreen(false)
+			}
+			if (e.key === 'F11') {
+				e.preventDefault()
+				setIsFullscreen((prev) => !prev)
+			}
+		}
+		document.addEventListener('keydown', handleKeyDown)
+		return () => document.removeEventListener('keydown', handleKeyDown)
+	}, [isFullscreen])
+
 	if (!editor) return null
 
 	return (
-		<div className={`${editorWrapper} ${className ?? ''}`}>
+		<div className={`${editorWrapper} ${className ?? ''} ${isFullscreen ? 'editor-fullscreen' : ''}`}>
 			{editable && (
 				<EditorToolbar
 					editor={editor}
 					filename={exportFilename}
 					sticky={stickyToolbar}
+					isFullscreen={isFullscreen}
+					onToggleFullscreen={() => setIsFullscreen((prev) => !prev)}
 				/>
 			)}
 			{editable && <EditorBubbleMenu editor={editor} />}

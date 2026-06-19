@@ -41,7 +41,7 @@ export default function ToolbarHighlightButton({ editor }: ToolbarHighlightButto
 
 	return (
 		<>
-			<AppTooltip label='Resaltar texto' placement='top'>
+			<AppTooltip label='Resaltar texto' placement='bottom'>
 				<button
 					type='button'
 					className={toolbarButton}
@@ -58,8 +58,9 @@ export default function ToolbarHighlightButton({ editor }: ToolbarHighlightButto
 				placement='bottom'
 				rootClose
 				onHide={() => setShow(false)}
+				container={document.querySelector('.modal-body') ?? document.body}
 			>
-				<Popover onMouseDown={(e: React.MouseEvent) => e.preventDefault()}>
+				<Popover style={{ zIndex: 1060 }} onMouseDown={(e: React.MouseEvent) => e.preventDefault()}>
 					<Popover.Body>
 						<div className={colorPickerWrapper}>
 							{HIGHLIGHT_COLORS.map((c) => (

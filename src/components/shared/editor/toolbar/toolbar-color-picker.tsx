@@ -51,7 +51,7 @@ export default function ToolbarColorPicker({
 
 	return (
 		<>
-			<AppTooltip label='Color de texto' placement='top'>
+			<AppTooltip label='Color de texto' placement='bottom'>
 				<button
 					type='button'
 					className={toolbarButton}
@@ -68,8 +68,9 @@ export default function ToolbarColorPicker({
 			placement='bottom'
 			rootClose
 			onHide={() => setShow(false)}
+			container={document.querySelector('.modal-body') ?? document.body}
 		>
-			<Popover onMouseDown={(e: React.MouseEvent) => e.preventDefault()}>
+			<Popover style={{ zIndex: 1060 }} onMouseDown={(e: React.MouseEvent) => e.preventDefault()}>
 					<Popover.Body>
 						<div className={colorPickerWrapper}>
 							{COLORS.map((c) => (

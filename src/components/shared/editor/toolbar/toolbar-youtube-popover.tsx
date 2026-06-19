@@ -46,7 +46,7 @@ export default function ToolbarYouTubePopover({ editor }: ToolbarYouTubePopoverP
 
 	return (
 		<>
-			<AppTooltip label='Insertar YouTube' placement='top'>
+			<AppTooltip label='Insertar YouTube' placement='bottom'>
 				<button
 					type='button'
 					className={toolbarButton}
@@ -62,8 +62,9 @@ export default function ToolbarYouTubePopover({ editor }: ToolbarYouTubePopoverP
 				placement='bottom'
 				rootClose
 				onHide={() => setShow(false)}
+				container={document.querySelector('.modal-body') ?? document.body}
 			>
-				<Popover style={{ minWidth: 300 }} onMouseDown={(e: React.MouseEvent) => e.preventDefault()}>
+				<Popover style={{ minWidth: 300, zIndex: 1060 }} onMouseDown={(e: React.MouseEvent) => e.preventDefault()}>
 					<Popover.Body>
 						<div className='d-flex flex-column gap-2'>
 							<Form.Label className='mb-0 small fw-semibold'>

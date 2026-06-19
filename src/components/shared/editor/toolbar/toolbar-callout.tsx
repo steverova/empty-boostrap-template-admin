@@ -34,7 +34,7 @@ export default function ToolbarCallout({ editor }: ToolbarCalloutProps) {
 
 	return (
 		<>
-			<AppTooltip label='Callout / Advertencia' placement='top'>
+			<AppTooltip label='Callout / Advertencia' placement='bottom'>
 				<button
 					type='button'
 					className={toolbarButton}
@@ -50,8 +50,9 @@ export default function ToolbarCallout({ editor }: ToolbarCalloutProps) {
 				placement='bottom'
 				rootClose
 				onHide={() => setShow(false)}
+				container={document.querySelector('.modal-body') ?? document.body}
 			>
-				<Popover onMouseDown={(e: React.MouseEvent) => e.preventDefault()}>
+				<Popover style={{ zIndex: 1060 }} onMouseDown={(e: React.MouseEvent) => e.preventDefault()}>
 					<Popover.Body>
 						<div style={{ display: 'flex', gap: 4, padding: 4 }}>
 							{CALLOUT_TYPES.map((c) => {

@@ -25,7 +25,7 @@ export default function ToolbarButton({
 	const isDisabled = disabled?.(editor) ?? false
 
 	return (
-		<AppTooltip label={tooltip} placement='top'>
+		<AppTooltip label={tooltip} placement='bottom'>
 			<button
 				type='button'
 				className={toolbarButton}

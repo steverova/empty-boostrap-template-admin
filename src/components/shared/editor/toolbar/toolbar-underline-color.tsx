@@ -44,7 +44,7 @@ export default function ToolbarUnderlineColor({ editor }: ToolbarUnderlineColorP
 
 	return (
 		<>
-			<AppTooltip label='Subrayado con color' placement='top'>
+			<AppTooltip label='Subrayado con color' placement='bottom'>
 				<button
 					type='button'
 					className={toolbarButton}
@@ -64,8 +64,9 @@ export default function ToolbarUnderlineColor({ editor }: ToolbarUnderlineColorP
 				placement='bottom'
 				rootClose
 				onHide={() => setShow(false)}
+				container={document.querySelector('.modal-body') ?? document.body}
 			>
-				<Popover onMouseDown={(e: React.MouseEvent) => e.preventDefault()}>
+				<Popover style={{ zIndex: 1060 }} onMouseDown={(e: React.MouseEvent) => e.preventDefault()}>
 					<Popover.Body>
 						<div className={colorPickerWrapper}>
 							{UNDERLINE_COLORS.map((c) => (

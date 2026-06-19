@@ -35,7 +35,7 @@ export default function ToolbarImagePopover({
 
 	return (
 		<>
-			<AppTooltip label='Insertar imagen' placement='top'>
+			<AppTooltip label='Insertar imagen' placement='bottom'>
 				<button
 					type='button'
 					className={toolbarButton}
@@ -51,8 +51,9 @@ export default function ToolbarImagePopover({
 			placement='bottom'
 			rootClose
 			onHide={() => setShow(false)}
+			container={document.querySelector('.modal-body') ?? document.body}
 		>
-			<Popover style={{ minWidth: 280 }} onMouseDown={(e: React.MouseEvent) => e.preventDefault()}>
+			<Popover style={{ minWidth: 280, zIndex: 1060 }} onMouseDown={(e: React.MouseEvent) => e.preventDefault()}>
 					<Popover.Body>
 						<div className='d-flex flex-column gap-2'>
 							<Form.Label className='mb-0 small fw-semibold'>

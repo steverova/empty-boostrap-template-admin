@@ -11,6 +11,8 @@ import {
 	List,
 	ListChecks,
 	ListOrdered,
+	Maximize2,
+	Minimize2,
 	Minus,
 	Quote,
 	Redo2,
@@ -48,9 +50,11 @@ type EditorToolbarProps = {
 	editor: Editor
 	filename?: string
 	sticky?: boolean
+	isFullscreen?: boolean
+	onToggleFullscreen?: () => void
 }
 
-export default function EditorToolbar({ editor, filename, sticky = true }: EditorToolbarProps) {
+export default function EditorToolbar({ editor, filename, sticky = true, isFullscreen, onToggleFullscreen }: EditorToolbarProps) {
 	return (
 		<div className={`${toolbar} ${sticky ? toolbarSticky : ''}`}>
 			{/* Text Style */}
@@ -301,10 +305,17 @@ export default function EditorToolbar({ editor, filename, sticky = true }: Edito
 				<ToolbarExportPdf editor={editor} filename={filename} />
 			</div>
 
-			{/* Right side */}
-			<div className={toolbarGroup} style={{ marginLeft: 'auto' }}>
-				<ToolbarContainerWidth />
-				<ToolbarButton
+		{/* Right side */}
+		<div className={toolbarGroup} style={{ marginLeft: 'auto' }}>
+			<ToolbarContainerWidth />
+			<ToolbarButton
+				icon={isFullscreen ? Minimize2 : Maximize2}
+				label={isFullscreen ? 'Salir de pantalla completa' : 'Pantalla completa'}
+				tooltip={isFullscreen ? 'Salir de pantalla completa (Esc)' : 'Pantalla completa (F11)'}
+				action={() => onToggleFullscreen?.()}
+				editor={editor}
+			/>
+			<ToolbarButton
 					icon={Undo2}
 					label='Deshacer'
 					tooltip='Deshacer (Ctrl+Z)'

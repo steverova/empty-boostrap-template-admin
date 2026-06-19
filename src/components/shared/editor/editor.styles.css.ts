@@ -361,3 +361,26 @@ globalStyle(`${contentArea} .tiptap pre code .hljs-deletion`, { color: '#cf222e'
 globalStyle(`${contentArea} .tiptap .editor-page-break`, {
 	margin: '16px 0',
 })
+
+globalStyle('.editor-fullscreen', {
+	position: 'fixed',
+	top: 0,
+	left: 0,
+	right: 0,
+	bottom: 0,
+	zIndex: 9999,
+	backgroundColor: 'var(--bs-body-bg)',
+	display: 'flex',
+	flexDirection: 'column',
+	borderRadius: 0,
+	border: 'none',
+})
+
+globalStyle('.editor-fullscreen .editor-toolbar', {
+	flexShrink: 0,
+})
+
+globalStyle('.editor-fullscreen .editor-content', {
+	flex: 1,
+	overflow: 'auto',
+})
