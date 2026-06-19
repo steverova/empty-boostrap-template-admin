@@ -41,6 +41,22 @@ export const exampleRoutes: RouteObject[] = [
 				path: 'google-keep',
 				lazy: () => import('./google-keep'),
 			},
+			{
+				path: 'otp',
+				lazy: () => import('./otp'),
+			},
+			{
+				path: 'country-selector',
+				lazy: () => import('./country-selector'),
+			},
+			{
+				path: 'skeleton',
+				lazy: () => import('./skeleton'),
+			},
+			{
+				path: 'empty-state',
+				lazy: () => import('./empty-state'),
+			},
 		],
 	},
 ]

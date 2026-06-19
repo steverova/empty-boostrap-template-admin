@@ -57,4 +57,32 @@ export const exampleNavigation: NavItem[] = [
 		icon: 'sticky-note',
 		type: 'item',
 	},
+	{
+		id: 'otp',
+		path: '/examples/otp',
+		label: 'OTP Input',
+		icon: 'key-round',
+		type: 'item',
+	},
+	{
+		id: 'country-selector',
+		path: '/examples/country-selector',
+		label: 'Country Selector',
+		icon: 'globe',
+		type: 'item',
+	},
+	{
+		id: 'skeleton',
+		path: '/examples/skeleton',
+		label: 'Skeleton',
+		icon: 'loader',
+		type: 'item',
+	},
+	{
+		id: 'empty-state',
+		path: '/examples/empty-state',
+		label: 'Empty State',
+		icon: 'inbox',
+		type: 'item',
+	},
 ]
