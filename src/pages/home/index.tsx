@@ -230,7 +230,10 @@ export function Component() {
 		>()
 
 		for (const collab of mockCollaborators) {
-			collabMap.set(collab.id, { name: collab.name, hours: 0, entries: 0 })
+			collabMap.set(
+				collab.id,
+				{ name: `${collab.firstName} ${collab.lastName}`, hours: 0, entries: 0 },
+			)
 		}
 
 		for (const entry of mockTimeEntries) {

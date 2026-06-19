@@ -156,11 +156,11 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 							<Select
 								styles={reactSelectStyles}
 								options={collaborators.map((c) => ({
-									value: c.name,
+									value: c.id,
 									label: c.name,
 								}))}
 								onChange={(val: any) => field.onChange(val?.value ?? '')}
-								value={field.value ? { value: field.value, label: field.value } : null}
+								value={collaborators.find((c) => c.id === field.value)?.id ?? undefined}
 								isClearable
 								placeholder='Select assignee'
 							/>

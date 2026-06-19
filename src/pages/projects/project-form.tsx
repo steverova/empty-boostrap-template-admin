@@ -207,13 +207,13 @@ export default function ProjectForm({ initialData, clients, collaborators, onSub
 								isMulti
 								options={collaborators.map((c) => ({
 									value: c.id,
-									label: c.name,
+									label: `${c.firstName} ${c.lastName}`,
 								}))}
 								onChange={(vals: any) => field.onChange(vals?.map((v: any) => v.value) ?? [])}
 								value={collaborators
 									.map((c) => ({
 										value: c.id,
-										label: c.name,
+										label: `${c.firstName} ${c.lastName}`,
 									}))
 									.filter((o) => field.value?.includes(o.value))}
 								placeholder='Select team members'

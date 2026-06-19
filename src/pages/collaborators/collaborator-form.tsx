@@ -1,39 +1,66 @@
-import { nanoid } from 'nanoid'
 import { zodResolver } from '@hookform/resolvers/zod'
-import Select from 'react-select'
+import { nanoid } from 'nanoid'
 import { Button, Card, Col, Form, Row } from 'react-bootstrap'
 import { Controller, useForm } from 'react-hook-form'
+import Select from 'react-select'
 import { reactSelectStyles } from '@/components/shared/react-select-styles'
-import { collaboratorSchema, type CollaboratorFormData } from './collaborator.schema'
-import { collaboratorRoles, type Collaborator } from './collaborator.types'
+import { mockClients } from '@/mocks'
+import { type CollaboratorFormData, collaboratorSchema } from './collaborator.schema'
 
-const roleOptions = collaboratorRoles.map((r) => ({
-	value: r,
-	label: r.charAt(0).toUpperCase() + r.slice(1),
-}))
+const roleOptions = [
+	{ value: 'developer', label: 'Developer' },
+	{ value: 'qa', label: 'QA' },
+	{ value: 'design', label: 'Design' },
+	{ value: 'chief', label: 'Chief' },
+	{ value: 'administrator', label: 'Administrator' },
+]
+
+const typeOptions = [
+	{ value: 'internal', label: 'Internal' },
+	{ value: 'external', label: 'External' },
+]
 
 type CollaboratorFormProps = {
-	initialData?: Collaborator
-	onSubmit: (data: Collaborator) => void
+	initialData?: {
+		id: string
+		type: string
+		clientId?: string
+		firstName: string
+		lastName: string
+		email: string
+		role: string
+		phone?: string
+	}
+	onSubmit: (data: any) => void
 	onCancel?: () => void
 }
 
-export default function CollaboratorForm({ initialData, onSubmit, onCancel }: CollaboratorFormProps) {
+export default function CollaboratorForm({
+	initialData,
+	onSubmit,
+	onCancel,
+}: CollaboratorFormProps) {
 	const isEdit = !!initialData
 
 	const {
 		handleSubmit,
 		control,
 		formState: { errors },
+		watch,
 	} = useForm<CollaboratorFormData>({
 		resolver: zodResolver(collaboratorSchema),
 		defaultValues: {
-			name: initialData?.name ?? '',
+			type: initialData?.type ?? 'internal',
+			clientId: initialData?.clientId ?? '',
+			firstName: initialData?.firstName ?? '',
+			lastName: initialData?.lastName ?? '',
 			email: initialData?.email ?? '',
-			role: initialData?.role ?? undefined,
+			role: initialData?.role ?? 'developer',
 			phone: initialData?.phone ?? '',
 		},
 	})
+
+	const type = watch('type')
 
 	function handleFormSubmit(data: CollaboratorFormData) {
 		onSubmit({ ...data, id: initialData?.id ?? nanoid(10) })
@@ -42,31 +69,105 @@ export default function CollaboratorForm({ initialData, onSubmit, onCancel }: Co
 	return (
 		<Card className='border-0 shadow-sm'>
 			<Card.Header className='bg-body border-bottom'>
-				<h5 className='mb-0 fw-semibold'>{isEdit ? 'Edit Collaborator' : 'New Collaborator'}</h5>
+				<h5 className='mb-0 fw-semibold'>
+					{isEdit ? 'Edit Collaborator' : 'New Collaborator'}
+				</h5>
 			</Card.Header>
 			<Card.Body>
 				<Form onSubmit={handleSubmit(handleFormSubmit)}>
 					<Row className='mb-3'>
 						<Col md={4}>
-							<Form.Label className='fw-semibold'>Name</Form.Label>
+							<Form.Label className='fw-semibold'>Type</Form.Label>
 							<Controller
 								control={control}
-								name='name'
+								name='type'
 								render={({ field }) => (
-									<Form.Control
-										{...field}
-										isInvalid={!!errors.name}
-										placeholder='John Doe'
+									<Select
+										styles={reactSelectStyles}
+										options={typeOptions}
+										onChange={(val: any) => field.onChange(val?.value)}
+										value={typeOptions.find((o) => o.value === field.value)}
+										placeholder='Select type'
 									/>
 								)}
 							/>
-							{errors.name && (
-								<Form.Control.Feedback type='invalid'>
-									{errors.name.message}
-								</Form.Control.Feedback>
+							{errors.type && (
+								<small className='text-danger'>{errors.type.message}</small>
 							)}
 						</Col>
 						<Col md={4}>
+							<Form.Label className='fw-semibold'>Client</Form.Label>
+							<Controller
+								control={control}
+								name='clientId'
+								render={({ field }) => (
+									<Select
+										styles={reactSelectStyles}
+										options={mockClients.map((c) => ({
+											value: c.id,
+											label: c.companyName
+												? `${c.name} (${c.companyName})`
+												: c.name,
+										}))}
+										onChange={(val: any) => field.onChange(val?.value)}
+										value={
+											mockClients.find((c) => c.id === field.value)?.id ??
+											undefined
+										}
+										placeholder='Select client'
+										isDisabled={type !== 'external'}
+									/>
+								)}
+							/>
+							{errors.clientId && (
+								<small className='text-danger'>{errors.clientId.message}</small>
+							)}
+						</Col>
+					</Row>
+
+					<Row className='mb-3'>
+						<Col md={6}>
+							<Form.Label className='fw-semibold'>First Name</Form.Label>
+							<Controller
+								control={control}
+								name='firstName'
+								render={({ field }) => (
+									<Form.Control
+										{...field}
+										isInvalid={!!errors.firstName}
+										placeholder='John'
+									/>
+								)}
+							/>
+							{errors.firstName && (
+								<Form.Control.Feedback type='invalid'>
+									{errors.firstName.message}
+								</Form.Control.Feedback>
+							)}
+						</Col>
+						<Col md={6}>
+							<Form.Label className='fw-semibold'>Last Name</Form.Label>
+							<Controller
+								control={control}
+								name='lastName'
+								render={({ field }) => (
+									<Form.Control
+										{...field}
+										isInvalid={!!errors.lastName}
+										placeholder='Doe'
+									/>
+								)}
+							/>
+							{errors.lastName && (
+								<Form.Control.Feedback type='invalid'>
+									{errors.lastName.message}
+								</Form.Control.Feedback>
+							)}
+						</Col>
+					</Row>
+
+					<Row className='mb-3'>
+						<Col md={6}>
 							<Form.Label className='fw-semibold'>Email</Form.Label>
 							<Controller
 								control={control}
@@ -86,19 +187,19 @@ export default function CollaboratorForm({ initialData, onSubmit, onCancel }: Co
 								</Form.Control.Feedback>
 							)}
 						</Col>
-						<Col md={4}>
+						<Col md={6}>
 							<Form.Label className='fw-semibold'>Role</Form.Label>
 							<Controller
 								control={control}
 								name='role'
 								render={({ field }) => (
-							<Select
-								styles={reactSelectStyles}
-								options={roleOptions}
-								onChange={(val: any) => field.onChange(val?.value)}
-								value={roleOptions.find((o) => o.value === field.value)}
-								placeholder='Select role'
-							/>
+									<Select
+										styles={reactSelectStyles}
+										options={roleOptions}
+										onChange={(val: any) => field.onChange(val?.value)}
+										value={roleOptions.find((o) => o.value === field.value)}
+										placeholder='Select role'
+									/>
 								)}
 							/>
 							{errors.role && (
@@ -114,10 +215,7 @@ export default function CollaboratorForm({ initialData, onSubmit, onCancel }: Co
 								control={control}
 								name='phone'
 								render={({ field }) => (
-									<Form.Control
-										{...field}
-										placeholder='+1 234 567 890'
-									/>
+									<Form.Control {...field} placeholder='+1 234 567 890' />
 								)}
 							/>
 						</Col>

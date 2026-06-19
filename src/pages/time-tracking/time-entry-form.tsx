@@ -102,7 +102,7 @@ export default function TimeEntryForm({
 
 	const collaboratorOptions = collaborators.map((c) => ({
 		value: c.id,
-		label: c.name,
+		label: `${c.firstName} ${c.lastName}`,
 	}))
 
 	const clientOptions = clients.map((c) => ({

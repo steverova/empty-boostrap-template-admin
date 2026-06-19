@@ -1,8 +1,11 @@
 import { z } from 'zod'
-import { collaboratorRoles } from './collaborator.types'
+import { collaboratorRoles, collaboratorTypes } from './collaborator.types'
 
 export const collaboratorSchema = z.object({
-	name: z.string().min(1, 'Name is required'),
+	type: z.enum(collaboratorTypes, { message: 'Type is required' }),
+	clientId: z.string().optional(),
+	firstName: z.string().min(1, 'First name is required'),
+	lastName: z.string().min(1, 'Last name is required'),
 	email: z.string().email('Invalid email'),
 	role: z.enum(collaboratorRoles, { message: 'Role is required' }),
 	phone: z.string().optional(),

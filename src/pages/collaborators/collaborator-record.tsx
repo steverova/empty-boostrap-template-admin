@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { useParams, useNavigate } from 'react-router'
-import CollaboratorForm from './collaborator-form'
-import type { Collaborator } from './collaborator.types'
+import { useNavigate, useParams } from 'react-router'
 import { mockCollaborators } from '@/mocks'
+import type { Collaborator } from './collaborator.types'
+import CollaboratorForm from './collaborator-form'
 
 export default function CollaboratorRecordPage() {
 	const { id } = useParams()
