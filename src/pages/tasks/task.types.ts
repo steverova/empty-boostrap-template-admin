@@ -14,9 +14,9 @@ export interface Attachment {
 export interface TodoItem {
 	id: string
 	text: string
-	description: string
+	description?: string
 	completed: boolean
-	attachments: Attachment[]
+	attachments?: Attachment[]
 }
 
 export interface Task {
@@ -30,4 +30,5 @@ export interface Task {
 	project?: string
 	members?: string[]
 	todos?: TodoItem[]
+	reply?: string
 }

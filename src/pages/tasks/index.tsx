@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table'
-import { LayoutGrid, List, Pencil } from 'lucide-react'
+import { Eye, LayoutGrid, List, MessageSquare, Pencil } from 'lucide-react'
 import { useState } from 'react'
 import { Badge, Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
@@ -7,7 +7,9 @@ import AppTable from '@/components/shared/app-table'
 import IconButton from '@/components/shared/icon-button'
 import KanbanBoard from '@/components/shared/kan-ban'
 import { mockTasks } from '@/mocks'
-import type { Task } from './task.types'
+import TaskDetailsModal from './task-details-modal'
+import TaskReplyModal from './task-reply-modal'
+import type { Task, TaskStatus } from './task.types'
 
 const priorityBg: Record<string, string> = {
 	low: 'success',
@@ -35,7 +37,17 @@ const statusBg: Record<string, string> = {
 
 export default function TasksPage() {
 	const [view, setView] = useState<'table' | 'kanban'>('table')
+	const [tasks, setTasks] = useState<Task[]>(mockTasks)
+	const [selectedTask, setSelectedTask] = useState<Task | null>(null)
+	const [showDetails, setShowDetails] = useState(false)
+	const [showReply, setShowReply] = useState(false)
 	const navigate = useNavigate()
+
+	function handleReply(taskId: string, reply: string, status: TaskStatus) {
+		setTasks((prev) =>
+			prev.map((t) => (t.id === taskId ? { ...t, reply, status } : t)),
+		)
+	}
 
 	const columns: ColumnDef<Task, any>[] = [
 		{
@@ -75,6 +87,43 @@ export default function TasksPage() {
 			header: 'Due Date',
 			cell: ({ row }) => row.original.dueDate ?? '-',
 		},
+		{
+			id: 'actions',
+			header: 'Actions',
+			cell: ({ row }) => (
+				<div className='d-flex gap-1'>
+					<IconButton
+						aria-label='Edit Task'
+						onClick={(e) => {
+							e.stopPropagation()
+							navigate(`/tasks/record/${row.original.id}`)
+						}}
+					>
+						<Pencil size={16} />
+					</IconButton>
+					<IconButton
+						aria-label='View details'
+						onClick={(e) => {
+							e.stopPropagation()
+							setSelectedTask(row.original)
+							setShowDetails(true)
+						}}
+					>
+						<Eye size={16} />
+					</IconButton>
+					<IconButton
+						aria-label='Reply to task'
+						onClick={(e) => {
+							e.stopPropagation()
+							setSelectedTask(row.original)
+							setShowReply(true)
+						}}
+					>
+						<MessageSquare size={16} />
+					</IconButton>
+				</div>
+			),
+		},
 	]
 
 	return (
@@ -107,24 +156,26 @@ export default function TasksPage() {
 							tableName='Tasks'
 							enableExport
 							columns={columns}
-							data={mockTasks}
+							data={tasks}
 							onAddFn={() => navigate('/tasks/record')}
-							rowActions={(row) => (
-								<IconButton
-									aria-label='Edit Task'
-									onClick={(e) => {
-										e.stopPropagation()
-										navigate(`/tasks/record/${row.id}`)
-									}}
-								>
-									<Pencil size={16} />
-								</IconButton>
-							)}
 						/>
 					</div>
 				) : (
 					<KanbanBoard />
 				)}
+
+				<TaskDetailsModal
+					task={selectedTask}
+					show={showDetails}
+					onHide={() => setShowDetails(false)}
+				/>
+
+				<TaskReplyModal
+					task={selectedTask}
+					show={showReply}
+					onHide={() => setShowReply(false)}
+					onSubmit={handleReply}
+				/>
 			</div>
 		</div>
 	)

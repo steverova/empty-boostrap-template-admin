@@ -18,6 +18,8 @@ import { columns } from './kanban-helper'
 import { initialTasks } from './kanban-mock'
 import KanbanToolbar, { type KanbanFilters } from './kanban-toolbar'
 import TaskCard from './task-card'
+import TaskDetailsModal from '@/pages/tasks/task-details-modal'
+import TaskReplyModal from '@/pages/tasks/task-reply-modal'
 
 // ─── Main board ───────────────────────────────────────────────────────────────
 
@@ -33,6 +35,25 @@ export default function KanbanBoard() {
 		assignee: '',
 		project: '',
 	})
+	const [selectedTask, setSelectedTask] = useState<Task | null>(null)
+	const [showDetails, setShowDetails] = useState(false)
+	const [showReply, setShowReply] = useState(false)
+
+	function handleDetails(task: Task) {
+		setSelectedTask(task)
+		setShowDetails(true)
+	}
+
+	function handleReply(task: Task) {
+		setSelectedTask(task)
+		setShowReply(true)
+	}
+
+	function handleSubmitReply(taskId: string, reply: string, status: string) {
+		setTasks((prev) =>
+			prev.map((t) => (t.id === taskId ? { ...t, reply, columnId: status } : t)),
+		)
+	}
 
 	const assignees = useMemo(
 		() =>
@@ -201,14 +222,16 @@ export default function KanbanBoard() {
 											handleCollapse={handleCollapse}
 										/>
 									) : (
-										// ── Vista expandida normal ──
-										<ExpandedCard
-											icon={column.icon}
-											handleCollapse={handleCollapse}
-											column={column}
-											columnTasks={columnTasks}
-											onMove={handleMove}
-										/>
+									// ── Vista expandida normal ──
+									<ExpandedCard
+										icon={column.icon}
+										handleCollapse={handleCollapse}
+										column={column}
+										columnTasks={columnTasks}
+										onMove={handleMove}
+										onDetails={handleDetails}
+										onReply={handleReply}
+									/>
 									)}
 								</Col>
 							)
@@ -220,6 +243,19 @@ export default function KanbanBoard() {
 					</DragOverlay>
 				</DndContext>
 			</Container>
+
+			<TaskDetailsModal
+				task={selectedTask as any}
+				show={showDetails}
+				onHide={() => setShowDetails(false)}
+			/>
+
+			<TaskReplyModal
+				task={selectedTask as any}
+				show={showReply}
+				onHide={() => setShowReply(false)}
+				onSubmit={handleSubmitReply}
+			/>
 		</div>
 	)
 }

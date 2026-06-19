@@ -13,6 +13,8 @@ type ExpandedCardProps = {
 	columnTasks: Task[]
 	handleCollapse: (columnId: string) => void
 	onMove?: (taskId: string, targetColumnId: string) => void
+	onDetails?: (task: Task) => void
+	onReply?: (task: Task) => void
 }
 
 export default function ExpandedCard({
@@ -21,6 +23,8 @@ export default function ExpandedCard({
 	columnTasks,
 	handleCollapse,
 	onMove,
+	onDetails,
+	onReply,
 }: ExpandedCardProps) {
 	return (
 		<Card className='border-0 shadow-sm d-flex flex-column flex-grow-1' style={{ overflow: 'hidden' }}>
@@ -69,6 +73,8 @@ export default function ExpandedCard({
 								key={task.id}
 								task={task}
 								onMove={onMove}
+								onDetails={onDetails}
+								onReply={onReply}
 								taskIndex={index + 1}
 								totalTasks={columnTasks.length}
 							/>

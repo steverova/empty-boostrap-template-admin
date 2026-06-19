@@ -61,12 +61,11 @@ export default function ClientForm({ initialData, onSubmit, onCancel }: ClientFo
 								name='type'
 								render={({ field }) => (
 								<Select
-									{...field}
-									styles={reactSelectStyles}
-									options={typeOptions}
-									onChange={(val) => field.onChange(val?.value)}
-									value={typeOptions.find((o) => o.value === field.value)}
-								/>
+								styles={reactSelectStyles}
+								options={typeOptions}
+								onChange={(val: any) => field.onChange(val?.value)}
+								value={typeOptions.find((o) => o.value === field.value)}
+							/>
 								)}
 							/>
 							{errors.type && (

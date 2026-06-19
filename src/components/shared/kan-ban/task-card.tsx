@@ -3,6 +3,7 @@ import {
 	Copy,
 	Eye,
 	GripHorizontal,
+	MessageSquare,
 	MoreVertical,
 	Pencil,
 } from 'lucide-react'
@@ -49,12 +50,16 @@ export default function TaskCard({
 	task,
 	isDragging = false,
 	onMove,
+	onDetails,
+	onReply,
 	taskIndex,
 	totalTasks,
 }: {
 	task: Task
 	isDragging?: boolean
 	onMove?: (taskId: string, targetColumnId: string) => void
+	onDetails?: (task: Task) => void
+	onReply?: (task: Task) => void
 	taskIndex?: number
 	totalTasks?: number
 }) {
@@ -76,7 +81,6 @@ export default function TaskCard({
 						<Dropdown.Toggle
 							variant='link'
 							size='sm'
-							caret={false}
 							className='p-0 border-0 text-muted'
 							style={{ textDecoration: 'none' }}
 						>
@@ -111,9 +115,17 @@ export default function TaskCard({
 						</IconButton>
 						<IconButton
 							aria-label='View details'
+							onClick={() => onDetails?.(task)}
 							style={{ color: 'var(--bs-body-color)' }}
 						>
 							<Eye size={14} />
+						</IconButton>
+						<IconButton
+							aria-label='Reply to task'
+							onClick={() => onReply?.(task)}
+							style={{ color: 'var(--bs-body-color)' }}
+						>
+							<MessageSquare size={14} />
 						</IconButton>
 					</div>
 				</div>

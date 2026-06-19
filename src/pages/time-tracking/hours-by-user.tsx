@@ -156,7 +156,7 @@ export default function HoursByUser({ timeEntries }: HoursByUserProps) {
 										label: c.companyName ? `${c.name} (${c.companyName})` : c.name,
 									})),
 								]}
-								onChange={(val) => setSelectedClient(val?.value ?? '')}
+								onChange={(val: any) => setSelectedClient(val?.value ?? '')}
 								value={
 									selectedClient
 										? mockClients
@@ -181,7 +181,7 @@ export default function HoursByUser({ timeEntries }: HoursByUserProps) {
 										label: p.projectName,
 									})),
 								]}
-								onChange={(val) => setSelectedProject(val?.value ?? '')}
+								onChange={(val: any) => setSelectedProject(val?.value ?? '')}
 								value={
 									selectedProject
 										? filteredProjects
@@ -253,7 +253,7 @@ export default function HoursByUser({ timeEntries }: HoursByUserProps) {
 									width={120}
 								/>
 								<Tooltip
-									formatter={(value: number) => [`${value}h`, 'Horas']}
+									formatter={(value) => [`${value}h`, 'Horas']}
 									cursor={{ fill: 'rgba(0,0,0,0.05)' }}
 								/>
 								<ReferenceLine

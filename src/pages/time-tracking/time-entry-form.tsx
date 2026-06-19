@@ -85,13 +85,13 @@ export default function TimeEntryForm({
 		return tasks.filter((t) => t.project === projectId)
 	}, [projectId, tasks])
 
-	function handleClientChange(val: { value: string; label: string } | null) {
+	function handleClientChange(val: any) {
 		setValue('clientId', val?.value ?? '', { shouldValidate: true })
 		setValue('projectId', '', { shouldValidate: true })
 		setValue('taskId', '', { shouldValidate: true })
 	}
 
-	function handleProjectChange(val: { value: string; label: string } | null) {
+	function handleProjectChange(val: any) {
 		setValue('projectId', val?.value ?? '', { shouldValidate: true })
 		setValue('taskId', '', { shouldValidate: true })
 	}
@@ -136,15 +136,14 @@ export default function TimeEntryForm({
 								control={control}
 								name='collaboratorId'
 								render={({ field }) => (
-								<Select
-									{...field}
-									styles={reactSelectStyles}
-									options={collaboratorOptions}
-									onChange={(val) => field.onChange(val?.value ?? '')}
-									value={collaboratorOptions.find((o) => o.value === field.value) ?? null}
-									isClearable
-									placeholder='Select collaborator...'
-								/>
+							<Select
+								styles={reactSelectStyles}
+								options={collaboratorOptions}
+								onChange={(val: any) => field.onChange(val?.value ?? '')}
+								value={collaboratorOptions.find((o) => o.value === field.value) ?? null}
+								isClearable
+								placeholder='Select collaborator...'
+							/>
 								)}
 							/>
 							{errors.collaboratorId && (
@@ -157,14 +156,13 @@ export default function TimeEntryForm({
 								control={control}
 								name='category'
 								render={({ field }) => (
-								<Select
-									{...field}
-									styles={reactSelectStyles}
-									options={categoryOptions}
-									onChange={(val) => field.onChange(val?.value)}
-									value={categoryOptions.find((o) => o.value === field.value)}
-									placeholder='Select category'
-								/>
+							<Select
+								styles={reactSelectStyles}
+								options={categoryOptions}
+								onChange={(val: any) => field.onChange(val?.value)}
+								value={categoryOptions.find((o) => o.value === field.value)}
+								placeholder='Select category'
+							/>
 								)}
 							/>
 							{errors.category && (
@@ -235,14 +233,13 @@ export default function TimeEntryForm({
 										control={control}
 										name='hourType'
 										render={({ field }) => (
-										<Select
-											{...field}
-											styles={reactSelectStyles}
-											options={hourTypeOptions}
-											onChange={(val) => field.onChange(val?.value)}
-											value={hourTypeOptions.find((o) => o.value === field.value)}
-											placeholder='Select type'
-										/>
+									<Select
+										styles={reactSelectStyles}
+										options={hourTypeOptions}
+										onChange={(val: any) => field.onChange(val?.value)}
+										value={hourTypeOptions.find((o) => o.value === field.value)}
+										placeholder='Select type'
+									/>
 										)}
 									/>
 									{errors.hourType && (
@@ -255,15 +252,14 @@ export default function TimeEntryForm({
 										control={control}
 										name='clientId'
 										render={({ field }) => (
-										<Select
-											{...field}
-											styles={reactSelectStyles}
-											options={clientOptions}
-											onChange={handleClientChange}
-											value={clientOptions.find((o) => o.value === field.value) ?? null}
-											isClearable
-											placeholder='Search client...'
-										/>
+									<Select
+										styles={reactSelectStyles}
+										options={clientOptions}
+										onChange={(val: any) => handleClientChange(val)}
+										value={clientOptions.find((o) => o.value === field.value) ?? null}
+										isClearable
+										placeholder='Search client...'
+									/>
 										)}
 									/>
 									{errors.clientId && (
@@ -276,16 +272,15 @@ export default function TimeEntryForm({
 										control={control}
 										name='projectId'
 										render={({ field }) => (
-										<Select
-											{...field}
-											styles={reactSelectStyles}
-											options={projectOptions}
-											onChange={handleProjectChange}
-											value={projectOptions.find((o) => o.value === field.value) ?? null}
-											isClearable
-											isDisabled={!clientId}
-											placeholder={clientId ? 'Search project...' : 'Select client first'}
-										/>
+									<Select
+										styles={reactSelectStyles}
+										options={projectOptions}
+										onChange={(val: any) => handleProjectChange(val)}
+										value={projectOptions.find((o) => o.value === field.value) ?? null}
+										isClearable
+										isDisabled={!clientId}
+										placeholder={clientId ? 'Search project...' : 'Select client first'}
+									/>
 										)}
 									/>
 									{errors.projectId && (
@@ -300,17 +295,16 @@ export default function TimeEntryForm({
 										control={control}
 										name='taskId'
 										render={({ field }) => (
-										<Select
-											{...field}
-											styles={reactSelectStyles}
-											options={taskOptions}
-											onChange={(val) => field.onChange(val?.value ?? '')}
-											value={taskOptions.find((o) => o.value === field.value) ?? null}
-											isClearable
-											isSearchable
-											isDisabled={!projectId}
-											placeholder={projectId ? 'Search task...' : 'Select project first'}
-										/>
+									<Select
+										styles={reactSelectStyles}
+										options={taskOptions}
+										onChange={(val: any) => field.onChange(val?.value ?? '')}
+										value={taskOptions.find((o) => o.value === field.value) ?? null}
+										isClearable
+										isSearchable
+										isDisabled={!projectId}
+										placeholder={projectId ? 'Search task...' : 'Select project first'}
+									/>
 										)}
 									/>
 									{errors.taskId && (

@@ -5,7 +5,7 @@ import { Button, Card, Col, Form, Row } from 'react-bootstrap'
 import { Controller, useForm } from 'react-hook-form'
 import DatePicker from '@/components/shared/date-picker'
 import { reactSelectStyles } from '@/components/shared/react-select-styles'
-import { taskSchema, type TaskFormData } from './task.schema'
+import { taskSchema } from './task.schema'
 import TodoChecklist from './todo-checklist'
 import type { Task } from './task.types'
 
@@ -39,7 +39,7 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 		handleSubmit,
 		control,
 		formState: { errors },
-	} = useForm<TaskFormData>({
+	} = useForm({
 		resolver: zodResolver(taskSchema),
 		defaultValues: {
 			title: initialData?.title ?? '',
@@ -54,8 +54,8 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 		},
 	})
 
-	function handleFormSubmit(data: TaskFormData) {
-		onSubmit({ ...data, id: initialData?.id ?? nanoid(10) })
+	function handleFormSubmit(data: Record<string, unknown>) {
+		onSubmit({ ...data, id: initialData?.id ?? nanoid(10) } as Task)
 	}
 
 	return (
@@ -91,14 +91,13 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 								control={control}
 								name='priority'
 								render={({ field }) => (
-								<Select
-									{...field}
-									styles={reactSelectStyles}
-									options={priorityOptions}
-									onChange={(val) => field.onChange(val?.value)}
-									value={priorityOptions.find((o) => o.value === field.value)}
-									placeholder='Select priority'
-								/>
+							<Select
+								styles={reactSelectStyles}
+								options={priorityOptions}
+								onChange={(val: any) => field.onChange(val?.value)}
+								value={priorityOptions.find((o) => o.value === field.value)}
+								placeholder='Select priority'
+							/>
 								)}
 							/>
 							{errors.priority && (
@@ -111,14 +110,13 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 								control={control}
 								name='status'
 								render={({ field }) => (
-								<Select
-									{...field}
-									styles={reactSelectStyles}
-									options={statusOptions}
-									onChange={(val) => field.onChange(val?.value)}
-									value={statusOptions.find((o) => o.value === field.value)}
-									placeholder='Select status'
-								/>
+							<Select
+								styles={reactSelectStyles}
+								options={statusOptions}
+								onChange={(val: any) => field.onChange(val?.value)}
+								value={statusOptions.find((o) => o.value === field.value)}
+								placeholder='Select status'
+							/>
 								)}
 							/>
 							{errors.status && (
@@ -155,18 +153,17 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 								control={control}
 								name='assignee'
 								render={({ field }) => (
-								<Select
-									{...field}
-									styles={reactSelectStyles}
-									options={collaborators.map((c) => ({
-										value: c.name,
-										label: c.name,
-									}))}
-									onChange={(val) => field.onChange(val?.value ?? '')}
-									value={field.value ? { value: field.value, label: field.value } : null}
-									isClearable
-									placeholder='Select assignee'
-								/>
+							<Select
+								styles={reactSelectStyles}
+								options={collaborators.map((c) => ({
+									value: c.name,
+									label: c.name,
+								}))}
+								onChange={(val: any) => field.onChange(val?.value ?? '')}
+								value={field.value ? { value: field.value, label: field.value } : null}
+								isClearable
+								placeholder='Select assignee'
+							/>
 								)}
 							/>
 						</Col>
@@ -193,18 +190,17 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 								control={control}
 								name='project'
 								render={({ field }) => (
-								<Select
-									{...field}
-									styles={reactSelectStyles}
-									options={projects.map((p) => ({
-										value: p.projectName,
-										label: p.projectName,
-									}))}
-									onChange={(val) => field.onChange(val?.value ?? '')}
-									value={field.value ? { value: field.value, label: field.value } : null}
-									isClearable
-									placeholder='Select project'
-								/>
+							<Select
+								styles={reactSelectStyles}
+								options={projects.map((p) => ({
+									value: p.projectName,
+									label: p.projectName,
+								}))}
+								onChange={(val: any) => field.onChange(val?.value ?? '')}
+								value={field.value ? { value: field.value, label: field.value } : null}
+								isClearable
+								placeholder='Select project'
+							/>
 								)}
 							/>
 						</Col>
@@ -218,7 +214,7 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 							control={control}
 							name='todos'
 							render={({ field }) => (
-								<TodoChecklist value={field.value ?? []} onChange={field.onChange} />
+								<TodoChecklist value={field.value ?? []} onChange={(val: any) => field.onChange(val)} />
 							)}
 						/>
 					</Form.Group>

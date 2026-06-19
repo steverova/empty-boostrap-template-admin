@@ -92,14 +92,13 @@ export default function CollaboratorForm({ initialData, onSubmit, onCancel }: Co
 								control={control}
 								name='role'
 								render={({ field }) => (
-								<Select
-									{...field}
-									styles={reactSelectStyles}
-									options={roleOptions}
-									onChange={(val) => field.onChange(val?.value)}
-									value={roleOptions.find((o) => o.value === field.value)}
-									placeholder='Select role'
-								/>
+							<Select
+								styles={reactSelectStyles}
+								options={roleOptions}
+								onChange={(val: any) => field.onChange(val?.value)}
+								value={roleOptions.find((o) => o.value === field.value)}
+								placeholder='Select role'
+							/>
 								)}
 							/>
 							{errors.role && (

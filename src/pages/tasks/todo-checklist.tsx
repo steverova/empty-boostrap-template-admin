@@ -13,7 +13,7 @@ import {
 	Video,
 	X,
 } from 'lucide-react'
-import type { Attachment, AttachmentType, TodoItem } from '../task.types'
+import type { Attachment, AttachmentType, TodoItem } from './task.types'
 
 type TodoChecklistProps = {
 	value: TodoItem[]
@@ -63,7 +63,7 @@ export default function TodoChecklist({ value, onChange }: TodoChecklistProps) {
 		}
 		onChange(
 			value.map((t) =>
-				t.id === id ? { ...t, attachments: [...t.attachments, attachment] } : t,
+				t.id === id ? { ...t, attachments: [...(t.attachments ?? []), attachment] } : t,
 			),
 		)
 		setAttachUrl('')
@@ -86,7 +86,7 @@ export default function TodoChecklist({ value, onChange }: TodoChecklistProps) {
 			onChange(
 				value.map((t) =>
 					t.id === todoId
-						? { ...t, attachments: [...t.attachments, ...newAttachments] }
+						? { ...t, attachments: [...(t.attachments ?? []), ...newAttachments] }
 						: t,
 				),
 			)
@@ -98,7 +98,7 @@ export default function TodoChecklist({ value, onChange }: TodoChecklistProps) {
 		onChange(
 			value.map((t) =>
 				t.id === todoId
-					? { ...t, attachments: t.attachments.filter((a) => a.id !== attachmentId) }
+					? { ...t, attachments: (t.attachments ?? []).filter((a) => a.id !== attachmentId) }
 					: t,
 			),
 		)
@@ -167,11 +167,11 @@ export default function TodoChecklist({ value, onChange }: TodoChecklistProps) {
 										{todo.text}
 									</span>
 
-									{todo.attachments.length > 0 && (
-										<Badge bg='secondary' className='me-1'>
-											{todo.attachments.length} file(s)
-										</Badge>
-									)}
+								{(todo.attachments?.length ?? 0) > 0 && (
+									<Badge bg='secondary' className='me-1'>
+										{todo.attachments?.length ?? 0} file(s)
+									</Badge>
+								)}
 
 									<Button
 										variant='link'
@@ -188,14 +188,14 @@ export default function TodoChecklist({ value, onChange }: TodoChecklistProps) {
 											as='textarea'
 											rows={2}
 											placeholder='Add a description...'
-											value={todo.description}
+											value={todo.description ?? ''}
 											onChange={(e) => updateDescription(todo.id, e.target.value)}
 											className='mb-2'
 										/>
 
-										{todo.attachments.length > 0 && (
+										{(todo.attachments?.length ?? 0) > 0 && (
 											<div className='d-flex flex-wrap gap-1 mb-2'>
-												{todo.attachments.map((att) => (
+												{todo.attachments?.map((att) => (
 													<Badge
 														key={att.id}
 														bg='light'

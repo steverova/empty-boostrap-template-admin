@@ -108,13 +108,12 @@ export default function ProjectForm({ initialData, clients, collaborators, onSub
 								control={control}
 								name='status'
 								render={({ field }) => (
-								<Select
-									{...field}
-									styles={reactSelectStyles}
-									options={statusOptions}
-									onChange={(val) => field.onChange(val?.value)}
-									value={statusOptions.find((o) => o.value === field.value)}
-								/>
+							<Select
+								styles={reactSelectStyles}
+								options={statusOptions}
+								onChange={(val: any) => field.onChange(val?.value)}
+								value={statusOptions.find((o) => o.value === field.value)}
+							/>
 								)}
 							/>
 						</Col>
@@ -124,13 +123,12 @@ export default function ProjectForm({ initialData, clients, collaborators, onSub
 								control={control}
 								name='priority'
 								render={({ field }) => (
-								<Select
-									{...field}
-									styles={reactSelectStyles}
-									options={priorityOptions}
-									onChange={(val) => field.onChange(val?.value)}
-									value={priorityOptions.find((o) => o.value === field.value)}
-								/>
+							<Select
+								styles={reactSelectStyles}
+								options={priorityOptions}
+								onChange={(val: any) => field.onChange(val?.value)}
+								value={priorityOptions.find((o) => o.value === field.value)}
+							/>
 								)}
 							/>
 						</Col>
@@ -140,22 +138,21 @@ export default function ProjectForm({ initialData, clients, collaborators, onSub
 								control={control}
 								name='owner'
 								render={({ field }) => (
-								<Select
-									{...field}
-									styles={reactSelectStyles}
-									options={clients.map((c) => ({
+							<Select
+								styles={reactSelectStyles}
+								options={clients.map((c) => ({
+									value: c.id,
+									label: c.companyName ? `${c.name} (${c.companyName})` : c.name,
+								}))}
+								onChange={(val: any) => field.onChange(val?.value)}
+								value={clients
+									.map((c) => ({
 										value: c.id,
 										label: c.companyName ? `${c.name} (${c.companyName})` : c.name,
-									}))}
-									onChange={(val) => field.onChange(val?.value)}
-									value={clients
-										.map((c) => ({
-											value: c.id,
-											label: c.companyName ? `${c.name} (${c.companyName})` : c.name,
-										}))
-										.find((o) => o.value === field.value)}
-									placeholder='Select owner'
-								/>
+									}))
+									.find((o) => o.value === field.value)}
+								placeholder='Select owner'
+							/>
 								)}
 							/>
 							{errors.owner && (
@@ -205,23 +202,22 @@ export default function ProjectForm({ initialData, clients, collaborators, onSub
 								control={control}
 								name='team'
 								render={({ field }) => (
-								<Select
-									{...field}
-									styles={reactSelectStyles}
-									isMulti
-									options={collaborators.map((c) => ({
+							<Select
+								styles={reactSelectStyles}
+								isMulti
+								options={collaborators.map((c) => ({
+									value: c.id,
+									label: c.name,
+								}))}
+								onChange={(vals: any) => field.onChange(vals?.map((v: any) => v.value) ?? [])}
+								value={collaborators
+									.map((c) => ({
 										value: c.id,
 										label: c.name,
-									}))}
-									onChange={(vals) => field.onChange(vals?.map((v) => v.value) ?? [])}
-									value={collaborators
-										.map((c) => ({
-											value: c.id,
-											label: c.name,
-										}))
-										.filter((o) => field.value?.includes(o.value))}
-									placeholder='Select team members'
-								/>
+									}))
+									.filter((o) => field.value?.includes(o.value))}
+								placeholder='Select team members'
+							/>
 								)}
 							/>
 							{errors.team && (

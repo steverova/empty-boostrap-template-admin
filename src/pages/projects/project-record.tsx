@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router'
 import ProjectForm from './project-form'
 import type { ProjectFormData } from './project.schema'
-import type { Project } from './project.types'
 import { mockClients, mockCollaborators, mockProjects } from '@/mocks'
 
 export default function ProjectRecordPage() {

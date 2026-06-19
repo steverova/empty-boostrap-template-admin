@@ -134,10 +134,6 @@ export default function HoursByTicket({ timeEntries }: HoursByTicketProps) {
 		return Array.from(map.values()).sort((a, b) => b.hours - a.hours)
 	}, [filteredEntries])
 
-	const maxHours = useMemo(() => {
-		return Math.max(...hoursByTicket.map((t) => t.hours), 0)
-	}, [hoursByTicket])
-
 	const avgHours = useMemo(() => {
 		if (hoursByTicket.length === 0) return 0
 		const total = hoursByTicket.reduce((sum, t) => sum + t.hours, 0)
@@ -185,7 +181,7 @@ export default function HoursByTicket({ timeEntries }: HoursByTicketProps) {
 										label: c.companyName ? `${c.name} (${c.companyName})` : c.name,
 									})),
 								]}
-								onChange={(val) => setSelectedClient(val?.value ?? '')}
+								onChange={(val: any) => setSelectedClient(val?.value ?? '')}
 								value={
 									selectedClient
 										? mockClients
@@ -210,7 +206,7 @@ export default function HoursByTicket({ timeEntries }: HoursByTicketProps) {
 										label: p.projectName,
 									})),
 								]}
-								onChange={(val) => setSelectedProject(val?.value ?? '')}
+								onChange={(val: any) => setSelectedProject(val?.value ?? '')}
 								value={
 									selectedProject
 										? filteredProjects
@@ -233,7 +229,7 @@ export default function HoursByTicket({ timeEntries }: HoursByTicketProps) {
 										label: c.name,
 									})),
 								]}
-								onChange={(val) => setSelectedCollaborator(val?.value ?? '')}
+								onChange={(val: any) => setSelectedCollaborator(val?.value ?? '')}
 								value={
 									selectedCollaborator
 										? mockCollaborators
@@ -306,7 +302,7 @@ export default function HoursByTicket({ timeEntries }: HoursByTicketProps) {
 											width={180}
 										/>
 										<Tooltip
-											formatter={(value: number) => [`${value}h`, 'Horas']}
+											formatter={(value) => [`${value}h`, 'Horas']}
 											cursor={{ fill: 'rgba(0,0,0,0.05)' }}
 										/>
 										<ReferenceLine

@@ -10,6 +10,7 @@ export const mockTasks: Task[] = [
 		assignee: 'col2',
 		dueDate: '2026-06-25',
 		project: 'proj1',
+		reply: 'The wireframes are ready for review. I used the new brand colors we discussed.',
 	},
 	{
 		id: 't2',
@@ -40,6 +41,7 @@ export const mockTasks: Task[] = [
 		assignee: 'col1',
 		dueDate: '2026-06-20',
 		project: 'proj1',
+		reply: 'Endpoints are complete. Need to add pagination and filtering next.',
 	},
 	{
 		id: 't5',
@@ -70,6 +72,7 @@ export const mockTasks: Task[] = [
 		assignee: 'col1',
 		dueDate: '2026-06-15',
 		project: 'proj3',
+		reply: 'All CRUD operations implemented and tested. Ready for QA.',
 	},
 	{
 		id: 't8',
