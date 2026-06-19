@@ -6,8 +6,11 @@ import Select, {
 	type OptionProps,
 	type Props as SelectProps,
 	type SingleValueProps as SingleValuePropsTyped,
+	type StylesConfig,
 } from 'react-select'
 import { reactSelectStyles } from './react-select-styles'
+
+type ReactSelectStyles = StylesConfig<CountryItem, false, GroupBase<CountryItem>>
 
 function codeToFlag(code: string): string {
 	return code
@@ -40,8 +43,8 @@ const COUNTRY_OPTIONS: GroupBase<CountryItem>[] = [
 
 interface CountrySelectorProps
 	extends Omit<
-		SelectProps<CountryItem>,
-		'options' | 'formatOptionLabel' | 'components' | 'styles'
+		SelectProps<CountryItem, false, GroupBase<CountryItem>>,
+		'options' | 'formatOptionLabel' | 'components' | 'styles' | 'isMulti'
 	> {
 	showFlag?: boolean
 	showCode?: boolean
@@ -90,7 +93,11 @@ export default function CountrySelector({
 	...rest
 }: CountrySelectorProps) {
 	const stylesMerged = useMemo(
-		() => ({ ...reactSelectStyles(), ...customStyles }),
+		() =>
+			({
+				...reactSelectStyles,
+				...customStyles,
+			}) as ReactSelectStyles as ReactSelectStyles,
 		[customStyles],
 	)
 
@@ -113,12 +120,14 @@ export default function CountrySelector({
 					)}
 				</div>
 			)}
-			components={{
-				Option: CountryOption,
-				SingleValue: CountrySingleValue,
-				...customComponents,
-			}}
-			styles={stylesMerged as any}
+			components={
+				{
+					Option: CountryOption,
+					SingleValue: CountrySingleValue,
+					...customComponents,
+				} as CountrySelectorProps['components']
+			}
+			styles={stylesMerged}
 			classNamePrefix='country-selector'
 		/>
 	)
