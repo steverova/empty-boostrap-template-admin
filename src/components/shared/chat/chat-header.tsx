@@ -6,19 +6,22 @@ import type { ChatContact } from './types'
 
 interface ChatHeaderProps {
 	contact: ChatContact
-	onBack: () => void
+	onBack?: () => void
+	compact?: boolean
 }
 
-export function ChatHeader({ contact, onBack }: ChatHeaderProps) {
+export function ChatHeader({ contact, onBack, compact }: ChatHeaderProps) {
 	return (
 		<div className='d-flex align-items-center gap-3 px-3 py-2 border-bottom bg-body flex-shrink-0'>
-			<Button
-				variant='link'
-				onClick={onBack}
-				className='p-0 border-0 bg-transparent d-flex d-md-none align-items-center text-decoration-none'
-			>
-				<ArrowLeft size={24} />
-			</Button>
+			{onBack && (
+				<Button
+					variant='link'
+					onClick={onBack}
+					className={`p-0 border-0 bg-transparent d-flex align-items-center text-decoration-none ${compact ? '' : 'd-md-none'}`}
+				>
+					<ArrowLeft size={24} />
+				</Button>
+			)}
 			<Avatar
 				seed={contact.id}
 				variant='emoji'

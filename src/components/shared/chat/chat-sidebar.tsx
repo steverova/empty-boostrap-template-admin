@@ -9,6 +9,7 @@ interface ChatSidebarProps {
 	selectedContactId?: string
 	onSelectContact: (contactId: string) => void
 	onNewChat?: () => void
+	compact?: boolean
 }
 
 export function ChatSidebar({
@@ -16,6 +17,7 @@ export function ChatSidebar({
 	selectedContactId,
 	onSelectContact,
 	onNewChat,
+	compact,
 }: ChatSidebarProps) {
 	const [query, setQuery] = useState('')
 
@@ -26,7 +28,10 @@ export function ChatSidebar({
 	}, [contacts, query])
 
 	return (
-		<div className='chat-sidebar d-flex flex-column h-100 bg-body border-end'>
+		<div
+			className='chat-sidebar d-flex flex-column h-100 bg-body border-end'
+			style={compact ? { width: '100%', minWidth: 0, border: 'none' } : undefined}
+		>
 			<div className='p-3 d-flex flex-column gap-2 flex-shrink-0'>
 				{onNewChat && (
 					<button

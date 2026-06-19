@@ -31,7 +31,7 @@ export const exampleRoutes: RouteObject[] = [
 			},
 			{
 				path: 'chat',
-				lazy: () => import('./table'),
+				lazy: () => import('./chat'),
 			},
 			{
 				path: 'chat/:contactId',
