@@ -154,6 +154,7 @@ function ColorDot({
 	const className = isActive ? keepColorDotActive : keepColorDot
 	return (
 		<button
+			type='button'
 			className={className}
 			style={{ backgroundColor: COLOR_DOT_MAP[color] }}
 			onClick={onClick}

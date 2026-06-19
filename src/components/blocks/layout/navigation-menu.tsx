@@ -1,22 +1,21 @@
 import { navigationMenu } from '@router/navigation-menu'
+import { ChevronDown, ChevronUp, type LucideIcon } from 'lucide-react'
 import { type JSX, useState } from 'react'
 import { Link, useLocation } from 'react-router'
 import styled from 'styled-components'
 import type { NavItem } from '@/types/navigation-menu'
-import { iconMap } from './icon-map'
 
 function Icon({
-	name,
+	icon: IconComponent,
 	size = 18,
 	className,
 }: {
-	name: string
+	icon?: LucideIcon
 	size?: number
 	className?: string
 }) {
-	const Component = iconMap[name]
-	if (!Component) return null
-	return <Component size={size} className={className} />
+	if (!IconComponent) return null
+	return <IconComponent size={size} className={className} />
 }
 
 const StyledNavLink = styled(Link)`
@@ -89,7 +88,7 @@ export default function NavigationMenu({
 						to={navItem.path ?? '/'}
 						onClick={onNavigate}
 					>
-						<Icon className='me-2' name={navItem.icon ?? ''} />
+						<Icon className='me-2' icon={navItem.icon} />
 						{navItem.label}
 					</StyledNavLink>
 				</li>
@@ -105,12 +104,14 @@ export default function NavigationMenu({
 						target='_blank'
 						rel='noopener noreferrer'
 					>
-						<Icon className='me-2' name={navItem.icon ?? ''} />
+						<Icon className='me-2' icon={navItem.icon} />
 						{navItem.label}
 					</a>
 				</li>
 			)
 		}
+
+		const isOpen = openGroups.has(navItem.id)
 
 		return (
 			<li className='nav-item' key={navItem.id}>
@@ -120,14 +121,12 @@ export default function NavigationMenu({
 					type='button'
 				>
 					<span className='d-flex align-items-center'>
-						<Icon className='me-1' name={navItem.icon ?? ''} />
+						<Icon className='me-1' icon={navItem.icon} />
 						{navItem.label}
 					</span>
-					<Icon
-						name={openGroups.has(navItem.id) ? 'chevron-up' : 'chevron-down'}
-					/>
+					{isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
 				</StyledGroupButton>
-				{openGroups.has(navItem.id) && navItem.children && (
+				{isOpen && navItem.children && (
 					<ul className='nav flex-column ms-3'>
 						{navItem.children.map((child) => renderNavItem(child, level + 1))}
 					</ul>

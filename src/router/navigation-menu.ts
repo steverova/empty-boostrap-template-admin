@@ -1,48 +1,49 @@
+import { ClipboardCheck, Clock, FolderOpen, Gauge, Users } from 'lucide-react'
 import { exampleNavigation } from '@/pages/examples/examples-navigation'
 import type { NavItem } from '@/types/navigation-menu'
 
 export const navigationMenu: NavItem[] = [
-	...exampleNavigation,
 	{
 		path: '/',
 		label: 'Dashboard',
 		type: 'item',
-    id: 'dashboard',
-    icon: 'speedometer2'
-  },
+		id: 'dashboard',
+		icon: Gauge,
+	},
 	{
 		path: '/projects',
 		label: 'Projects',
 		type: 'item',
-    id: 'projects',
-    icon: 'folder-open'
-  },
-  {
+		id: 'projects',
+		icon: FolderOpen,
+	},
+	{
 		path: '/clients',
 		label: 'Clients',
 		type: 'item',
-    id: 'clients',
-    icon: 'people'
-  },
-  {
+		id: 'clients',
+		icon: Users,
+	},
+	{
 		path: '/collaborators',
 		label: 'Collaborators',
 		type: 'item',
-    id: 'collaborators',
-    icon: 'people'
-  },
-  {
+		id: 'collaborators',
+		icon: Users,
+	},
+	{
 		path: '/tasks',
 		label: 'Tasks',
 		type: 'item',
-    id: 'tasks',
-    icon: 'clipboard-check'
+		id: 'tasks',
+		icon: ClipboardCheck,
 	},
-  {
+	{
 		path: '/time-tracking',
 		label: 'Time Tracking',
 		type: 'item',
-    id: 'time-tracking',
-    icon: 'clock'
+		id: 'time-tracking',
+		icon: Clock,
 	},
+	...exampleNavigation,
 ]
