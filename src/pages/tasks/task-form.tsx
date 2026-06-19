@@ -4,6 +4,7 @@ import Select from 'react-select'
 import { Button, Card, Col, Form, Row } from 'react-bootstrap'
 import { Controller, useForm } from 'react-hook-form'
 import DatePicker from '@/components/shared/date-picker'
+import { reactSelectStyles } from '@/components/shared/react-select-styles'
 import { taskSchema, type TaskFormData } from './task.schema'
 import TodoChecklist from './todo-checklist'
 import type { Task } from './task.types'
@@ -90,13 +91,14 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 								control={control}
 								name='priority'
 								render={({ field }) => (
-									<Select
-										{...field}
-										options={priorityOptions}
-										onChange={(val) => field.onChange(val?.value)}
-										value={priorityOptions.find((o) => o.value === field.value)}
-										placeholder='Select priority'
-									/>
+								<Select
+									{...field}
+									styles={reactSelectStyles}
+									options={priorityOptions}
+									onChange={(val) => field.onChange(val?.value)}
+									value={priorityOptions.find((o) => o.value === field.value)}
+									placeholder='Select priority'
+								/>
 								)}
 							/>
 							{errors.priority && (
@@ -109,13 +111,14 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 								control={control}
 								name='status'
 								render={({ field }) => (
-									<Select
-										{...field}
-										options={statusOptions}
-										onChange={(val) => field.onChange(val?.value)}
-										value={statusOptions.find((o) => o.value === field.value)}
-										placeholder='Select status'
-									/>
+								<Select
+									{...field}
+									styles={reactSelectStyles}
+									options={statusOptions}
+									onChange={(val) => field.onChange(val?.value)}
+									value={statusOptions.find((o) => o.value === field.value)}
+									placeholder='Select status'
+								/>
 								)}
 							/>
 							{errors.status && (
@@ -152,17 +155,18 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 								control={control}
 								name='assignee'
 								render={({ field }) => (
-									<Select
-										{...field}
-										options={collaborators.map((c) => ({
-											value: c.name,
-											label: c.name,
-										}))}
-										onChange={(val) => field.onChange(val?.value ?? '')}
-										value={field.value ? { value: field.value, label: field.value } : null}
-										isClearable
-										placeholder='Select assignee'
-									/>
+								<Select
+									{...field}
+									styles={reactSelectStyles}
+									options={collaborators.map((c) => ({
+										value: c.name,
+										label: c.name,
+									}))}
+									onChange={(val) => field.onChange(val?.value ?? '')}
+									value={field.value ? { value: field.value, label: field.value } : null}
+									isClearable
+									placeholder='Select assignee'
+								/>
 								)}
 							/>
 						</Col>
@@ -189,17 +193,18 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 								control={control}
 								name='project'
 								render={({ field }) => (
-									<Select
-										{...field}
-										options={projects.map((p) => ({
-											value: p.projectName,
-											label: p.projectName,
-										}))}
-										onChange={(val) => field.onChange(val?.value ?? '')}
-										value={field.value ? { value: field.value, label: field.value } : null}
-										isClearable
-										placeholder='Select project'
-									/>
+								<Select
+									{...field}
+									styles={reactSelectStyles}
+									options={projects.map((p) => ({
+										value: p.projectName,
+										label: p.projectName,
+									}))}
+									onChange={(val) => field.onChange(val?.value ?? '')}
+									value={field.value ? { value: field.value, label: field.value } : null}
+									isClearable
+									placeholder='Select project'
+								/>
 								)}
 							/>
 						</Col>

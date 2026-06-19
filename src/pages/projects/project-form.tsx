@@ -6,6 +6,7 @@ import { Upload, X, FileText } from 'lucide-react'
 import { Badge, Button, Card, Col, Form, Row } from 'react-bootstrap'
 import { Controller, useForm } from 'react-hook-form'
 import DatePicker from '@/components/shared/date-picker'
+import { reactSelectStyles } from '@/components/shared/react-select-styles'
 import { type ProjectFormData, projectSchema } from './project.schema'
 import type { Project } from './project.types'
 import type { Client } from '../clients/client.types'
@@ -107,12 +108,13 @@ export default function ProjectForm({ initialData, clients, collaborators, onSub
 								control={control}
 								name='status'
 								render={({ field }) => (
-									<Select
-										{...field}
-										options={statusOptions}
-										onChange={(val) => field.onChange(val?.value)}
-										value={statusOptions.find((o) => o.value === field.value)}
-									/>
+								<Select
+									{...field}
+									styles={reactSelectStyles}
+									options={statusOptions}
+									onChange={(val) => field.onChange(val?.value)}
+									value={statusOptions.find((o) => o.value === field.value)}
+								/>
 								)}
 							/>
 						</Col>
@@ -122,12 +124,13 @@ export default function ProjectForm({ initialData, clients, collaborators, onSub
 								control={control}
 								name='priority'
 								render={({ field }) => (
-									<Select
-										{...field}
-										options={priorityOptions}
-										onChange={(val) => field.onChange(val?.value)}
-										value={priorityOptions.find((o) => o.value === field.value)}
-									/>
+								<Select
+									{...field}
+									styles={reactSelectStyles}
+									options={priorityOptions}
+									onChange={(val) => field.onChange(val?.value)}
+									value={priorityOptions.find((o) => o.value === field.value)}
+								/>
 								)}
 							/>
 						</Col>
@@ -137,21 +140,22 @@ export default function ProjectForm({ initialData, clients, collaborators, onSub
 								control={control}
 								name='owner'
 								render={({ field }) => (
-									<Select
-										{...field}
-										options={clients.map((c) => ({
+								<Select
+									{...field}
+									styles={reactSelectStyles}
+									options={clients.map((c) => ({
+										value: c.id,
+										label: c.companyName ? `${c.name} (${c.companyName})` : c.name,
+									}))}
+									onChange={(val) => field.onChange(val?.value)}
+									value={clients
+										.map((c) => ({
 											value: c.id,
 											label: c.companyName ? `${c.name} (${c.companyName})` : c.name,
-										}))}
-										onChange={(val) => field.onChange(val?.value)}
-										value={clients
-											.map((c) => ({
-												value: c.id,
-												label: c.companyName ? `${c.name} (${c.companyName})` : c.name,
-											}))
-											.find((o) => o.value === field.value)}
-										placeholder='Select owner'
-									/>
+										}))
+										.find((o) => o.value === field.value)}
+									placeholder='Select owner'
+								/>
 								)}
 							/>
 							{errors.owner && (
@@ -201,22 +205,23 @@ export default function ProjectForm({ initialData, clients, collaborators, onSub
 								control={control}
 								name='team'
 								render={({ field }) => (
-									<Select
-										{...field}
-										isMulti
-										options={collaborators.map((c) => ({
+								<Select
+									{...field}
+									styles={reactSelectStyles}
+									isMulti
+									options={collaborators.map((c) => ({
+										value: c.id,
+										label: c.name,
+									}))}
+									onChange={(vals) => field.onChange(vals?.map((v) => v.value) ?? [])}
+									value={collaborators
+										.map((c) => ({
 											value: c.id,
 											label: c.name,
-										}))}
-										onChange={(vals) => field.onChange(vals?.map((v) => v.value) ?? [])}
-										value={collaborators
-											.map((c) => ({
-												value: c.id,
-												label: c.name,
-											}))
-											.filter((o) => field.value?.includes(o.value))}
-										placeholder='Select team members'
-									/>
+										}))
+										.filter((o) => field.value?.includes(o.value))}
+									placeholder='Select team members'
+								/>
 								)}
 							/>
 							{errors.team && (

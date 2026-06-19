@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Select from 'react-select'
 import { Button, Card, Col, Form, Row } from 'react-bootstrap'
 import { Controller, useForm } from 'react-hook-form'
+import { reactSelectStyles } from '@/components/shared/react-select-styles'
 import { clientSchema, type ClientFormData } from './client.schema'
 import type { Client } from './client.types'
 
@@ -59,12 +60,13 @@ export default function ClientForm({ initialData, onSubmit, onCancel }: ClientFo
 								control={control}
 								name='type'
 								render={({ field }) => (
-									<Select
-										{...field}
-										options={typeOptions}
-										onChange={(val) => field.onChange(val?.value)}
-										value={typeOptions.find((o) => o.value === field.value)}
-									/>
+								<Select
+									{...field}
+									styles={reactSelectStyles}
+									options={typeOptions}
+									onChange={(val) => field.onChange(val?.value)}
+									value={typeOptions.find((o) => o.value === field.value)}
+								/>
 								)}
 							/>
 							{errors.type && (

@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Select from 'react-select'
 import { Button, Card, Col, Form, Row } from 'react-bootstrap'
 import { Controller, useForm } from 'react-hook-form'
+import { reactSelectStyles } from '@/components/shared/react-select-styles'
 import { collaboratorSchema, type CollaboratorFormData } from './collaborator.schema'
 import { collaboratorRoles, type Collaborator } from './collaborator.types'
 
@@ -91,13 +92,14 @@ export default function CollaboratorForm({ initialData, onSubmit, onCancel }: Co
 								control={control}
 								name='role'
 								render={({ field }) => (
-									<Select
-										{...field}
-										options={roleOptions}
-										onChange={(val) => field.onChange(val?.value)}
-										value={roleOptions.find((o) => o.value === field.value)}
-										placeholder='Select role'
-									/>
+								<Select
+									{...field}
+									styles={reactSelectStyles}
+									options={roleOptions}
+									onChange={(val) => field.onChange(val?.value)}
+									value={roleOptions.find((o) => o.value === field.value)}
+									placeholder='Select role'
+								/>
 								)}
 							/>
 							{errors.role && (

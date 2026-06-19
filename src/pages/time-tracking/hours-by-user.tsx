@@ -13,6 +13,7 @@ import {
 } from 'recharts'
 import { RefreshCw, Filter, ChevronDown, ChevronUp } from 'lucide-react'
 import Select from 'react-select'
+import { reactSelectStyles } from '@/components/shared/react-select-styles'
 import { mockTimeEntries, mockCollaborators, mockClients, mockProjects } from '@/mocks'
 import type { TimeEntry } from './time-entry.types'
 
@@ -146,49 +147,51 @@ export default function HoursByUser({ timeEntries }: HoursByUserProps) {
 						<Row className='g-3 align-items-end'>
 							<Col md={3}>
 								<Form.Label className='fw-semibold small'>Clientes</Form.Label>
-								<Select
-									options={[
-										{ value: '', label: 'Seleccione un cliente' },
-										...mockClients.map((c) => ({
-											value: c.id,
-											label: c.companyName ? `${c.name} (${c.companyName})` : c.name,
-										})),
-									]}
-									onChange={(val) => setSelectedClient(val?.value ?? '')}
-									value={
-										selectedClient
-											? mockClients
-													.map((c) => ({
-														value: c.id,
-														label: c.companyName ? `${c.name} (${c.companyName})` : c.name,
-													}))
-													.find((o) => o.value === selectedClient)
-											: { value: '', label: 'Seleccione un cliente' }
-									}
-									placeholder='Seleccione un cliente'
-								/>
+							<Select
+								styles={reactSelectStyles}
+								options={[
+									{ value: '', label: 'Seleccione un cliente' },
+									...mockClients.map((c) => ({
+										value: c.id,
+										label: c.companyName ? `${c.name} (${c.companyName})` : c.name,
+									})),
+								]}
+								onChange={(val) => setSelectedClient(val?.value ?? '')}
+								value={
+									selectedClient
+										? mockClients
+												.map((c) => ({
+													value: c.id,
+													label: c.companyName ? `${c.name} (${c.companyName})` : c.name,
+												}))
+												.find((o) => o.value === selectedClient)
+										: { value: '', label: 'Seleccione un cliente' }
+								}
+								placeholder='Seleccione un cliente'
+							/>
 							</Col>
 							<Col md={3}>
 								<Form.Label className='fw-semibold small'>Proyecto</Form.Label>
-								<Select
-									options={[
-										{ value: '', label: 'Seleccione un Proyecto' },
-										...filteredProjects.map((p) => ({
-											value: p.id,
-											label: p.projectName,
-										})),
-									]}
-									onChange={(val) => setSelectedProject(val?.value ?? '')}
-									value={
-										selectedProject
-											? filteredProjects
-													.map((p) => ({ value: p.id, label: p.projectName }))
-													.find((o) => o.value === selectedProject)
-											: { value: '', label: 'Seleccione un Proyecto' }
-									}
-									isDisabled={!selectedClient}
-									placeholder={selectedClient ? 'Seleccione un Proyecto' : 'Primero seleccione un cliente'}
-								/>
+							<Select
+								styles={reactSelectStyles}
+								options={[
+									{ value: '', label: 'Seleccione un Proyecto' },
+									...filteredProjects.map((p) => ({
+										value: p.id,
+										label: p.projectName,
+									})),
+								]}
+								onChange={(val) => setSelectedProject(val?.value ?? '')}
+								value={
+									selectedProject
+										? filteredProjects
+												.map((p) => ({ value: p.id, label: p.projectName }))
+												.find((o) => o.value === selectedProject)
+										: { value: '', label: 'Seleccione un Proyecto' }
+								}
+								isDisabled={!selectedClient}
+								placeholder={selectedClient ? 'Seleccione un Proyecto' : 'Primero seleccione un cliente'}
+							/>
 							</Col>
 							<Col md={3}>
 								<Form.Label className='fw-semibold small'>Seleccionar Semana</Form.Label>
