@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
-import ClientForm from './client-form'
-import type { Client } from './client.types'
 import { mockClients } from '@/mocks'
+import type { Client } from './client.types'
+import ClientForm from './client-form'
 
 export default function ClientRecordPage() {
 	const { id } = useParams()
@@ -17,12 +17,10 @@ export default function ClientRecordPage() {
 	}
 
 	return (
-		<div className='p-4'>
-			<ClientForm
-				initialData={client ?? undefined}
-				onSubmit={handleSubmit}
-				onCancel={() => navigate('/clients')}
-			/>
-		</div>
+		<ClientForm
+			initialData={client ?? undefined}
+			onSubmit={handleSubmit}
+			onCancel={() => navigate('/clients')}
+		/>
 	)
 }

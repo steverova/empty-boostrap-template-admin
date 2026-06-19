@@ -9,6 +9,7 @@ export const mockClients: Client[] = [
 		phone: '+1 555 100 2000',
 		email: 'alice@acme.com',
 		address: '123 Main St, New York, NY',
+		country: 'US',
 	},
 	{
 		id: 'cli2',
@@ -17,6 +18,7 @@ export const mockClients: Client[] = [
 		phone: '+1 555 300 4000',
 		email: 'bob@personal.dev',
 		address: '456 Oak Ave, Austin, TX',
+		country: 'US',
 	},
 	{
 		id: 'cli3',
@@ -26,6 +28,7 @@ export const mockClients: Client[] = [
 		phone: '+1 555 123 4567',
 		email: 'contact@techcorp.com',
 		address: '100 Tech Ave, San Francisco, CA',
+		country: 'US',
 	},
 	{
 		id: 'cli4',
@@ -35,5 +38,6 @@ export const mockClients: Client[] = [
 		phone: '+1 555 456 7890',
 		email: 'info@greenleaf.com',
 		address: '500 Green Blvd, Portland, OR',
+		country: 'US',
 	},
 ]

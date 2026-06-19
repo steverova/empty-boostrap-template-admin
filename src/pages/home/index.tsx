@@ -262,9 +262,7 @@ export function Component() {
 	}, [weeklyHoursByCollaborator])
 
 	return (
-		<div className='p-4'>
-			<h4 className='fw-bold mb-4'>Dashboard</h4>
-
+		<div className='p-1'>
 			<Row className='g-3 mb-4'>
 				<Col md={3}>
 					<Card className='border-0 shadow-sm h-100'>

@@ -1,10 +1,13 @@
-import { nanoid } from 'nanoid'
 import { zodResolver } from '@hookform/resolvers/zod'
-import Select from 'react-select'
+import { nanoid } from 'nanoid'
 import { Button, Card, Col, Form, Row } from 'react-bootstrap'
 import { Controller, useForm } from 'react-hook-form'
+import Select from 'react-select'
+import CountrySelector, {
+	ALL_COUNTRIES,
+} from '@/components/shared/country-selector'
 import { reactSelectStyles } from '@/components/shared/react-select-styles'
-import { clientSchema, type ClientFormData } from './client.schema'
+import { type ClientFormData, clientSchema } from './client.schema'
 import type { Client } from './client.types'
 
 const typeOptions = [
@@ -18,7 +21,11 @@ type ClientFormProps = {
 	onCancel?: () => void
 }
 
-export default function ClientForm({ initialData, onSubmit, onCancel }: ClientFormProps) {
+export default function ClientForm({
+	initialData,
+	onSubmit,
+	onCancel,
+}: ClientFormProps) {
 	const isEdit = !!initialData
 
 	const {
@@ -36,6 +43,7 @@ export default function ClientForm({ initialData, onSubmit, onCancel }: ClientFo
 			phone: initialData?.phone ?? '',
 			email: initialData?.email ?? '',
 			address: initialData?.address ?? '',
+			country: initialData?.country ?? '',
 			notes: initialData?.notes ?? '',
 		},
 	})
@@ -49,30 +57,45 @@ export default function ClientForm({ initialData, onSubmit, onCancel }: ClientFo
 	return (
 		<Card className='border-0 shadow-sm'>
 			<Card.Header className='bg-body border-bottom'>
-				<h5 className='mb-0 fw-semibold'>{isEdit ? 'Edit Client' : 'New Client'}</h5>
+				<div className='d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3'>
+					<h5 className='mb-0 fw-semibold'>
+						{isEdit ? 'Edit Client' : 'New Client'}
+					</h5>
+
+					<div className='d-flex gap-2'>
+						{onCancel && (
+							<Button variant='outline-secondary' onClick={onCancel}>
+								Cancel
+							</Button>
+						)}
+						<Button variant='primary' type='submit'>
+							{isEdit ? 'Update Client' : 'Create Client'}
+						</Button>
+					</div>
+				</div>
 			</Card.Header>
 			<Card.Body>
 				<Form onSubmit={handleSubmit(handleFormSubmit)}>
 					<Row className='mb-3'>
-						<Col md={3}>
+						<Col md={2}>
 							<Form.Label className='fw-semibold'>Type</Form.Label>
 							<Controller
 								control={control}
 								name='type'
 								render={({ field }) => (
-								<Select
-								styles={reactSelectStyles}
-								options={typeOptions}
-								onChange={(val: any) => field.onChange(val?.value)}
-								value={typeOptions.find((o) => o.value === field.value)}
-							/>
+									<Select
+										styles={reactSelectStyles}
+										options={typeOptions}
+										onChange={(val: any) => field.onChange(val?.value)}
+										value={typeOptions.find((o) => o.value === field.value)}
+									/>
 								)}
 							/>
 							{errors.type && (
 								<small className='text-danger'>{errors.type.message}</small>
 							)}
 						</Col>
-						<Col md={3}>
+						<Col md={5}>
 							<Form.Label className='fw-semibold'>Name</Form.Label>
 							<Form.Control
 								{...register('name')}
@@ -85,17 +108,7 @@ export default function ClientForm({ initialData, onSubmit, onCancel }: ClientFo
 								</Form.Control.Feedback>
 							)}
 						</Col>
-						{clientType === 'company' && (
-							<Col md={3}>
-								<Form.Label className='fw-semibold'>Company Name</Form.Label>
-								<Form.Control
-									{...register('companyName')}
-									isInvalid={!!errors.companyName}
-									placeholder='Acme Corp'
-								/>
-							</Col>
-						)}
-						<Col md={3}>
+						<Col md={5}>
 							<Form.Label className='fw-semibold'>Phone</Form.Label>
 							<Form.Control
 								{...register('phone')}
@@ -109,6 +122,19 @@ export default function ClientForm({ initialData, onSubmit, onCancel }: ClientFo
 							)}
 						</Col>
 					</Row>
+
+					{clientType === 'company' && (
+						<Row className='mb-3'>
+							<Col md={12}>
+								<Form.Label className='fw-semibold'>Company Name</Form.Label>
+								<Form.Control
+									{...register('companyName')}
+									isInvalid={!!errors.companyName}
+									placeholder='Acme Corp'
+								/>
+							</Col>
+						</Row>
+					)}
 
 					<Row className='mb-3'>
 						<Col md={6}>
@@ -126,6 +152,33 @@ export default function ClientForm({ initialData, onSubmit, onCancel }: ClientFo
 							)}
 						</Col>
 						<Col md={6}>
+							<Form.Label className='fw-semibold'>Country</Form.Label>
+							<Controller
+								control={control}
+								name='country'
+								render={({ field: { onChange, value } }) => {
+									const selectedCountry = ALL_COUNTRIES.find(
+										(c) => c.code === value,
+									)
+									return (
+										<CountrySelector
+											showFlag
+											showCode
+											placeholder='Select country'
+											onChange={(val) => onChange(val?.code ?? '')}
+											value={selectedCountry ?? null}
+										/>
+									)
+								}}
+							/>
+							{errors.country && (
+								<small className='text-danger'>{errors.country.message}</small>
+							)}
+						</Col>
+					</Row>
+
+					<Row className='mb-3'>
+						<Col md={12}>
 							<Form.Label className='fw-semibold'>Address</Form.Label>
 							<Form.Control
 								{...register('address')}
@@ -149,17 +202,6 @@ export default function ClientForm({ initialData, onSubmit, onCancel }: ClientFo
 							placeholder='Additional notes...'
 						/>
 					</Form.Group>
-
-					<div className='d-flex justify-content-end gap-2'>
-						{onCancel && (
-							<Button variant='outline-secondary' onClick={onCancel}>
-								Cancel
-							</Button>
-						)}
-						<Button variant='primary' type='submit'>
-							{isEdit ? 'Update Client' : 'Create Client'}
-						</Button>
-					</div>
 				</Form>
 			</Card.Body>
 		</Card>

@@ -18,16 +18,13 @@ export const reactSelectStyles: StylesConfig = {
 			borderColor: '#86b7fe',
 		},
 	}),
-	option: (base, { isFocused, isSelected }) => ({
+	option: (base, { isFocused }) => ({
 		...base,
-		backgroundColor: isSelected
-			? '#0d6efd'
-			: isFocused
-				? 'var(--bs-tertiary-bg)'
-				: 'var(--bs-body-bg)',
-		color: isSelected ? '#fff' : 'var(--bs-body-color)',
+		backgroundColor: isFocused ? 'var(--bs-tertiary-bg)' : 'var(--bs-body-bg)',
+		color: 'var(--bs-body-color)',
+		fontWeight: 400,
 		'&:active': {
-			backgroundColor: isSelected ? '#0d6efd' : 'var(--bs-tertiary-bg)',
+			backgroundColor: 'var(--bs-tertiary-bg)',
 		},
 	}),
 	menu: (base) => ({

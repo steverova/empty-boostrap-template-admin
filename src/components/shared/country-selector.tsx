@@ -54,7 +54,8 @@ interface CountrySelectorProps
 }
 
 function CountryOption(props: OptionProps<CountryItem, false>) {
-	const { data, isSelected } = props
+	const { data, selectProps } = props
+	const isSelected = selectProps.value?.code === data.code
 	return (
 		<components.Option {...props}>
 			<div className='d-flex align-items-center gap-2'>
@@ -103,6 +104,7 @@ export default function CountrySelector({
 
 	return (
 		<Select<CountryItem, false, GroupBase<CountryItem>>
+			isMulti={false}
 			{...rest}
 			options={COUNTRY_OPTIONS}
 			placeholder={placeholder}
@@ -120,13 +122,11 @@ export default function CountrySelector({
 					)}
 				</div>
 			)}
-			components={
-				{
-					Option: CountryOption,
-					SingleValue: CountrySingleValue,
-					...customComponents,
-				} as CountrySelectorProps['components']
-			}
+			components={{
+				Option: CountryOption,
+				SingleValue: CountrySingleValue,
+				...customComponents,
+			}}
 			styles={stylesMerged}
 			classNamePrefix='country-selector'
 		/>
@@ -134,4 +134,4 @@ export default function CountrySelector({
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export { type CountryItem, codeToFlag }
+export { ALL_COUNTRIES, type CountryItem, codeToFlag }
