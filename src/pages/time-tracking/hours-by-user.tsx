@@ -94,7 +94,7 @@ export default function HoursByUser({ timeEntries }: HoursByUserProps) {
 		const map = new Map<string, { name: string; hours: number }>()
 
 		for (const collab of mockCollaborators) {
-			map.set(collab.id, { name: collab.name, hours: 0 })
+			map.set(collab.id, { name: `${collab.firstName} ${collab.lastName}`, hours: 0 })
 		}
 
 		for (const entry of filteredEntries) {

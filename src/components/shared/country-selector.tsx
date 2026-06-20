@@ -55,7 +55,7 @@ interface CountrySelectorProps
 
 function CountryOption(props: OptionProps<CountryItem, false>) {
 	const { data, selectProps } = props
-	const isSelected = selectProps.value?.code === data.code
+	const isSelected = (selectProps.value as CountryItem | undefined)?.code === data.code
 	return (
 		<components.Option {...props}>
 			<div className='d-flex align-items-center gap-2'>
@@ -126,7 +126,7 @@ export default function CountrySelector({
 				Option: CountryOption,
 				SingleValue: CountrySingleValue,
 				...customComponents,
-			}}
+			} as any}
 			styles={stylesMerged}
 			classNamePrefix='country-selector'
 		/>

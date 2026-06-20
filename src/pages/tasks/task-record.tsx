@@ -37,7 +37,10 @@ export default function TaskRecordPage() {
 		<div className='p-4'>
 			<TaskForm
 				initialData={initialData as Task | undefined}
-				collaborators={mockCollaborators}
+				collaborators={mockCollaborators.map((c) => ({
+					id: c.id,
+					name: `${c.firstName} ${c.lastName}`,
+				}))}
 				projects={mockProjects}
 				onSubmit={handleSubmit}
 				onCancel={() => navigate('/tasks')}

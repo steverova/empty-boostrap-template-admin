@@ -226,14 +226,14 @@ export default function HoursByTicket({ timeEntries }: HoursByTicketProps) {
 									{ value: '', label: 'Todos' },
 									...mockCollaborators.map((c) => ({
 										value: c.id,
-										label: c.name,
+										label: `${c.firstName} ${c.lastName}`,
 									})),
 								]}
 								onChange={(val: any) => setSelectedCollaborator(val?.value ?? '')}
 								value={
 									selectedCollaborator
 										? mockCollaborators
-												.map((c) => ({ value: c.id, label: c.name }))
+												.map((c) => ({ value: c.id, label: `${c.firstName} ${c.lastName}` }))
 												.find((o) => o.value === selectedCollaborator)
 										: { value: '', label: 'Todos' }
 								}

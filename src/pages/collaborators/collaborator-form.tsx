@@ -5,9 +5,13 @@ import { Controller, useForm } from 'react-hook-form'
 import Select from 'react-select'
 import { reactSelectStyles } from '@/components/shared/react-select-styles'
 import { mockClients } from '@/mocks'
-import { type CollaboratorFormData, collaboratorSchema } from './collaborator.schema'
+import {
+	type CollaboratorFormData,
+	collaboratorSchema,
+} from './collaborator.schema'
+import type { CollaboratorRole, CollaboratorType } from './collaborator.types'
 
-const roleOptions = [
+const roleOptions: Array<{ value: CollaboratorRole; label: string }> = [
 	{ value: 'developer', label: 'Developer' },
 	{ value: 'qa', label: 'QA' },
 	{ value: 'design', label: 'Design' },
@@ -15,7 +19,7 @@ const roleOptions = [
 	{ value: 'administrator', label: 'Administrator' },
 ]
 
-const typeOptions = [
+const typeOptions: Array<{ value: CollaboratorType; label: string }> = [
 	{ value: 'internal', label: 'Internal' },
 	{ value: 'external', label: 'External' },
 ]
@@ -23,15 +27,15 @@ const typeOptions = [
 type CollaboratorFormProps = {
 	initialData?: {
 		id: string
-		type: string
+		type: CollaboratorType
 		clientId?: string
 		firstName: string
 		lastName: string
 		email: string
-		role: string
+		role: CollaboratorRole
 		phone?: string
 	}
-	onSubmit: (data: any) => void
+	onSubmit: (data: CollaboratorFormData & { id: string }) => void
 	onCancel?: () => void
 }
 
@@ -82,10 +86,10 @@ export default function CollaboratorForm({
 								control={control}
 								name='type'
 								render={({ field }) => (
-									<Select
-										styles={reactSelectStyles}
+									<Select<{ value: CollaboratorType; label: string }>
+										styles={reactSelectStyles as any}
 										options={typeOptions}
-										onChange={(val: any) => field.onChange(val?.value)}
+										onChange={(val) => field.onChange(val?.value)}
 										value={typeOptions.find((o) => o.value === field.value)}
 										placeholder='Select type'
 									/>
@@ -101,19 +105,23 @@ export default function CollaboratorForm({
 								control={control}
 								name='clientId'
 								render={({ field }) => (
-									<Select
-										styles={reactSelectStyles}
+									<Select<{ value: string; label: string }>
+										styles={reactSelectStyles as any}
 										options={mockClients.map((c) => ({
 											value: c.id,
 											label: c.companyName
 												? `${c.name} (${c.companyName})`
 												: c.name,
 										}))}
-										onChange={(val: any) => field.onChange(val?.value)}
-										value={
-											mockClients.find((c) => c.id === field.value)?.id ??
-											undefined
-										}
+										onChange={(val) => field.onChange(val?.value)}
+										value={mockClients
+											.map((c) => ({
+												value: c.id,
+												label: c.companyName
+													? `${c.name} (${c.companyName})`
+													: c.name,
+											}))
+											.find((o) => o.value === field.value)}
 										placeholder='Select client'
 										isDisabled={type !== 'external'}
 									/>
@@ -193,10 +201,10 @@ export default function CollaboratorForm({
 								control={control}
 								name='role'
 								render={({ field }) => (
-									<Select
-										styles={reactSelectStyles}
+									<Select<{ value: CollaboratorRole; label: string }>
+										styles={reactSelectStyles as any}
 										options={roleOptions}
-										onChange={(val: any) => field.onChange(val?.value)}
+										onChange={(val) => field.onChange(val?.value)}
 										value={roleOptions.find((o) => o.value === field.value)}
 										placeholder='Select role'
 									/>
