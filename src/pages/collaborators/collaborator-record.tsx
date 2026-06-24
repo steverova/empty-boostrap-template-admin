@@ -17,7 +17,7 @@ export function Component() {
 	}
 
 	return (
-		<div className='p-4'>
+		<div className=''>
 			<CollaboratorForm
 				initialData={collaborator ?? undefined}
 				onSubmit={handleSubmit}

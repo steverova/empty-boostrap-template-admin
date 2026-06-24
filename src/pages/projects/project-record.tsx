@@ -18,7 +18,7 @@ export function Component() {
 
 	if (submitted) {
 		return (
-			<div className='p-4'>
+			<div className=''>
 				<div className='alert alert-success'>
 					{id ? 'Project updated' : 'Project created'} successfully!
 				</div>
@@ -34,7 +34,7 @@ export function Component() {
 	}
 
 	return (
-		<div className='p-4'>
+		<div className=''>
 			<ProjectForm
 				initialData={initialData}
 				clients={mockClients}

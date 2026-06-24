@@ -128,7 +128,7 @@ export function Component() {
 
 	return (
 		<div className='h-100 d-flex flex-column'>
-			<div className='d-flex justify-content-between align-items-center p-2 border-bottom'>
+			<div className='d-flex justify-content-between align-items-center border-bottom'>
 				<div className='d-flex gap-2'>
 					<Button
 						variant={view === 'table' ? 'primary' : 'outline-primary'}

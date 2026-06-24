@@ -1,13 +1,13 @@
-import { nanoid } from 'nanoid'
 import { zodResolver } from '@hookform/resolvers/zod'
-import Select from 'react-select'
+import { nanoid } from 'nanoid'
 import { Button, Card, Col, Form, Row } from 'react-bootstrap'
 import { Controller, useForm } from 'react-hook-form'
+import Select from 'react-select'
 import DatePicker from '@/components/shared/date-picker'
 import { reactSelectStyles } from '@/components/shared/react-select-styles'
 import { taskSchema } from './task.schema'
-import TodoChecklist from './todo-checklist'
 import type { Task } from './task.types'
+import TodoChecklist from './todo-checklist'
 
 const priorityOptions = [
 	{ value: 'low', label: 'Low' },
@@ -32,7 +32,13 @@ type TaskFormProps = {
 	onCancel?: () => void
 }
 
-export default function TaskForm({ initialData, collaborators = [], projects = [], onSubmit, onCancel }: TaskFormProps) {
+export default function TaskForm({
+	initialData,
+	collaborators = [],
+	projects = [],
+	onSubmit,
+	onCancel,
+}: TaskFormProps) {
 	const isEdit = !!initialData
 
 	const {
@@ -59,9 +65,11 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 	}
 
 	return (
-		<Card className='border-0 shadow-sm'>
+		<Card className='border-0 shadow-sm p-0'>
 			<Card.Header className='bg-body border-bottom'>
-				<h5 className='mb-0 fw-semibold'>{isEdit ? 'Edit Task' : 'New Task'}</h5>
+				<h5 className='mb-0 fw-semibold'>
+					{isEdit ? 'Edit Task' : 'New Task'}
+				</h5>
 			</Card.Header>
 			<Card.Body>
 				<Form onSubmit={handleSubmit(handleFormSubmit)}>
@@ -91,13 +99,13 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 								control={control}
 								name='priority'
 								render={({ field }) => (
-							<Select
-								styles={reactSelectStyles}
-								options={priorityOptions}
-								onChange={(val: any) => field.onChange(val?.value)}
-								value={priorityOptions.find((o) => o.value === field.value)}
-								placeholder='Select priority'
-							/>
+									<Select
+										styles={reactSelectStyles}
+										options={priorityOptions}
+										onChange={(val: any) => field.onChange(val?.value)}
+										value={priorityOptions.find((o) => o.value === field.value)}
+										placeholder='Select priority'
+									/>
 								)}
 							/>
 							{errors.priority && (
@@ -110,13 +118,13 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 								control={control}
 								name='status'
 								render={({ field }) => (
-							<Select
-								styles={reactSelectStyles}
-								options={statusOptions}
-								onChange={(val: any) => field.onChange(val?.value)}
-								value={statusOptions.find((o) => o.value === field.value)}
-								placeholder='Select status'
-							/>
+									<Select
+										styles={reactSelectStyles}
+										options={statusOptions}
+										onChange={(val: any) => field.onChange(val?.value)}
+										value={statusOptions.find((o) => o.value === field.value)}
+										placeholder='Select status'
+									/>
 								)}
 							/>
 							{errors.status && (
@@ -153,17 +161,20 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 								control={control}
 								name='assignee'
 								render={({ field }) => (
-							<Select
-								styles={reactSelectStyles}
-								options={collaborators.map((c) => ({
-									value: c.id,
-									label: c.name,
-								}))}
-								onChange={(val: any) => field.onChange(val?.value ?? '')}
-								value={collaborators.find((c) => c.id === field.value)?.id ?? undefined}
-								isClearable
-								placeholder='Select assignee'
-							/>
+									<Select
+										styles={reactSelectStyles}
+										options={collaborators.map((c) => ({
+											value: c.id,
+											label: c.name,
+										}))}
+										onChange={(val: any) => field.onChange(val?.value ?? '')}
+										value={
+											collaborators.find((c) => c.id === field.value)?.id ??
+											undefined
+										}
+										isClearable
+										placeholder='Select assignee'
+									/>
 								)}
 							/>
 						</Col>
@@ -175,7 +186,9 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 								render={({ field }) => (
 									<DatePicker
 										value={field.value ? new Date(field.value) : null}
-										onChange={(date) => field.onChange(date?.toISOString().split('T')[0] ?? '')}
+										onChange={(date) =>
+											field.onChange(date?.toISOString().split('T')[0] ?? '')
+										}
 										placeholder='Select due date'
 									/>
 								)}
@@ -190,17 +203,21 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 								control={control}
 								name='project'
 								render={({ field }) => (
-							<Select
-								styles={reactSelectStyles}
-								options={projects.map((p) => ({
-									value: p.projectName,
-									label: p.projectName,
-								}))}
-								onChange={(val: any) => field.onChange(val?.value ?? '')}
-								value={field.value ? { value: field.value, label: field.value } : null}
-								isClearable
-								placeholder='Select project'
-							/>
+									<Select
+										styles={reactSelectStyles}
+										options={projects.map((p) => ({
+											value: p.projectName,
+											label: p.projectName,
+										}))}
+										onChange={(val: any) => field.onChange(val?.value ?? '')}
+										value={
+											field.value
+												? { value: field.value, label: field.value }
+												: null
+										}
+										isClearable
+										placeholder='Select project'
+									/>
 								)}
 							/>
 						</Col>
@@ -214,7 +231,10 @@ export default function TaskForm({ initialData, collaborators = [], projects = [
 							control={control}
 							name='todos'
 							render={({ field }) => (
-								<TodoChecklist value={field.value ?? []} onChange={(val: any) => field.onChange(val)} />
+								<TodoChecklist
+									value={field.value ?? []}
+									onChange={(val: any) => field.onChange(val)}
+								/>
 							)}
 						/>
 					</Form.Group>

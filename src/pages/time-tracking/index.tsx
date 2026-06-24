@@ -76,7 +76,7 @@ export function Component() {
 
 	return (
 		<div className='h-100 d-flex flex-column'>
-			<Tabs defaultActiveKey='entries' className='px-3 pt-2 border-bottom' fill>
+			<Tabs defaultActiveKey='entries' className='p-0 border-bottom' fill>
 				<Tab eventKey='entries' title='Time Entries'>
 					<div className='flex-grow-1 overflow-auto p-0'>
 						<AppTable
@@ -100,12 +100,12 @@ export function Component() {
 					</div>
 				</Tab>
 				<Tab eventKey='hours-by-user' title='Horas por Usuario'>
-					<div className='p-4 overflow-auto flex-grow-1'>
+					<div className=' overflow-auto flex-grow-1'>
 						<HoursByUser timeEntries={timeEntries} />
 					</div>
 				</Tab>
 				<Tab eventKey='hours-by-ticket' title='Horas por Ticket'>
-					<div className='p-4 overflow-auto flex-grow-1'>
+					<div className=' overflow-auto flex-grow-1'>
 						<HoursByTicket timeEntries={timeEntries} />
 					</div>
 				</Tab>

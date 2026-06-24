@@ -106,7 +106,7 @@ export default function Layout() {
 
 				<main className='flex-grow-1 d-flex flex-row overflow-auto bg-success-subtle'>
 					<div
-						className='flex-grow-1 mx-2 my-2 content-scroll rounded-3 bg-body'
+						className='flex-grow-1 mx-2 mb-2 content-scroll rounded-3 bg-body'
 						style={{
 							overflow: 'auto',
 							minHeight: 0,

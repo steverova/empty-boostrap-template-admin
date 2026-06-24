@@ -25,7 +25,7 @@ export function Component() {
 
 	if (submitted) {
 		return (
-			<div className='p-4'>
+			<div className=''>
 				<div className='alert alert-success'>
 					{id ? 'Time entry updated' : 'Time entry created'} successfully!
 				</div>
@@ -41,7 +41,7 @@ export function Component() {
 	}
 
 	return (
-		<div className='p-4'>
+		<div className=''>
 			<TimeEntryForm
 				initialData={entry}
 				clients={mockClients}

@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { useParams, useNavigate } from 'react-router'
-import TaskForm from './task-form'
+import { useNavigate, useParams } from 'react-router'
+import { mockCollaborators, mockProjects, mockTasks } from '@/mocks'
 import type { Task } from './task.types'
-import { mockTasks, mockCollaborators, mockProjects } from '@/mocks'
+import TaskForm from './task-form'
 
 export function Component() {
 	const { id } = useParams()
@@ -18,7 +18,7 @@ export function Component() {
 
 	if (submitted) {
 		return (
-			<div className='p-4'>
+			<div className=''>
 				<div className='alert alert-success'>
 					{id ? 'Task updated' : 'Task created'} successfully!
 				</div>
@@ -34,7 +34,7 @@ export function Component() {
 	}
 
 	return (
-		<div className='p-4'>
+		<div className=''>
 			<TaskForm
 				initialData={initialData as Task | undefined}
 				collaborators={mockCollaborators.map((c) => ({
