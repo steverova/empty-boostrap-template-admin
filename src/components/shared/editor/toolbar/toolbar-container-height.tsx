@@ -1,7 +1,7 @@
 import AppTooltip from '@components/shared/tooltip'
 import { MoveHorizontal } from 'lucide-react'
-import { toolbarButton } from '../editor.styles.css'
 import { useEditorStore } from '../editor.store'
+import { toolbarButton } from '../editor.styles.css'
 
 type WidthOption = 'auto' | 'sm' | 'md' | 'lg'
 

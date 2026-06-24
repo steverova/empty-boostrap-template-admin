@@ -33,6 +33,22 @@ export const routes: RouteObject[] = [
 					...tasksRoutes,
 					...timeTrackingRoutes,
 				],
+      },
+      {
+				path: 'server-error',
+				lazy: () => import('../pages/feedback/server-error'),
+			},
+      {
+				path: 'invalid-token',
+				lazy: () => import('../pages/feedback/invalid-token'),
+			},
+      {
+				path: 'signin-success',
+				lazy: () => import('../pages/feedback/success-verification'),
+			},
+      {
+				path: 'forgot-password',
+				lazy: () => import('../pages/signin'),
 			},
 			{
 				path: 'signin',

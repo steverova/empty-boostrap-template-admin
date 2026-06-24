@@ -11,20 +11,20 @@ import TaskList from '@tiptap/extension-task-list'
 import TextAlign from '@tiptap/extension-text-align'
 import Typography from '@tiptap/extension-typography'
 import Underline from '@tiptap/extension-underline'
-import { useEditor, EditorContent } from '@tiptap/react'
+import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import ImageResize from 'tiptap-extension-resize-image'
 import { common, createLowlight } from 'lowlight'
-import { FontSize } from './extensions/font-size'
-import { Indent } from './extensions/indent'
-import { TwoColumns, ColumnBlock } from './extensions/two-columns'
-import { YouTube } from './extensions/youtube'
-import { UnderlineColor } from './extensions/underline-color'
+import ImageResize from 'tiptap-extension-resize-image'
+import { contentArea, editorPreview, editorSize } from './editor.styles.css'
+import type { EditorSize } from './editor.types'
 import { Callout } from './extensions/callout'
 import { Expandable } from './extensions/expandable'
+import { FontSize } from './extensions/font-size'
+import { Indent } from './extensions/indent'
 import { PageBreak } from './extensions/page-break'
-import { contentArea, editorSize, editorPreview } from './editor.styles.css'
-import type { EditorSize } from './editor.types'
+import { ColumnBlock, TwoColumns } from './extensions/two-columns'
+import { UnderlineColor } from './extensions/underline-color'
+import { YouTube } from './extensions/youtube'
 
 const lowlight = createLowlight(common)
 
@@ -74,7 +74,10 @@ export default function EditorPreview({
 
 	return (
 		<div className={editorPreview}>
-			<div className={`${contentArea} ${editorSize[size]}`} style={{ pointerEvents: 'none' }}>
+			<div
+				className={`${contentArea} ${editorSize[size]}`}
+				style={{ pointerEvents: 'none' }}
+			>
 				<EditorContent editor={editor} />
 			</div>
 		</div>

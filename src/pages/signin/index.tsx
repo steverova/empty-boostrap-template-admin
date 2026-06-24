@@ -32,12 +32,15 @@ export function Component() {
 				<style>{`
             .signin-form-wrapper {
               width: 100%;
-              padding: 16px;
+              padding: 8px;
             }
             @media (min-width: 992px) {
               .signin-form-wrapper {
                 width: 50%;
-                padding: 16px 16px 16px 0;
+                padding: 12px 12px 12px 0;
+              }
+              .signin-card {
+                padding: 24px !important;
               }
             }
           `}</style>
@@ -70,21 +73,13 @@ export function Component() {
 
 				<div className='position-absolute top-0 end-0 h-100 signin-form-wrapper'>
 					<Card
-						className='h-100 border-0'
-						style={{ borderRadius: 12, padding: '32px' }}
+						className='h-100 border-0 signin-card '
+						style={{ borderRadius: 12 }}
 					>
-						<button
-							onClick={() => otpModal.open()}
-							className='btn btn-neutral'
-							type='button'
-						>
-							hola
-						</button>
-
 						<Card.Body className='d-flex align-items-center justify-content-center p-0'>
 							<div className='w-100' style={{ maxWidth: 400 }}>
-								<h2 className='fw-bold mb-1'>Iniciar sesión</h2>
-								<p className='text-muted mb-4'>
+								<h2 className='fw-bold mb-1 mb-md-2'>Iniciar sesión</h2>
+								<p className='text-muted mb-3 mb-md-4'>
 									Ingresa tus credenciales para continuar
 								</p>
 								<SignInForm />
@@ -100,10 +95,7 @@ export function Component() {
 				</div>
 			</div>
 
-			<ModalDialog
-				onHide={otpModal.close}
-				show={otpModal.isOpen}
-			>
+			<ModalDialog onHide={otpModal.close} show={otpModal.isOpen}>
 				<div>
 					<Alert variant='light'>
 						Hemos enviado tu código OTP a [email@example.com]. Por favor,
