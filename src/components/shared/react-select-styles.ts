@@ -2,7 +2,7 @@ import type { StylesConfig } from 'react-select'
 
 type OptionType = { value: string; label: string }
 
-export const reactSelectStyles: StylesConfig<OptionType, false> = {
+export const reactSelectStyles: StylesConfig<OptionType, boolean> = {
 	singleValue: (base) => ({
 		...base,
 		color: 'var(--bs-body-color)',
