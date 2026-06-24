@@ -8,7 +8,7 @@ import IconButton from '@/components/shared/icon-button'
 import { mockClients } from '@/mocks'
 import type { Client } from './client.types'
 
-export default function ClientsPage() {
+export function Component() {
 	const [clients] = useState<Client[]>(mockClients)
 	const navigate = useNavigate()
 
@@ -43,7 +43,7 @@ export default function ClientsPage() {
 
 	return (
 		<AppTable
-			tableName='Projects'
+			tableName='Clients'
 			enableExport
 			columns={columns}
 			data={clients}

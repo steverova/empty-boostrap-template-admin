@@ -11,6 +11,8 @@ import {
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { useMemo, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
+import TaskDetailsModal from '@/pages/tasks/task-details-modal'
+import TaskReplyModal from '@/pages/tasks/task-reply-modal'
 import CollapseCard from './collapse-card'
 import ExpandedCard from './expanded-card'
 import type { Task } from './kanban.types'
@@ -18,8 +20,6 @@ import { columns } from './kanban-helper'
 import { initialTasks } from './kanban-mock'
 import KanbanToolbar, { type KanbanFilters } from './kanban-toolbar'
 import TaskCard from './task-card'
-import TaskDetailsModal from '@/pages/tasks/task-details-modal'
-import TaskReplyModal from '@/pages/tasks/task-reply-modal'
 
 // ─── Main board ───────────────────────────────────────────────────────────────
 
@@ -51,7 +51,9 @@ export default function KanbanBoard() {
 
 	function handleSubmitReply(taskId: string, reply: string, status: string) {
 		setTasks((prev) =>
-			prev.map((t) => (t.id === taskId ? { ...t, reply, columnId: status } : t)),
+			prev.map((t) =>
+				t.id === taskId ? { ...t, reply, columnId: status } : t,
+			),
 		)
 	}
 
@@ -222,16 +224,16 @@ export default function KanbanBoard() {
 											handleCollapse={handleCollapse}
 										/>
 									) : (
-									// ── Vista expandida normal ──
-									<ExpandedCard
-										icon={column.icon}
-										handleCollapse={handleCollapse}
-										column={column}
-										columnTasks={columnTasks}
-										onMove={handleMove}
-										onDetails={handleDetails}
-										onReply={handleReply}
-									/>
+										// ── Vista expandida normal ──
+										<ExpandedCard
+											icon={column.icon}
+											handleCollapse={handleCollapse}
+											column={column}
+											columnTasks={columnTasks}
+											onMove={handleMove}
+											onDetails={handleDetails}
+											onReply={handleReply}
+										/>
 									)}
 								</Col>
 							)

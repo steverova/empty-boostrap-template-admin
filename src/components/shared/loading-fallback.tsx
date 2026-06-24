@@ -13,7 +13,7 @@ export default function LoadingFallback() {
 
 	return (
 		<div
-			className='bg-dark d-flex align-items-center justify-content-center w-100'
+			className='d-flex align-items-center justify-content-center w-100'
 			style={{
 				minHeight: '100dvh',
 				paddingBottom: '15vh', // lo empuja más hacia arriba
@@ -38,7 +38,7 @@ export default function LoadingFallback() {
                 height='64'
                 viewBox='0 0 105 105'
                 fill='currentColor'
-                className='text-danger'
+                className='text-success'
             >
                 <title>{'Loading...'}</title>
 

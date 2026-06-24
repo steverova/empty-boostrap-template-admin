@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { useParams, useNavigate } from 'react-router'
-import ProjectForm from './project-form'
-import type { ProjectFormData } from './project.schema'
+import { useNavigate, useParams } from 'react-router'
 import { mockClients, mockCollaborators, mockProjects } from '@/mocks'
+import type { ProjectFormData } from './project.schema'
+import ProjectForm from './project-form'
 
-export default function ProjectRecordPage() {
+export function Component() {
 	const { id } = useParams()
 	const navigate = useNavigate()
 	const [submitted, setSubmitted] = useState(false)
@@ -18,7 +18,7 @@ export default function ProjectRecordPage() {
 
 	if (submitted) {
 		return (
-			<div className='p-4'>
+			<div className=''>
 				<div className='alert alert-success'>
 					{id ? 'Project updated' : 'Project created'} successfully!
 				</div>
@@ -34,7 +34,7 @@ export default function ProjectRecordPage() {
 	}
 
 	return (
-		<div className='p-4'>
+		<div className=''>
 			<ProjectForm
 				initialData={initialData}
 				clients={mockClients}

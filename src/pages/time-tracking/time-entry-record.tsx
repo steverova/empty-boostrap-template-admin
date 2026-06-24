@@ -1,10 +1,16 @@
 import { useState } from 'react'
-import { useParams, useNavigate } from 'react-router'
-import TimeEntryForm from './time-entry-form'
+import { useNavigate, useParams } from 'react-router'
+import {
+	mockClients,
+	mockCollaborators,
+	mockProjects,
+	mockTasks,
+	mockTimeEntries,
+} from '@/mocks'
 import type { TimeEntry } from './time-entry.types'
-import { mockClients, mockProjects, mockTasks, mockTimeEntries, mockCollaborators } from '@/mocks'
+import TimeEntryForm from './time-entry-form'
 
-export default function TimeEntryRecordPage() {
+export function Component() {
 	const { id } = useParams()
 	const navigate = useNavigate()
 	const [timeEntries] = useState<TimeEntry[]>(mockTimeEntries)
@@ -19,7 +25,7 @@ export default function TimeEntryRecordPage() {
 
 	if (submitted) {
 		return (
-			<div className='p-4'>
+			<div className=''>
 				<div className='alert alert-success'>
 					{id ? 'Time entry updated' : 'Time entry created'} successfully!
 				</div>
@@ -35,7 +41,7 @@ export default function TimeEntryRecordPage() {
 	}
 
 	return (
-		<div className='p-4'>
+		<div className=''>
 			<TimeEntryForm
 				initialData={entry}
 				clients={mockClients}

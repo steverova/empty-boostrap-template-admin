@@ -1,25 +1,41 @@
+import { ChevronDown, ChevronUp, Filter, RefreshCw } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { Card, Row, Col, Form, Button } from 'react-bootstrap'
+import { Button, Card, Col, Form, Row } from 'react-bootstrap'
+import Select from 'react-select'
 import {
-	BarChart,
 	Bar,
-	XAxis,
-	YAxis,
+	BarChart,
 	CartesianGrid,
-	Tooltip,
-	ResponsiveContainer,
 	Cell,
 	ReferenceLine,
+	ResponsiveContainer,
+	Tooltip,
+	XAxis,
+	YAxis,
 } from 'recharts'
-import { RefreshCw, Filter, ChevronDown, ChevronUp } from 'lucide-react'
-import Select from 'react-select'
 import { reactSelectStyles } from '@/components/shared/react-select-styles'
-import { mockTimeEntries, mockCollaborators, mockClients, mockProjects } from '@/mocks'
+import {
+	mockClients,
+	mockCollaborators,
+	mockProjects,
+	mockTimeEntries,
+} from '@/mocks'
 import type { TimeEntry } from './time-entry.types'
 
-const COLORS = ['#4fc3f7', '#81c784', '#ffb74d', '#e57373', '#ba68c8', '#4dd0e1']
+const COLORS = [
+	'#4fc3f7',
+	'#81c784',
+	'#ffb74d',
+	'#e57373',
+	'#ba68c8',
+	'#4dd0e1',
+]
 
-function getWeekRange(dateStr: string): { start: string; end: string; label: string } {
+function getWeekRange(dateStr: string): {
+	start: string
+	end: string
+	label: string
+} {
 	const d = new Date(dateStr)
 	const day = d.getDay()
 	const diff = d.getDate() - day + (day === 0 ? -6 : 1)
@@ -31,7 +47,9 @@ function getWeekRange(dateStr: string): { start: string; end: string; label: str
 	const fmt = (dt: Date) => dt.toISOString().split('T')[0]
 	const year = start.getFullYear()
 	const oneJan = new Date(year, 0, 1)
-	const weekNum = Math.ceil(((start.getTime() - oneJan.getTime()) / 86400000 + oneJan.getDay() + 1) / 7)
+	const weekNum = Math.ceil(
+		((start.getTime() - oneJan.getTime()) / 86400000 + oneJan.getDay() + 1) / 7,
+	)
 
 	return {
 		start: fmt(start),
@@ -94,7 +112,10 @@ export default function HoursByUser({ timeEntries }: HoursByUserProps) {
 		const map = new Map<string, { name: string; hours: number }>()
 
 		for (const collab of mockCollaborators) {
-			map.set(collab.id, { name: `${collab.firstName} ${collab.lastName}`, hours: 0 })
+			map.set(collab.id, {
+				name: `${collab.firstName} ${collab.lastName}`,
+				hours: 0,
+			})
 		}
 
 		for (const entry of filteredEntries) {
@@ -128,7 +149,7 @@ export default function HoursByUser({ timeEntries }: HoursByUserProps) {
 
 	return (
 		<div>
-			<Card className='border-0 shadow-sm mb-4'>
+			<Card className='border-0 shadow-sm p-0'>
 				<Card.Header
 					className='bg-body border-bottom py-3'
 					style={{ cursor: 'pointer' }}
@@ -147,54 +168,64 @@ export default function HoursByUser({ timeEntries }: HoursByUserProps) {
 						<Row className='g-3 align-items-end'>
 							<Col md={3}>
 								<Form.Label className='fw-semibold small'>Clientes</Form.Label>
-							<Select
-								styles={reactSelectStyles}
-								options={[
-									{ value: '', label: 'Seleccione un cliente' },
-									...mockClients.map((c) => ({
-										value: c.id,
-										label: c.companyName ? `${c.name} (${c.companyName})` : c.name,
-									})),
-								]}
-								onChange={(val: any) => setSelectedClient(val?.value ?? '')}
-								value={
-									selectedClient
-										? mockClients
-												.map((c) => ({
-													value: c.id,
-													label: c.companyName ? `${c.name} (${c.companyName})` : c.name,
-												}))
-												.find((o) => o.value === selectedClient)
-										: { value: '', label: 'Seleccione un cliente' }
-								}
-								placeholder='Seleccione un cliente'
-							/>
+								<Select
+									styles={reactSelectStyles}
+									options={[
+										{ value: '', label: 'Seleccione un cliente' },
+										...mockClients.map((c) => ({
+											value: c.id,
+											label: c.companyName
+												? `${c.name} (${c.companyName})`
+												: c.name,
+										})),
+									]}
+									onChange={(val: any) => setSelectedClient(val?.value ?? '')}
+									value={
+										selectedClient
+											? mockClients
+													.map((c) => ({
+														value: c.id,
+														label: c.companyName
+															? `${c.name} (${c.companyName})`
+															: c.name,
+													}))
+													.find((o) => o.value === selectedClient)
+											: { value: '', label: 'Seleccione un cliente' }
+									}
+									placeholder='Seleccione un cliente'
+								/>
 							</Col>
 							<Col md={3}>
 								<Form.Label className='fw-semibold small'>Proyecto</Form.Label>
-							<Select
-								styles={reactSelectStyles}
-								options={[
-									{ value: '', label: 'Seleccione un Proyecto' },
-									...filteredProjects.map((p) => ({
-										value: p.id,
-										label: p.projectName,
-									})),
-								]}
-								onChange={(val: any) => setSelectedProject(val?.value ?? '')}
-								value={
-									selectedProject
-										? filteredProjects
-												.map((p) => ({ value: p.id, label: p.projectName }))
-												.find((o) => o.value === selectedProject)
-										: { value: '', label: 'Seleccione un Proyecto' }
-								}
-								isDisabled={!selectedClient}
-								placeholder={selectedClient ? 'Seleccione un Proyecto' : 'Primero seleccione un cliente'}
-							/>
+								<Select
+									styles={reactSelectStyles}
+									options={[
+										{ value: '', label: 'Seleccione un Proyecto' },
+										...filteredProjects.map((p) => ({
+											value: p.id,
+											label: p.projectName,
+										})),
+									]}
+									onChange={(val: any) => setSelectedProject(val?.value ?? '')}
+									value={
+										selectedProject
+											? filteredProjects
+													.map((p) => ({ value: p.id, label: p.projectName }))
+													.find((o) => o.value === selectedProject)
+											: { value: '', label: 'Seleccione un Proyecto' }
+									}
+									isDisabled={!selectedClient}
+									placeholder={
+										selectedClient
+											? 'Seleccione un Proyecto'
+											: 'Primero seleccione un cliente'
+									}
+								/>
 							</Col>
 							<Col md={3}>
-								<Form.Label className='fw-semibold small'>Seleccionar Semana</Form.Label>
+								<Form.Label className='fw-semibold small'>
+									Seleccionar Semana
+								</Form.Label>
 								<Form.Select
 									value={selectedWeekStart}
 									onChange={(e) => setSelectedWeekStart(e.target.value)}
@@ -227,7 +258,8 @@ export default function HoursByUser({ timeEntries }: HoursByUserProps) {
 						<h6 className='mb-0 fw-semibold'>Horas Trabajadas por Usuario</h6>
 						{avgHours > 0 && (
 							<span className='text-muted small'>
-								Promedio: <strong>{avgHours}h</strong> | Max: <strong>{maxHours}h</strong>
+								Promedio: <strong>{avgHours}h</strong> | Max:{' '}
+								<strong>{maxHours}h</strong>
 							</span>
 						)}
 					</div>
@@ -238,14 +270,25 @@ export default function HoursByUser({ timeEntries }: HoursByUserProps) {
 							No hay horas registradas para los filtros seleccionados
 						</div>
 					) : (
-						<ResponsiveContainer width='100%' height={Math.max(200, hoursByUser.length * 80)}>
+						<ResponsiveContainer
+							width='100%'
+							height={Math.max(200, hoursByUser.length * 80)}
+						>
 							<BarChart
 								data={hoursByUser}
 								layout='vertical'
 								margin={{ top: 5, right: 50, left: 20, bottom: 5 }}
 							>
-								<CartesianGrid strokeDasharray='3 3' stroke='#e9ecef' horizontal={false} />
-								<XAxis type='number' tick={{ fontSize: 12 }} domain={[0, 'dataMax + 2']} />
+								<CartesianGrid
+									strokeDasharray='3 3'
+									stroke='#e9ecef'
+									horizontal={false}
+								/>
+								<XAxis
+									type='number'
+									tick={{ fontSize: 12 }}
+									domain={[0, 'dataMax + 2']}
+								/>
 								<YAxis
 									type='category'
 									dataKey='name'
@@ -269,7 +312,10 @@ export default function HoursByUser({ timeEntries }: HoursByUserProps) {
 								/>
 								<Bar dataKey='hours' radius={[0, 6, 6, 0]} barSize={40}>
 									{hoursByUser.map((_, index) => (
-										<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+										<Cell
+											key={`cell-${index}`}
+											fill={COLORS[index % COLORS.length]}
+										/>
 									))}
 								</Bar>
 							</BarChart>

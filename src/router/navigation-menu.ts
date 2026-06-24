@@ -9,6 +9,20 @@ export const navigationMenu: NavItem[] = [
 		type: 'item',
 		id: 'dashboard',
 		icon: Gauge,
+  },
+  {
+		path: '/clients',
+		label: 'Clients',
+		type: 'item',
+		id: 'clients',
+		icon: Users,
+  },
+  {
+		path: '/collaborators',
+		label: 'Collaborators',
+		type: 'item',
+		id: 'collaborators',
+		icon: Users,
 	},
 	{
 		path: '/projects',
@@ -17,20 +31,8 @@ export const navigationMenu: NavItem[] = [
 		id: 'projects',
 		icon: FolderOpen,
 	},
-	{
-		path: '/clients',
-		label: 'Clients',
-		type: 'item',
-		id: 'clients',
-		icon: Users,
-	},
-	{
-		path: '/collaborators',
-		label: 'Collaborators',
-		type: 'item',
-		id: 'collaborators',
-		icon: Users,
-	},
+
+
 	{
 		path: '/tasks',
 		label: 'Tasks',

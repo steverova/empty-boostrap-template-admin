@@ -340,7 +340,7 @@ export function Component() {
 			</Row>
 
 			<Card className='border-0 shadow-sm mb-4'>
-				<Card.Header className='bg-body border-bottom py-3 d-flex justify-content-between align-items-center'>
+				<Card.Header className='bg-body border-bottom py-3 d-flex justify-content-between align-items-center flex-wrap gap-2'>
 					<h6 className='mb-0 fw-semibold d-flex align-items-center gap-2'>
 						<Calendar size={18} />
 						Weekly Hours by Collaborator
@@ -390,7 +390,8 @@ export function Component() {
 								</ResponsiveContainer>
 							</Col>
 							<Col md={5}>
-								<Table hover className='mb-0'>
+								<div className='table-responsive'>
+							<Table hover className='mb-0'>
 									<thead>
 										<tr>
 											<th>Collaborator</th>
@@ -432,6 +433,7 @@ export function Component() {
 										</tr>
 									</tfoot>
 								</Table>
+							</div>
 							</Col>
 						</Row>
 					)}
@@ -520,7 +522,7 @@ export function Component() {
 						<Card.Header className='bg-body border-bottom py-3'>
 							<h6 className='mb-0 fw-semibold'>Hours by Type</h6>
 						</Card.Header>
-						<Card.Body>
+						<Card.Body className='overflow-hidden'>
 							<ResponsiveContainer width='100%' height={280}>
 								<BarChart data={hoursByType} layout='vertical'>
 									<CartesianGrid strokeDasharray='3 3' stroke='#e9ecef' />

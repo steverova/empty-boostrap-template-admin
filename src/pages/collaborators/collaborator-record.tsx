@@ -4,7 +4,7 @@ import { mockCollaborators } from '@/mocks'
 import type { Collaborator } from './collaborator.types'
 import CollaboratorForm from './collaborator-form'
 
-export default function CollaboratorRecordPage() {
+export function Component() {
 	const { id } = useParams()
 	const navigate = useNavigate()
 	const [collaborators] = useState<Collaborator[]>(mockCollaborators)
@@ -17,7 +17,7 @@ export default function CollaboratorRecordPage() {
 	}
 
 	return (
-		<div className='p-4'>
+		<div className=''>
 			<CollaboratorForm
 				initialData={collaborator ?? undefined}
 				onSubmit={handleSubmit}

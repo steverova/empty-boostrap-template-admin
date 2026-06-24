@@ -1,10 +1,9 @@
-import { ChevronLeft, PanelRightClose, PanelRightOpen, Search } from 'lucide-react'
+import { PanelRightClose, PanelRightOpen, Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Button, Navbar, Offcanvas } from 'react-bootstrap'
 import { Outlet } from 'react-router'
 import GlobalSearch from '@/components/shared/global-search'
 import IconButton from '@/components/shared/icon-button'
-import RightPanel from '@/components/shared/right-panel'
 import { useModal } from '@/hooks/use-modal'
 import Sidebar from './sidebar'
 import UserMenu from './user-menu'
@@ -30,7 +29,6 @@ export default function Layout() {
 		return stored !== null ? stored === 'true' : true
 	})
 	const [showOffcanvas, setShowOffcanvas] = useState(false)
-	const [showRightSidebar, setShowRightSidebar] = useState(true)
 	const isMobile = useMediaQuery('(max-width: 991.98px)')
 
 	const handleToggle = () => {
@@ -55,7 +53,7 @@ export default function Layout() {
 			/>
 
 			<div className='d-flex flex-column flex-grow-1 overflow-hidden'>
-				<Navbar className={`bg-primary-subtle d-flex gap-2`}>
+				<Navbar className={`bg-success-subtle d-flex gap-2`}>
 					<Button
 						onClick={handleToggle}
 						variant='light'
@@ -106,9 +104,9 @@ export default function Layout() {
 					</Offcanvas.Body>
 				</Offcanvas>
 
-				<main className='flex-grow-1 d-flex flex-row overflow-auto bg-primary-subtle'>
+				<main className='flex-grow-1 d-flex flex-row overflow-auto bg-success-subtle'>
 					<div
-						className='flex-grow-1 mx-2 my-2 content-scroll rounded-3 bg-light-subtle'
+						className='flex-grow-1 mx-2 mb-2 content-scroll rounded-3 bg-body'
 						style={{
 							overflow: 'auto',
 							minHeight: 0,
@@ -117,35 +115,6 @@ export default function Layout() {
 					>
 						<Outlet />
 					</div>
-					{showRightSidebar && (
-						<RightPanel onClose={() => setShowRightSidebar(false)} />
-					)}
-					{!showRightSidebar && (
-						<button
-							type='button'
-							onClick={() => setShowRightSidebar(true)}
-							style={{
-								position: 'relative',
-								right: 0,
-								top: '50%',
-								transform: 'translateY(-50%)',
-								width: 20,
-								height: 48,
-								border: '1px solid var(--bs-border-color)',
-								borderRight: 'none',
-								borderRadius: '6px 0 0 6px',
-								backgroundColor: 'var(--bs-body-bg)',
-								cursor: 'pointer',
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'center',
-								zIndex: 10,
-								transition: 'all 0.2s ease',
-							}}
-						>
-							<ChevronLeft size={14} style={{ color: 'var(--bs-secondary-color)' }} />
-						</button>
-					)}
 				</main>
 			</div>
 		</div>

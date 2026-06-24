@@ -35,7 +35,7 @@ const statusBg: Record<string, string> = {
 	cancelled: 'danger',
 }
 
-export default function TasksPage() {
+export function Component() {
 	const [view, setView] = useState<'table' | 'kanban'>('table')
 	const [tasks, setTasks] = useState<Task[]>(mockTasks)
 	const [selectedTask, setSelectedTask] = useState<Task | null>(null)
@@ -128,7 +128,7 @@ export default function TasksPage() {
 
 	return (
 		<div className='h-100 d-flex flex-column'>
-			<div className='d-flex justify-content-between align-items-center p-2 border-bottom'>
+			<div className='d-flex justify-content-between align-items-center border-bottom'>
 				<div className='d-flex gap-2'>
 					<Button
 						variant={view === 'table' ? 'primary' : 'outline-primary'}
