@@ -4,7 +4,7 @@ import TaskForm from './task-form'
 import type { Task } from './task.types'
 import { mockTasks, mockCollaborators, mockProjects } from '@/mocks'
 
-export default function TaskRecordPage() {
+export function Component() {
 	const { id } = useParams()
 	const navigate = useNavigate()
 	const [submitted, setSubmitted] = useState(false)

@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { useParams, useNavigate } from 'react-router'
-import ProjectForm from './project-form'
-import type { ProjectFormData } from './project.schema'
+import { useNavigate, useParams } from 'react-router'
 import { mockClients, mockCollaborators, mockProjects } from '@/mocks'
+import type { ProjectFormData } from './project.schema'
+import ProjectForm from './project-form'
 
-export default function ProjectRecordPage() {
+export function Component() {
 	const { id } = useParams()
 	const navigate = useNavigate()
 	const [submitted, setSubmitted] = useState(false)

@@ -1,14 +1,13 @@
-import { useState } from 'react'
-import { Tab, Tabs } from 'react-bootstrap'
 import type { ColumnDef } from '@tanstack/react-table'
 import { Pencil } from 'lucide-react'
-import { Badge } from 'react-bootstrap'
+import { useState } from 'react'
+import { Badge, Tab, Tabs } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import AppTable from '@/components/shared/app-table'
 import IconButton from '@/components/shared/icon-button'
 import { mockTimeEntries } from '@/mocks'
-import HoursByUser from './hours-by-user'
 import HoursByTicket from './hours-by-ticket'
+import HoursByUser from './hours-by-user'
 import type { TimeEntry } from './time-entry.types'
 
 const categoryLabel: Record<string, string> = {
@@ -32,7 +31,7 @@ const hourTypeLabel: Record<string, string> = {
 	mantenimiento: 'Mantenimiento',
 }
 
-export default function TimeTrackingPage() {
+export function Component() {
 	const [timeEntries] = useState<TimeEntry[]>(mockTimeEntries)
 	const navigate = useNavigate()
 
@@ -54,7 +53,10 @@ export default function TimeTrackingPage() {
 			accessorKey: 'comment',
 			header: 'Comment',
 			cell: ({ row }) => (
-				<span className='text-truncate d-inline-block' style={{ maxWidth: '200px' }}>
+				<span
+					className='text-truncate d-inline-block'
+					style={{ maxWidth: '200px' }}
+				>
 					{row.original.comment}
 				</span>
 			),
@@ -74,11 +76,7 @@ export default function TimeTrackingPage() {
 
 	return (
 		<div className='h-100 d-flex flex-column'>
-			<Tabs
-				defaultActiveKey='entries'
-				className='px-3 pt-2 border-bottom'
-				fill
-			>
+			<Tabs defaultActiveKey='entries' className='px-3 pt-2 border-bottom' fill>
 				<Tab eventKey='entries' title='Time Entries'>
 					<div className='flex-grow-1 overflow-auto p-0'>
 						<AppTable

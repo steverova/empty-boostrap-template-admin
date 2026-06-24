@@ -7,7 +7,7 @@ import IconButton from '@/components/shared/icon-button'
 import { mockCollaborators } from '@/mocks'
 import type { Collaborator } from './collaborator.types'
 
-export default function CollaboratorsPage() {
+export function Component() {
 	const [collaborators] = useState<Collaborator[]>(mockCollaborators)
 	const navigate = useNavigate()
 

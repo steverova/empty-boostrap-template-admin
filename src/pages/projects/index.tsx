@@ -30,7 +30,7 @@ const priorityBg: Record<string, string> = {
 	high: 'danger',
 }
 
-export default function ProjectsPage() {
+export function Component() {
 	const [projects] = useState<Project[]>(mockProjects)
 	const navigate = useNavigate()
 

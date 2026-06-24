@@ -4,7 +4,7 @@ import { mockClients } from '@/mocks'
 import type { Client } from './client.types'
 import ClientForm from './client-form'
 
-export default function ClientRecordPage() {
+export function Component() {
 	const { id } = useParams()
 	const navigate = useNavigate()
 	const [clients] = useState<Client[]>(mockClients)

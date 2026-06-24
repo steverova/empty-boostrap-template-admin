@@ -35,7 +35,7 @@ const statusBg: Record<string, string> = {
 	cancelled: 'danger',
 }
 
-export default function TasksPage() {
+export function Component() {
 	const [view, setView] = useState<'table' | 'kanban'>('table')
 	const [tasks, setTasks] = useState<Task[]>(mockTasks)
 	const [selectedTask, setSelectedTask] = useState<Task | null>(null)
