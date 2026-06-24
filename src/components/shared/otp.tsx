@@ -1,6 +1,5 @@
-import { ClipboardPaste, RotateCcw } from 'lucide-react'
 import { type ClipboardEvent, useCallback, useEffect, useRef, useState } from 'react'
-import { Button, Form, InputGroup } from 'react-bootstrap'
+import {Form, InputGroup } from 'react-bootstrap'
 
 interface OtpProps {
 	length?: number
@@ -124,19 +123,6 @@ export default function Otp({
 		[digits, length, emitChange, focusInput],
 	)
 
-	const handleReset = useCallback(() => {
-		const next = Array.from({ length }, () => '')
-		setDigits(next)
-		emitChange(next)
-		focusInput(0)
-	}, [length, emitChange, focusInput])
-
-	const handleCopy = useCallback(() => {
-		const joined = digits.join('')
-		if (joined) {
-			navigator.clipboard.writeText(joined)
-		}
-	}, [digits])
 
 	return (
 		<div className={className}>
@@ -169,7 +155,7 @@ export default function Otp({
 				))}
 			</InputGroup>
 
-			<div className='d-flex justify-content-center gap-2 mt-3'>
+			{/*<div className='d-flex justify-content-center gap-2 mt-3'>
 				<Button
 					variant='outline-secondary'
 					size='sm'
@@ -190,7 +176,7 @@ export default function Otp({
 					<RotateCcw size={14} className='me-1' />
 					Limpiar
 				</Button>
-			</div>
+			</div>*/}
 		</div>
 	)
 }
