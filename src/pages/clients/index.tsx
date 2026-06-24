@@ -43,7 +43,7 @@ export default function ClientsPage() {
 
 	return (
 		<AppTable
-			tableName='Projects'
+			tableName='Clients'
 			enableExport
 			columns={columns}
 			data={clients}

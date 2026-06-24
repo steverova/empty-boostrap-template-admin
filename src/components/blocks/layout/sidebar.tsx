@@ -9,7 +9,7 @@ type SidebarProps = {
 export default function Sidebar({ onNavigate }: SidebarProps) {
 	return (
 		<nav
-			className={`d-flex flex-column flex-shrink-0 py-3 bg-primary-subtle sidebar`}
+			className={`d-flex flex-column flex-shrink-0 py-3 bg-success-subtle sidebar`}
 			style={{ width: 250, minHeight: 0 }}
 		>
 			<div className='px-3'>

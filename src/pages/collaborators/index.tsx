@@ -13,7 +13,8 @@ export default function CollaboratorsPage() {
 
 	const columns: ColumnDef<Collaborator, any>[] = [
 		{
-			accessorKey: 'name',
+			accessorFn: (row) => `${row.firstName} ${row.lastName}`,
+			id: 'name',
 			header: 'Name',
 		},
 		{
@@ -35,6 +36,7 @@ export default function CollaboratorsPage() {
 
 	return (
 		<AppTable
+			tableName='Collaborators'
 			columns={columns}
 			data={collaborators}
 			onAddFn={() => navigate('/collaborators/record')}
