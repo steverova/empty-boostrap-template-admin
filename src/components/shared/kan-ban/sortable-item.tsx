@@ -29,11 +29,10 @@ export default function SortableItem({
 	const style = {
 		transform: CSS.Transform.toString(transform),
 		transition,
-		touchAction: 'none',
 	}
 
 	return (
-		<div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+		<div ref={setNodeRef} style={style}>
 			<TaskCard
 				task={task}
 				onMove={onMove}
@@ -41,6 +40,7 @@ export default function SortableItem({
 				onReply={onReply}
 				taskIndex={taskIndex}
 				totalTasks={totalTasks}
+				dragHandleProps={{ ...listeners, ...attributes }}
 			/>
 		</div>
 	)
