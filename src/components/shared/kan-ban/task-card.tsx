@@ -54,6 +54,7 @@ export default function TaskCard({
 	onReply,
 	taskIndex,
 	totalTasks,
+	dragHandleProps,
 }: {
 	task: Task
 	isDragging?: boolean
@@ -62,6 +63,7 @@ export default function TaskCard({
 	onReply?: (task: Task) => void
 	taskIndex?: number
 	totalTasks?: number
+	dragHandleProps?: React.HTMLAttributes<HTMLElement>
 }) {
 	const [copied, setCopied] = useState(false)
 
@@ -77,36 +79,14 @@ export default function TaskCard({
 		>
 			<Card.Body className='px-3 py-1'>
 				<div className='d-flex justify-content-between align-items-center mb-2'>
-					<Dropdown>
-						<Dropdown.Toggle
-							variant='link'
-							size='sm'
-							className='p-0 border-0 text-muted'
-							style={{ textDecoration: 'none' }}
-						>
-							<MoreVertical size={16} />
-						</Dropdown.Toggle>
-						<Dropdown.Menu>
-							{columns
-								.filter((c) => c.id !== task.columnId)
-								.map((col) => (
-									<Dropdown.Item
-										key={col.id}
-										onClick={() => onMove?.(task.id, col.id)}
-									>
-										<span style={{ color: col.color }} className='me-2'>
-											{col.icon && <col.icon size={14} />}
-										</span>
-										Move to {col.title}
-									</Dropdown.Item>
-								))}
-						</Dropdown.Menu>
-					</Dropdown>
+					<span
+						{...dragHandleProps}
+						style={{ cursor: 'grab', touchAction: 'none', lineHeight: 0 }}
+					>
+						<GripHorizontal size={16} className='text-muted' />
+					</span>
 
 					<div className='d-flex align-items-center gap-1'>
-						{isDragging && (
-							<GripHorizontal size={14} style={{ opacity: 0.5 }} />
-						)}
 						<IconButton
 							aria-label='Edit task'
 							style={{ color: 'var(--bs-body-color)' }}
@@ -127,6 +107,31 @@ export default function TaskCard({
 						>
 							<MessageSquare size={14} />
 						</IconButton>
+						<Dropdown>
+							<Dropdown.Toggle
+								variant='link'
+								size='sm'
+								className='p-0 border-0 text-muted'
+								style={{ textDecoration: 'none' }}
+							>
+								<MoreVertical size={16} />
+							</Dropdown.Toggle>
+							<Dropdown.Menu>
+								{columns
+									.filter((c) => c.id !== task.columnId)
+									.map((col) => (
+										<Dropdown.Item
+											key={col.id}
+											onClick={() => onMove?.(task.id, col.id)}
+										>
+											<span style={{ color: col.color }} className='me-2'>
+												{col.icon && <col.icon size={14} />}
+											</span>
+											Move to {col.title}
+										</Dropdown.Item>
+									))}
+							</Dropdown.Menu>
+						</Dropdown>
 					</div>
 				</div>
 
