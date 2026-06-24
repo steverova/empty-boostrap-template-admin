@@ -6,17 +6,17 @@ import Modal from 'react-bootstrap/Modal'
 
 type ModalDialogProps = {
 	isLoading?: boolean
-	size?: 'sm' | 'lg' | 'xl'
+	size?: 'sm' | 'lg' | 'xl' | undefined
 	show: boolean
-	title: string
+	title?: string
 	children: ReactNode
 	onHide: () => void
 	onConfirm?: () => void | Promise<void>
 }
 
 export default function ModalDialog({
-	isLoading = true,
-	size = 'lg',
+	isLoading = false,
+	size,
 	show,
 	title,
 	children,
@@ -29,12 +29,12 @@ export default function ModalDialog({
 			onHide={onHide}
 			backdrop='static'
 			scrollable
-			size={size}
+			{...(size && { size })}
 			centered
 			aria-labelledby='modal-dialog-title'
 		>
-			<Modal.Header closeButton className='border-0 px-3 py-1'>
-				<Modal.Title id='modal-dialog-title'>{title}</Modal.Title>
+			<Modal.Header closeButton className='border-0 px-3 py-2'>
+				{title && <Modal.Title id='modal-dialog-title'>{title}</Modal.Title>}
 			</Modal.Header>
 
 			<Modal.Body>{children}</Modal.Body>

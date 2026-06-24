@@ -79,7 +79,7 @@ export default function SignInForm() {
 
 			<Button
 				type='submit'
-				variant='primary'
+				variant='secondary'
 				className='w-100 py-2'
 				disabled={isSubmitting}
 			>

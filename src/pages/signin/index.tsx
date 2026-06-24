@@ -1,46 +1,124 @@
-import { Col, Container, Row } from 'react-bootstrap'
-import { svg } from '@assets/assets'
 import SignInForm from '@components/blocks/signin/signin-form'
+import { useState } from 'react'
+import { Alert, Card } from 'react-bootstrap'
 import { Link } from 'react-router'
+import ModalDialog from '@/components/shared/modal-dialog'
+import Otp from '@/components/shared/otp'
+import Grainient from '@/components/shared/particles/grainient'
+import { useModal } from '@/hooks/use-modal'
+import { useThemeMode } from '@/hooks/use-theme-mode'
 
 export function Component() {
+	const { themeMode } = useThemeMode()
+	const otpModal = useModal()
+	const [otp6, setOtp6] = useState('')
+
+	const isDark =
+		themeMode === 'dark' ||
+		(themeMode === 'system' &&
+			window.matchMedia('(prefers-color-scheme: dark)').matches)
+	const lightColors = {
+		color1: '#e0dede',
+		color2: '#161719',
+		color3: '#201d24',
+	}
+
+	const darkColors = { color1: '#201d24', color2: '#e0dede', color3: '#161719' }
+	const colors = isDark ? darkColors : lightColors
+
 	return (
-		<div className='vh-100 d-flex align-items-center bg-light'>
-			<Container fluid className='h-100'>
-				<Row className='h-100'>
-					<Col
-						style={{
-							opacity: 0.2,
-							backgroundImage: `url(${svg.patters[1]})`,
-							WebkitMaskImage:
-								'linear-gradient(to right, black 92%, transparent 100%)',
-							maskImage:
-								'linear-gradient(to right, black 92%, transparent 100%)',
-						}}
-						lg={6}
-						className='d-none d-lg-flex align-items-center justify-content-center bg-primary bg-opacity-10'
+		<>
+			<div className='vh-100 position-relative overflow-hidden'>
+				<style>{`
+            .signin-form-wrapper {
+              width: 100%;
+              padding: 16px;
+            }
+            @media (min-width: 992px) {
+              .signin-form-wrapper {
+                width: 50%;
+                padding: 16px 16px 16px 0;
+              }
+            }
+          `}</style>
+				<div className='position-absolute top-0 start-0 w-100 h-100'>
+					<Grainient
+						color1={colors.color1}
+						color2={colors.color2}
+						color3={colors.color3}
+						timeSpeed={0.25}
+						colorBalance={0}
+						warpStrength={1}
+						warpFrequency={5}
+						warpSpeed={2}
+						warpAmplitude={50}
+						blendAngle={0}
+						blendSoftness={0.05}
+						rotationAmount={500}
+						noiseScale={2}
+						grainAmount={0.1}
+						grainScale={2}
+						grainAnimated={false}
+						contrast={1.5}
+						gamma={1}
+						saturation={1}
+						centerX={0}
+						centerY={0}
+						zoom={0.9}
 					/>
+				</div>
 
-					<Col
-						xs={12}
-						lg={6}
-						className='d-flex align-items-center justify-content-center'
+				<div className='position-absolute top-0 end-0 h-100 signin-form-wrapper'>
+					<Card
+						className='h-100 border-0'
+						style={{ borderRadius: 12, padding: '32px' }}
 					>
-						<div className='w-100' style={{ maxWidth: 400 }}>
-							<h2 className='fw-bold mb-1'>Iniciar sesión</h2>
-							<p className='text-muted mb-4'>
-								Ingresa tus credenciales para continuar
-							</p>
+						<button
+							onClick={() => otpModal.open()}
+							className='btn btn-neutral'
+							type='button'
+						>
+							hola
+						</button>
 
-              <SignInForm />
+						<Card.Body className='d-flex align-items-center justify-content-center p-0'>
+							<div className='w-100' style={{ maxWidth: 400 }}>
+								<h2 className='fw-bold mb-1'>Iniciar sesión</h2>
+								<p className='text-muted mb-4'>
+									Ingresa tus credenciales para continuar
+								</p>
+								<SignInForm />
+								<Link
+									to='/'
+									className='d-block text-start mt-3 text-decoration-none'
+								>
+									home
+								</Link>
+							</div>
+						</Card.Body>
+					</Card>
+				</div>
+			</div>
 
-              <Link to='/' className='d-block text-start mt-3 text-decoration-none'>
-                home
-              </Link>
-						</div>
-					</Col>
-				</Row>
-			</Container>
-		</div>
+			<ModalDialog
+				onHide={otpModal.close}
+				show={otpModal.isOpen}
+			>
+				<div>
+					<Alert variant='light'>
+						Hemos enviado tu código OTP a [email@example.com]. Por favor,
+						verifica tu bandeja de entrada y confirma el código para continuar.
+					</Alert>
+
+					<Otp
+						value={otp6}
+						onChange={setOtp6}
+						onComplete={(v) => {
+							console.log('OTP 6:', v)
+						}}
+					/>
+				</div>
+			</ModalDialog>
+		</>
 	)
 }

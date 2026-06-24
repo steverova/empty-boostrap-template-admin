@@ -18,7 +18,7 @@ export default function CollapseCard({
 	return (
 		<Card className='border-0 shadow-sm flex-grow-1'>
 			<Card.Body
-				className='p-0 d-flex flex-column align-items-center py-3 gap-3'
+				className='p-0 d-flex flex-column align-items-center py-1 gap-3'
 				style={{ cursor: 'default' }}
 			>
 			<IconButton

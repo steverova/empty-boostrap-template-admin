@@ -33,6 +33,17 @@ export const ThemeModeProvider = ({
 		localStorage.setItem('themeMode', themeMode)
 	}, [themeMode])
 
+	useEffect(() => {
+		function handleKeyDown(e: KeyboardEvent) {
+			if (e.altKey && e.shiftKey && e.code === 'KeyD') {
+				e.preventDefault()
+				setThemeMode((prev) => (prev === 'dark' ? 'light' : 'dark'))
+			}
+		}
+		window.addEventListener('keydown', handleKeyDown)
+		return () => window.removeEventListener('keydown', handleKeyDown)
+	}, [])
+
 	return (
 		<themeModeContext.Provider value={{ themeMode, setThemeMode }}>
 			{children}
