@@ -13,14 +13,13 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
 			style={{ width: 250, minHeight: 0 }}
 		>
 			<div className='px-3'>
-				<img
-					alt='Logo'
-					className='img-fluid'
-					src={assets.logo.mark}
-				/>
+				<img alt='Logo' className='img-fluid' src={assets.logo.mark} />
 			</div>
 			<hr />
-			<div className='flex-grow-1 sidebar-scroll' style={{ minHeight: 0, overflowY: 'auto' }}>
+			<div
+				className='flex-grow-1 sidebar-scroll'
+				style={{ minHeight: 0, overflowY: 'auto' }}
+			>
 				<NavigationMenu onNavigate={onNavigate} />
 			</div>
 			<ThemeMode2 />

@@ -104,7 +104,7 @@ export default function Layout() {
 					</Offcanvas.Body>
 				</Offcanvas>
 
-				<main className='flex-grow-1 d-flex flex-row overflow-auto bg-success-subtle'>
+				<main className='flex-grow-1 d-flex flex-row overflow-auto bg-success-subtle pb-1'>
 					<div
 						className='flex-grow-1 mx-2 content-scroll rounded-3 bg-body'
 						style={{

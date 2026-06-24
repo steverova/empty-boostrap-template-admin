@@ -1,6 +1,4 @@
-
-
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Eye, EyeClosed, Lock, Mail } from 'lucide-react'
 import { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
@@ -23,7 +21,14 @@ export default function SignInForm() {
 	}
 
 	return (
-		<Form onSubmit={handleSubmit(onSubmit)} noValidate>
+		<Form className='px-md-2 p-2' onSubmit={handleSubmit(onSubmit)} noValidate>
+			<h2 className='fw-bold mb-1 mb-md-2'>Iniciar sesión</h2>
+			<p className='text-muted mb-3 mb-md-4'>
+				Ingresa tus credenciales para continuar
+			</p>
+
+			<hr />
+
 			<Form.Group className='mb-3' controlId='email'>
 				<Form.Label>Correo electrónico</Form.Label>
 				<div className='input-group'>
@@ -70,7 +75,7 @@ export default function SignInForm() {
 				</div>
 			</Form.Group>
 
-			<div className='d-flex justify-content-between align-items-center mb-4'>
+			<div className='d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2 mb-4'>
 				<Form.Check type='checkbox' label='Recordarme' />
 				<a href='#' className='text-decoration-none small'>
 					¿Olvidaste tu contraseña?
@@ -80,7 +85,7 @@ export default function SignInForm() {
 			<Button
 				type='submit'
 				variant='secondary'
-				className='w-100 py-2'
+				className='w-100'
 				disabled={isSubmitting}
 			>
 				{isSubmitting ? 'Ingresando...' : 'Iniciar sesión'}

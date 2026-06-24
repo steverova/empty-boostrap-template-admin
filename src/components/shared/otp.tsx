@@ -1,5 +1,11 @@
-import { type ClipboardEvent, useCallback, useEffect, useRef, useState } from 'react'
-import {Form, InputGroup } from 'react-bootstrap'
+import {
+	type ClipboardEvent,
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from 'react'
+import { Button, Form, InputGroup } from 'react-bootstrap'
 
 interface OtpProps {
 	length?: number
@@ -31,7 +37,9 @@ export default function Otp({
 
 	const expectedDigits = value.split('').slice(0, length)
 	while (expectedDigits.length < length) expectedDigits.push('')
-	const digitsMatch = expectedDigits.length === digits.length && expectedDigits.every((d, i) => d === digits[i])
+	const digitsMatch =
+		expectedDigits.length === digits.length &&
+		expectedDigits.every((d, i) => d === digits[i])
 	if (!digitsMatch) {
 		setDigits(expectedDigits)
 	}
@@ -54,11 +62,14 @@ export default function Otp({
 		[length, onChange, onComplete],
 	)
 
-	const focusInput = useCallback((index: number) => {
-		const clamped = Math.max(0, Math.min(index, length - 1))
-		inputRefs.current[clamped]?.focus()
-		inputRefs.current[clamped]?.select()
-	}, [length])
+	const focusInput = useCallback(
+		(index: number) => {
+			const clamped = Math.max(0, Math.min(index, length - 1))
+			inputRefs.current[clamped]?.focus()
+			inputRefs.current[clamped]?.select()
+		},
+		[length],
+	)
 
 	const handleChange = useCallback(
 		(index: number, raw: string) => {
@@ -109,7 +120,10 @@ export default function Otp({
 	const handlePaste = useCallback(
 		(e: ClipboardEvent<HTMLInputElement>) => {
 			e.preventDefault()
-			const text = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, length)
+			const text = e.clipboardData
+				.getData('text')
+				.replace(/\D/g, '')
+				.slice(0, length)
 			if (!text) return
 			const next = [...digits]
 			for (let i = 0; i < text.length; i++) {
@@ -123,14 +137,19 @@ export default function Otp({
 		[digits, length, emitChange, focusInput],
 	)
 
-
 	return (
-		<div className={className}>
+		<div className={`${className} d-flex flex-column gap-3`}>
+			<div className='d-flex justify-content-end'>
+				<Button variant='outline-light' size='sm'>Resend</Button>
+			</div>
+
 			<InputGroup className='justify-content-center gap-1'>
 				{digits.map((digit, i) => (
 					<Form.Control
 						key={i}
-						ref={(el) => { inputRefs.current[i] = el }}
+						ref={(el) => {
+							inputRefs.current[i] = el
+						}}
 						type='text'
 						inputMode='numeric'
 						maxLength={2}
@@ -153,6 +172,8 @@ export default function Otp({
 					/>
 				))}
 			</InputGroup>
+
+      <Button disabled={!digitsMatch} variant='light'>Confirm</Button>
 		</div>
 	)
 }
