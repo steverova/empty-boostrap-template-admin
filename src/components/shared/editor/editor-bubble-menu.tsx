@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react'
-import type { Editor } from '@tiptap/react'
 import { BubbleMenuPlugin } from '@tiptap/extension-bubble-menu'
+import type { Editor } from '@tiptap/react'
 import { Bold, Code, Italic, Strikethrough, Underline } from 'lucide-react'
+import { useEffect, useRef } from 'react'
 import { toolbar, toolbarGroup } from './editor.styles.css'
 import { ToolbarButton, ToolbarColorPicker, ToolbarDivider } from './toolbar'
 
