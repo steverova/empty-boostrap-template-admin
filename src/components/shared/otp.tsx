@@ -126,7 +126,7 @@ export default function Otp({
 
 	return (
 		<div className={className}>
-			<InputGroup className='justify-content-center gap-2'>
+			<InputGroup className='justify-content-center gap-1'>
 				{digits.map((digit, i) => (
 					<Form.Control
 						key={i}
@@ -143,8 +143,7 @@ export default function Otp({
 						onFocus={(e) => e.target.select()}
 						className='text-center fw-semibold'
 						style={{
-							width: '48px',
-							height: '56px',
+							height: '48px',
 							fontSize: '1.5rem',
 							letterSpacing: '0',
 							borderColor: digit ? accentColor : undefined,
@@ -154,29 +153,6 @@ export default function Otp({
 					/>
 				))}
 			</InputGroup>
-
-			{/*<div className='d-flex justify-content-center gap-2 mt-3'>
-				<Button
-					variant='outline-secondary'
-					size='sm'
-					disabled={disabled}
-					onClick={handleCopy}
-					title='Copiar código'
-				>
-					<ClipboardPaste size={14} className='me-1' />
-					Copiar
-				</Button>
-				<Button
-					variant='outline-secondary'
-					size='sm'
-					disabled={disabled}
-					onClick={handleReset}
-					title='Limpiar'
-				>
-					<RotateCcw size={14} className='me-1' />
-					Limpiar
-				</Button>
-			</div>*/}
 		</div>
 	)
 }
