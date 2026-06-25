@@ -1,11 +1,11 @@
-import { useContext } from 'react'
-import type { ThemeModeContextType } from '@providers/theme-mode/theme-mode.provider'
-import { themeModeContext } from '@providers/theme-mode/theme-mode-context'
+import type { ThemeModeContextType } from "@providers/theme-mode/theme-mode.provider";
+import { themeModeContext } from "@providers/theme-mode/theme-mode-context";
+import { useContext } from "react";
 
 export function useThemeMode(): ThemeModeContextType {
-	const context = useContext(themeModeContext)
+	const context = useContext(themeModeContext);
 	if (!context) {
-		throw new Error('useThemeMode must be used within a ThemeModeProvider')
+		throw new Error("useThemeMode must be used within a ThemeModeProvider");
 	}
-	return context
+	return context;
 }

@@ -8,6 +8,7 @@ interface ButtonNeutralProps
 	endIcon?: React.ReactNode
 	loading?: boolean
 	loadingText?: string
+	size?: 'sm' | 'lg'
 }
 
 export default function ButtonNeutral({
@@ -20,17 +21,18 @@ export default function ButtonNeutral({
 	loadingText,
 	disabled,
 	type = 'button',
+	size,
 	...props
 }: ButtonNeutralProps) {
 	const { themeMode } = useThemeMode()
-
 	const baseVariant = themeMode === 'light' ? 'dark' : 'light'
-	const themeVariant = outline ? `outline-${baseVariant} ` : baseVariant
+	const themeVariant = outline ? `outline-${baseVariant}` : baseVariant
 	const isDisabled = disabled || loading
 
 	return (
 		<Button
 			variant={themeVariant}
+			size={size}
 			className={className ?? undefined}
 			disabled={isDisabled && !loading}
 			aria-disabled={loading || undefined}
@@ -39,7 +41,10 @@ export default function ButtonNeutral({
 			{...props}
 		>
 			<span
-				className={`d-flex align-items-center gap-2 ${isDisabled ? 'opacity-50' : ''}`}
+				className={`d-flex align-items-center justify-content-center gap-2 ${
+					isDisabled ? 'opacity-50' : ''
+				}`}
+				style={{ width: '100%' }}
 			>
 				{loading ? (
 					<>

@@ -1,6 +1,8 @@
 
 :root {
 	--bs-body-font-family: 'Geist Variable', sans-serif;
+	--bs-primary: #0d6efd;
+	--bs-primary-rgb: 13, 110, 253;
 }
 
 body {

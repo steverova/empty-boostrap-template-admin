@@ -1,5 +1,6 @@
 import { assets } from '@assets/assets'
 import ThemeMode2 from '@components/shared/theme-mode-2'
+import ColorThemeSelector from '@components/shared/color-theme-selector'
 import NavigationMenu from './navigation-menu'
 
 type SidebarProps = {
@@ -9,8 +10,8 @@ type SidebarProps = {
 export default function Sidebar({ onNavigate }: SidebarProps) {
 	return (
 		<nav
-			className={`d-flex flex-column flex-shrink-0 py-3 bg-success-subtle sidebar`}
-			style={{ width: 250, minHeight: 0 }}
+			className={`d-flex flex-column flex-shrink-0 py-3 sidebar`}
+			style={{ width: 250, minHeight: 0, backgroundColor: 'var(--app-layout-bg, var(--bs-success-subtle))' }}
 		>
 			<div className='px-3'>
 				<img alt='Logo' className='img-fluid' src={assets.logo.mark} />
@@ -22,7 +23,10 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
 			>
 				<NavigationMenu onNavigate={onNavigate} />
 			</div>
-			<ThemeMode2 />
+			<div className='px-2 d-flex align-items-center gap-2'>
+				<ThemeMode2 />
+				<ColorThemeSelector />
+			</div>
 		</nav>
 	)
 }

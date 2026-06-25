@@ -27,7 +27,8 @@
       "@providers/*": ["./src/providers/*"],
       "@router": ["./src/router/index"],
       "@router/*": ["./src/router/*"],
-      "@stores/*": ["./src/stores/*"]
+      "@stores/*": ["./src/stores/*"],
+      "@utils/*": ["./src/utils/*"]
     },
 
     /* Linting */

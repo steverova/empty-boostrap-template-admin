@@ -5,4 +5,4 @@ export const signInschema = z.object({
 	password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres'),
 })
 
-export type SignInValues = z.infer<typeof signInschema>
+export type sigInFormSchemaType = z.infer<typeof signInschema>

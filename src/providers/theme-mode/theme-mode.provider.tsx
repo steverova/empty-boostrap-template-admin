@@ -1,6 +1,12 @@
 import { type JSX, useEffect, useState } from 'react'
 import { themeModeContext } from './theme-mode-context'
 
+export const THEME_MODE = {
+	LIGHT: 'light',
+	DARK: 'dark',
+	SYSTEM: 'system'
+} as const
+
 export type ThemeModeContextType = {
 	themeMode: 'light' | 'dark' | 'system'
 	setThemeMode: (mode: 'light' | 'dark' | 'system') => void

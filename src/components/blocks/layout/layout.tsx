@@ -53,7 +53,7 @@ export default function Layout() {
 			/>
 
 			<div className='d-flex flex-column flex-grow-1 overflow-hidden'>
-				<Navbar className={`bg-success-subtle d-flex gap-2 p-0`}>
+				<Navbar className='d-flex gap-2 p-0' style={{ backgroundColor: 'var(--app-layout-bg, var(--bs-success-subtle))' }}>
 					<Button
 						onClick={handleToggle}
 						variant='light'
@@ -104,9 +104,9 @@ export default function Layout() {
 					</Offcanvas.Body>
 				</Offcanvas>
 
-				<main className='flex-grow-1 d-flex flex-row overflow-auto bg-success-subtle pb-1'>
+				<main className='flex-grow-1 d-flex flex-row overflow-auto pb-1' style={{ backgroundColor: 'var(--app-layout-bg, var(--bs-success-subtle))' }}>
 					<div
-						className='flex-grow-1 mx-2 content-scroll rounded-3 bg-body'
+						className='flex-grow-1 mx-2 content-scroll rounded-3 bg-body-tertiary'
 						style={{
 							overflow: 'auto',
 							minHeight: 0,
